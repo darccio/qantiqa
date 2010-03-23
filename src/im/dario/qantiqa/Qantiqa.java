@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -43,10 +44,14 @@ public class Qantiqa {
         connector.setHost("127.0.0.1");
         httpSrv.addConnector(connector);
 
-        httpSrv.addHandler(new WebAppContext());
+        final URL warUrl = this.getClass().getClassLoader().getResource("war");
+        httpSrv.addHandler(new WebAppContext(warUrl.toExternalForm(), "/"));
+
+        httpSrv.setStopAtShutdown(true);
     }
 
-    private void start() {
+    private void start() throws Exception {
+        httpSrv.start();
 
         try {
             ServerSocket ss = new ServerSocket(11575);
@@ -73,7 +78,7 @@ public class Qantiqa {
         }
     }
 
-    public static void main(String... args) {
+    public static void main(String... args) throws Exception {
 
         if (args.length > 0) {
             if (args[0].equals("-d")) {
