@@ -9,6 +9,11 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.mortbay.jetty.Connector;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.webapp.WebAppContext;
+
 import com.sun.akuma.Daemon;
 
 public class Qantiqa {
@@ -22,7 +27,27 @@ public class Qantiqa {
      */
     private static final String pidFile = "/tmp/qantiqa.pid";
 
+    private final Server httpSrv;
+
+    public Qantiqa() {
+        httpSrv = new Server();
+
+        initHttpServer();
+    }
+
+    private void initHttpServer() {
+        Connector connector = new SelectChannelConnector();
+
+        // TODO Configurable HTTP port
+        connector.setPort(11576);
+        connector.setHost("127.0.0.1");
+        httpSrv.addConnector(connector);
+
+        httpSrv.addHandler(new WebAppContext());
+    }
+
     private void start() {
+
         try {
             ServerSocket ss = new ServerSocket(11575);
 
