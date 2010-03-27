@@ -5,6 +5,15 @@
 	
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/play.jar" sourcepath="/home/dario/software/play-1.0.1/framework" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/protobuf-format-java-1.1.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/protobuf-java-2.3.0.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/bunshin.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/dom4j.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/easypastry.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/jdom.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/junit.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/pastry.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/web/lib/xstream.jar" />
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/lib/SnakeYAML-1.2.jar" />
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/lib/WikiText.jar" />
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/lib/ZDB.jar" />
