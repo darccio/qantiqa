@@ -4,3 +4,5 @@ web/public/playmanual
 web/war
 web/tmp
 web/logs
+web/eclipse/classes
+web/lib
