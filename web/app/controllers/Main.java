@@ -1,11 +1,10 @@
 package controllers;
 
-import play.mvc.*;
+import play.mvc.Controller;
 
-public class Application extends Controller {
+public class Main extends Controller {
 
     public static void index() {
         render();
     }
-
 }
