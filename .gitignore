@@ -1,8 +1,8 @@
 bin
 web.war
-web/public/playmanual
-web/war
-web/tmp
-web/logs
-web/eclipse/classes
-web/lib
+*/public/playmanual
+*/war
+*/tmp
+*/logs
+*/eclipse/classes
+*/lib
