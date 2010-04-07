@@ -51,7 +51,6 @@ public class Qantiqa {
 
     public Qantiqa() {
         httpSrv = new Server();
-
         initHttpServer();
     }
 
