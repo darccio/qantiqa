@@ -3,10 +3,15 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET     /                                       Higgins.index
+
+*       /                                       module:secure
+
+*		/admin             						module:crud
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
-# Catch all
-*       /{controller}/{action}                  {controller}.{action}
+GET		/gluons									Higgins.gluons
+
+POST	/validate								Higgins.validate
