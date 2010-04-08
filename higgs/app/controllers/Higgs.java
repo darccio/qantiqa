@@ -7,12 +7,25 @@ import java.util.List;
 import com.google.protobuf.XmlFormat;
 
 import models.Gluon;
+import play.modules.gae.GAE;
 import play.mvc.Controller;
 
-public class Higgins extends Controller {
+public class Higgs extends Controller {
 
     public static void index() {
+        if (GAE.isLoggedIn() && GAE.isAdmin()) {
+            Gluons.index();
+        }
+
         render();
+    }
+
+    public static void login() {
+        GAE.login("Higgins.index");
+    }
+
+    public static void logout() {
+        GAE.logout("Higgins.index");
     }
 
     public static void gluons() {
