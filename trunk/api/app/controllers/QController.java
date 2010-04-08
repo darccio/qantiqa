@@ -19,17 +19,17 @@
 
 package controllers;
 
+import im.dario.qantiqa.common.protocol.Protocol.hash;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.apache.commons.httpclient.Header;
 
-import play.Play;
 import play.cache.Cache;
 import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
-import proto.Error.hash;
 import utils.NotAcceptable;
 import utils.TwitterRequest;
 import annotations.Formats;
@@ -41,7 +41,6 @@ import com.google.protobuf.XmlFormat;
 
 import constants.Format;
 import constants.HttpMethod;
-import easypastry.core.PastryKernel;
 import edu.emory.mathcs.backport.java.util.Arrays;
 
 /* TODO Pending headers
