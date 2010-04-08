@@ -18,7 +18,14 @@ public class Gluon extends Model {
 
     public Boolean active;
 
-    static Query<Gluon> all() {
+    public Gluon(String host, String secret) {
+        this.host = host;
+        // TODO MD5
+        this.secret = secret;
+        this.active = Boolean.TRUE;
+    }
+
+    public static Query<Gluon> all() {
         return Model.all(Gluon.class);
     }
 
