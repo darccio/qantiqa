@@ -1,6 +1,10 @@
 package controllers;
 
+import im.dario.qantiqa.common.protocol.Protocol;
+
 import java.util.List;
+
+import com.google.protobuf.XmlFormat;
 
 import models.Gluon;
 import play.mvc.Controller;
@@ -14,15 +18,12 @@ public class Higgins extends Controller {
     public static void gluons() {
         List<Gluon> gluons = Gluon.active();
 
-        StringBuilder sb = new StringBuilder("<gluons>");
+        Protocol.gluons.Builder builder = Protocol.gluons.newBuilder();
         for (Gluon g : gluons) {
-            sb.append("<gluon>");
-            sb.append(g.host);
-            sb.append("</gluon>");
+            builder.setGluon(0, g.host);
         }
-        sb.append("</gluons>");
 
-        renderXml(sb.toString());
+        renderXml(XmlFormat.printToString(builder.build()));
     }
 
     public static void validate() {

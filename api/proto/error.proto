@@ -1,6 +1,0 @@
-option java_package = "proto";
-
-message hash {
-	optional string error = 1;
-	optional string request = 2; 
-}

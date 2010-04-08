@@ -1,0 +1,10 @@
+option java_package = "im.dario.qantiqa.common.protocol";
+
+message hash {
+	optional string error = 1;
+	optional string request = 2; 
+}
+
+message gluons {
+	repeated string gluon = 1; 
+}
