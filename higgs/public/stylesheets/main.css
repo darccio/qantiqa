@@ -1,0 +1,112 @@
+@font-face {
+	font-family: Qantiqa;
+	src: url("/public/fonts/Delicious-Bold.eot") /* EOT file for IE */
+}
+
+@font-face {
+	font-family: Qantiqa;
+	src: url("/public/fonts/Delicious-Bold.ttf")
+		/* TTF file for CSS3 browsers */
+}
+
+article,aside,dialog,figure,footer,header,hgroup,menu,nav,section {
+	display: block;
+}
+
+body {
+	background-color: #595959;
+	color: #FFFFFF;
+	font: normal normal 150%/ 1.2 Qantiqa, sans-serif;
+}
+
+header,nav,#main {
+	padding: 19px;
+}
+
+section {
+	padding-top: 19px;
+}
+
+header {
+	font-size: xx-large;
+}
+
+nav {
+	background-color: #196DA6;
+	border-bottom: 1px solid #FFFFFF;
+}
+
+a {
+	color: #a9afbf;
+	padding: 0.16em;
+	text-decoration: none;
+}
+
+h1,h2,h3,h4,h5,h6,legend {
+	text-shadow: 1px 1px 5px #111;
+	font-weight: normal;
+}
+
+#info {
+	padding: 19px;
+	border-top: 1px dashed #FFFFFF;
+	border-right: 1px dashed #FFFFFF;
+	border-left: 1px dashed #FFFFFF;
+}
+
+#info input {
+	width: 99%;
+}
+
+#send {
+	border-bottom: 1px dashed #FFFFFF;
+	border-right: 1px dashed #FFFFFF;
+	border-left: 1px dashed #FFFFFF;
+	padding-bottom: 19px;
+	padding-left: 19px;
+	padding-right: 19px;
+}
+
+legend {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+input {
+	border: 1px solid #a9afbf;
+	font-family: Qantiqa, sans-serif;
+	font-size: 1em;
+	margin: 0.2em;
+}
+
+.error,.success {
+	padding: 0.5em;
+	margin-bottom: 0.5em;
+	border: 1px dashed #FFFFFF;
+}
+
+.error {
+	background-color: #662424;
+}
+
+.success {
+	background-color: #1DA210;
+}
+
+.gluon {
+	border-bottom: 1px dashed #a9afbf;
+}
+
+.gluon td.host {
+	width: 100%;
+}
+
+.gluon td {
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
+
+.gluon_action {
+	padding-left: 1em;
+	padding-right: 1em;
+}

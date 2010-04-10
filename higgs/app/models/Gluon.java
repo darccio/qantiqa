@@ -2,20 +2,29 @@ package models;
 
 import java.util.List;
 
-import play.data.validation.Required;
+import siena.Column;
 import siena.Id;
+import siena.Index;
+import siena.Max;
 import siena.Model;
+import siena.NotNull;
 import siena.Query;
+import siena.Table;
 
+@Table("gluon")
 public class Gluon extends Model {
 
     @Id
-    @Required
+    public Long id;
+
+    @Index("ix_host")
+    @NotNull
     public String host;
 
-    @Required
+    @NotNull
     public String secret;
 
+    @NotNull
     public Boolean active;
 
     public Gluon(String host, String secret) {
@@ -29,8 +38,12 @@ public class Gluon extends Model {
         return Model.all(Gluon.class);
     }
 
-    public static Gluon findById(String id) {
-        return all().filter("host", id).get();
+    public static Gluon findById(Long id) {
+        return all().filter("id", id).get();
+    }
+
+    public static Gluon findByHost(String host) {
+        return all().filter("host", host).get();
     }
 
     public static List<Gluon> active() {

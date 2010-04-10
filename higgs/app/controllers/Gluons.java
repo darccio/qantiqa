@@ -23,12 +23,14 @@ public class Gluons extends Controller {
         }
     }
 
-    static void checkGluon(String host) {
-        Gluon g = Gluon.findById(host);
-        if (g != null) {
-            flash.error("Gluon already created");
+    static Gluon checkIfExistsGluon(Long id) {
+        Gluon g = Gluon.findById(id);
+        if (g == null) {
+            flash.error("Gluon with id %d not found", id);
             index();
         }
+
+        return g;
     }
 
     public static void index() {
@@ -46,24 +48,44 @@ public class Gluons extends Controller {
             blank();
         }
 
-        checkGluon(host);
+        Gluon g = Gluon.findByHost(host);
+        if (g != null) {
+            flash.error("Gluon already created");
+            index();
+        }
 
         flash.success("Gluon successfully created");
         new Gluon(host, secret).insert();
+
         index();
     }
 
-    public static void enable(@Required Gluon g) {
-        checkGluon(g.host);
-
+    public static void enable(Long id) {
+        Gluon g = checkIfExistsGluon(id);
         g.active = Boolean.TRUE;
         g.update();
+
+        flash.success("Gluon successfully enabled");
+
+        index();
     }
 
-    public static void disable(@Required Gluon g) {
-        checkGluon(g.host);
-
+    public static void disable(Long id) {
+        Gluon g = checkIfExistsGluon(id);
         g.active = Boolean.FALSE;
         g.update();
+
+        flash.success("Gluon successfully disabled");
+
+        index();
+    }
+
+    public static void delete(Long id) {
+        Gluon g = checkIfExistsGluon(id);
+        g.delete();
+
+        flash.success("Gluon successfully deleted");
+
+        index();
     }
 }

@@ -21,11 +21,11 @@ public class Higgs extends Controller {
     }
 
     public static void login() {
-        GAE.login("Higgins.index");
+        GAE.login("Higgs.index");
     }
 
     public static void logout() {
-        GAE.logout("Higgins.index");
+        GAE.logout("Higgs.index");
     }
 
     public static void gluons() {
@@ -41,7 +41,7 @@ public class Higgs extends Controller {
 
     public static void validate() {
         String host = request.remoteAddress;
-        Gluon g = Gluon.findById(host);
+        Gluon g = Gluon.findByHost(host);
         if (g == null) {
             forbidden();
         } else {
