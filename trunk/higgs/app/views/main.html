@@ -4,13 +4,15 @@
     <head>
         <title>#{get 'title' /}</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+        #{stylesheet src: 'reset.css', media: 'screen' /}
+        #{stylesheet src: 'main.css', media: 'screen' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <script src="@{'/public/javascripts/jquery-1.4.min.js'}" charset="utf-8"></script>
+        #{script src: 'html5.js', charset: 'utf-8' /}
+        #{script src: 'jquery-1.4.min.js', charset: 'utf-8' /}
     </head>
     <body>
     	<header>
-    		<h1>Qantiqa</h1>
+    		<img src="@{'/public/images/logo.png'}" />
     	</header>
     	<nav>
 	    	#{if user}
@@ -20,7 +22,7 @@
 	        	<a href="@{Higgs.login()}">Login</a>
 	        #{/else}
         </nav>
-        <section>
+        <section id="main">
 			#{if flash.error}
 				<p class="error">${flash.error}</p>
 			#{/if}

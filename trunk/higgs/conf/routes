@@ -15,3 +15,6 @@ GET     /public/                                staticDir:public
 GET		/gluons									Higgs.gluons
 
 POST	/validate								Higgs.validate
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

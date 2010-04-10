@@ -3,8 +3,13 @@
 
 <h1>Gluons (<span class="more"><a href="@{Gluons.blank()}">add a new Gluon</a></span>)</h1>
 
-<ol id="gluons">
-#{list gluon:gluons, as:'gluon'}
-    <li>${gluon} - #{if gluon.active}<a href="@{Gluons.disable()}">Disable#{/if}#{else}<a href="@{Gluons.enable()}">Enable#{/else}</a></li>
+<section>
+<table>
+#{list items:gluons, as:'gluon'}
+<tr class="gluon">
+	<td class="host">${gluon}</td>
+	#{actions gluon /}
+</tr>
 #{/list}
-</ol>
+</table>
+<section>

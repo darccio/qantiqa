@@ -1,0 +1,12 @@
+%{
+	if (! _arg) {
+		throw new play.exceptions.TagInternalException("missing gluon");
+	}
+}%
+#{if _arg.active}
+<td class="gluon_action"><a href="@{Gluons.disable(_arg.id)}">Disable</a></td>
+#{/if}
+#{else}
+<td class="gluon_action"><a href="@{Gluons.enable(_arg.id)}">Enable</a></td>
+#{/else}
+<td class="gluon_action"><a href="@{Gluons.delete(_arg.id)}">Delete</a></td>

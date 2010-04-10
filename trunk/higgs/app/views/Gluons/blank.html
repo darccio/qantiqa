@@ -1,14 +1,19 @@
 #{extends 'main.html' /}
 #{set title:'Add a new Gluon' /}
 
-#{form @Gluon.create()}
-    <p>
-        <label for="host">Host</label>
-        <input type="text" name="host" id="host" size="250" />
-        <label for="host">Secret</label>
-        <input type="text" name="secret" id="secret" size="250" />
-    </p>
-    <p>
-        <input type="submit" value="Add Gluon"> or <a href="@{Gluons.index()}">Cancel</a>
-    </p>
+#{form @Gluons.create()}
+	<fieldset id="info">
+		<legend>Gluon details</legend>
+    	<p>
+        	<label for="host">Host</label>
+        	<input type="text" name="host" id="host" required />
+    	</p>
+    	<p>
+    		<label for="secret">Secret</label>
+        	<input type="text" name="secret" id="secret" required placedholder="Generated with play secret" />
+    	</p>
+    </fieldset>
+    <fieldset id="send">
+    	<input type="submit" value="Add Gluon"> or <a href="@{Gluons.index()}">Cancel</a>
+    </fieldset>
 #{/form}
