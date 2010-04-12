@@ -161,11 +161,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-<<<<<<< HEAD
-        <dc:title />
-=======
         <dc:title></dc:title>
->>>>>>> Higgs fully functional
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -256,12 +252,6 @@
        width="155.78726"
        height="155.78726"
        x="318.08615"
-<<<<<<< HEAD
-       y="768.7005" />
-    <g
-       transform="translate(-140.00252,310.60826)"
-       id="g2850-8">
-=======
        y="768.7005"
        inkscape:export-filename="/home/dario/uoc/8e/tfc/forge/qantiqa/higgs/public/images/favicon.png"
        inkscape:export-xdpi="9.2399998"
@@ -272,7 +262,6 @@
        inkscape:export-filename="/home/dario/uoc/8e/tfc/forge/qantiqa/higgs/public/images/favicon.png"
        inkscape:export-xdpi="9.2399998"
        inkscape:export-ydpi="9.2399998">
->>>>>>> Higgs fully functional
       <path
          d="m 571.0603,478.25779 c 8.00386,1.3e-4 14.80717,2.86819 20.40993,8.60419 5.73606,5.60283 8.60412,12.47283 8.60419,20.61001 l 0,86.64212 -19.40944,0 0,-29.0141 -19.40944,0 0,29.0141 -19.40943,0 0,-86.64212 c 0,-8.13718 2.86806,-15.00718 8.60419,-20.61001 5.46931,-5.736 12.33931,-8.60406 20.61,-8.60419 m 9.60468,67.43278 0,-38.21858 c -4e-5,-2.80126 -0.93382,-5.13572 -2.80137,-7.0034 -1.86761,-1.86747 -4.13536,-2.80125 -6.80331,-2.80136 -2.80137,1.1e-4 -5.13584,0.93389 -7.00339,2.80136 -1.86759,1.86768 -2.80138,4.20214 -2.80137,7.0034 l 0,38.21858 19.40944,0"
          style="font-size:200.09725952px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Elbaris;-inkscape-font-specification:Elbaris"
