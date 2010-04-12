@@ -1,0 +1,60 @@
+option java_package = "im.dario.qantiqa.common.protocol";
+
+// Twitter
+message hash {
+	optional string error = 1;
+	optional string request = 2; 
+}
+
+message user {
+	optional int64 id = 1;
+	optional string name = 2;
+	optional string screen_name = 3;
+	optional string location = 4;
+	optional string description = 5;
+	optional string profile_image_url = 6;
+	optional string url = 7;
+	optional bool protected = 8;
+	optional int64 followers_count = 9;
+	optional string profile_background_color = 10;
+	optional string profile_text_color = 11;
+	optional string profile_link_color = 12;
+	optional string profile_sidebar_fill_color = 13;
+	optional string profile_sidebar_boder_color = 14;
+	optional int64 friends_count = 15;
+	optional string created_at = 16;
+	optional int64 favourites_count = 17;
+	optional sint32 utc_offset = 18;
+	optional string time_zone = 19;
+	optional string profile_background_image_url = 20;
+	optional bool profile_background_tile = 21;
+	optional int64 statuses_count = 22;
+	optional bool notifications = 23;
+	optional bool following = 24;
+	optional bool geo_enabled = 25;
+	optional bool verified = 26;
+	optional status status = 27;	
+}
+
+message status {
+	optional string created_at = 1;
+	optional int64 id = 2;
+	optional string text = 3;
+	optional string source = 4;
+	optional bool truncated = 5;
+	optional int64 in_reply_to_status_id = 6;
+	optional int64 in_reply_to_user_id = 7;
+	optional bool favorited = 8;
+	optional string in_reply_to_screen_name = 9;
+	optional string geo = 10;
+}
+
+// Higgs
+message gluons {
+	repeated string gluon = 1; 
+}
+
+message validation {
+	optional bool isOk = 1;
+	optional string message = 2;
+}

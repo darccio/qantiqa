@@ -7,6 +7,6 @@
 			<zipfileset src="../../deps/protobuf-java-2.3.0.jar" />
 			<zipfileset src="../../deps/protobuf-format-java-1.1.jar" />
 		</jarjar>
-		<copy file="../api/lib/qa-common.jar" todir="../higgins/lib/" />
+		<copy file="../api/lib/qa-common.jar" todir="../higgs/lib/" />
 	</target>
 </project>
