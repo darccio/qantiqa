@@ -22,14 +22,17 @@ public class Gluon extends Model {
     public String host;
 
     @NotNull
+    public Integer port;
+
+    @NotNull
     public String secret;
 
     @NotNull
     public Boolean active;
 
-    public Gluon(String host, String secret) {
+    public Gluon(String host, Integer port, String secret) {
         this.host = host;
-        // TODO MD5
+        this.port = port;
         this.secret = secret;
         this.active = Boolean.TRUE;
     }
@@ -42,8 +45,8 @@ public class Gluon extends Model {
         return all().filter("id", id).get();
     }
 
-    public static Gluon findByHost(String host) {
-        return all().filter("host", host).get();
+    public static Gluon findByEndpoint(String host, Integer port) {
+        return all().filter("host", host).filter("port", port).get();
     }
 
     public static List<Gluon> active() {
@@ -51,6 +54,6 @@ public class Gluon extends Model {
     }
 
     public String toString() {
-        return host;
+        return host + ":" + port;
     }
 }

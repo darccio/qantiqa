@@ -1,5 +1,8 @@
 package controllers;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import models.Gluon;
@@ -42,20 +45,21 @@ public class Gluons extends Controller {
         render();
     }
 
-    public static void create(@Required String host, @Required String secret) {
+    public static void create(@Required String host, @Required Integer port,
+            @Required String secret) {
         if (validation.hasErrors()) {
-            flash.error("Gluon host/secret missing");
+            flash.error("Some fields are missing");
             blank();
         }
 
-        Gluon g = Gluon.findByHost(host);
+        Gluon g = Gluon.findByEndpoint(host, port);
         if (g != null) {
             flash.error("Gluon already created");
             index();
         }
 
         flash.success("Gluon successfully created");
-        new Gluon(host, secret).insert();
+        new Gluon(host, port, play.libs.Codec.hexMD5(secret)).insert();
 
         index();
     }
