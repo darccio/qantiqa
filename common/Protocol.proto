@@ -58,3 +58,18 @@ message validation {
 	optional bool isOk = 1;
 	optional string message = 2;
 }
+
+// Gluon
+message authentication {
+    optional string username = 1;
+    optional string password = 2;
+}
+
+enum AuthResult {
+	VALID = 0;
+	NOT_VALID = 1;
+}
+
+message authentication_response {
+	required AuthResult result = 1;
+}

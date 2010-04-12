@@ -24,8 +24,8 @@ import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import network.services.UserService;
-import network.services.UserService.AuthResult;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -40,10 +40,15 @@ public class Qaccount extends QController {
 
         String md5Passwd = play.libs.Codec.hexMD5(request.password);
 
-        AuthResult result = svc.authenticate(request.user, md5Passwd);
+        System.out.println("Authenticating...");
+        AuthResult result = svc.authenticate(request.user, md5Passwd).get();
+        System.out.println("Authenticated: " + result.toString());
         switch (result) {
         case VALID:
-            Protocol.user user = svc.get(request.user);
+            // Protocol.user user = svc.get(request.user);
+            Protocol.hash.Builder user = Protocol.hash.newBuilder();
+            user.setRequest(request.path);
+            user.setError("It works!!!");
             renderProtobuf(user);
             break;
         case NOT_VALID:
