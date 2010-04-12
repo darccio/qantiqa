@@ -31,9 +31,10 @@ public class Higgs extends Controller {
     public static void gluons() {
         List<Gluon> gluons = Gluon.active();
 
+        int i = 0;
         Protocol.gluons.Builder builder = Protocol.gluons.newBuilder();
         for (Gluon g : gluons) {
-            builder.setGluon(0, g.host);
+            builder.setGluon(i++, g.host);
         }
 
         renderXml(XmlFormat.printToString(builder.build()));
