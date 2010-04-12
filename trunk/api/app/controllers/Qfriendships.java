@@ -34,14 +34,14 @@ public class Qfriendships extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void create(String id) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { POST, DELETE })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void destroy(String id) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { GET })
@@ -49,6 +49,6 @@ public class Qfriendships extends QController {
     @RequiresAuthentication
     public static void show(Long source_id, String source_screen_name,
             Long target_id, String target_screen_name) {
-        proxyToTwitter();
+        proxy();
     }
 }

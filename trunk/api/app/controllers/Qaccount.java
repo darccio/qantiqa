@@ -23,6 +23,9 @@ import static constants.Format.JSON;
 import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
+import im.dario.qantiqa.common.protocol.Protocol;
+import network.services.UserService;
+import network.services.UserService.AuthResult;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -33,12 +36,29 @@ public class Qaccount extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void verify_credentials() {
-        proxyToTwitter();
+        UserService svc = new UserService(getOverlay());
+
+        String md5Passwd = play.libs.Codec.hexMD5(request.password);
+
+        AuthResult result = svc.authenticate(request.user, md5Passwd);
+        switch (result) {
+        case VALID:
+            Protocol.user user = svc.get(request.user);
+            renderProtobuf(user);
+            break;
+        case NOT_VALID:
+            Protocol.hash.Builder bh = Protocol.hash.newBuilder();
+            bh.setRequest(request.path);
+            bh.setError("Could not authenticate you.");
+
+            response.current().status = 401;
+            renderProtobuf(bh);
+        }
     }
 
     @Methods( { GET })
     @Formats( { RAW })
     public static void profile_image(String screen_name) {
-        proxyToTwitter();
+        proxy();
     }
 }

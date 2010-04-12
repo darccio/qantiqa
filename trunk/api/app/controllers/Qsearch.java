@@ -30,6 +30,6 @@ public class Qsearch extends QController {
     @Methods( { GET })
     @Formats( { ATOM, JSON })
     public static void index(String q) {
-        proxyToTwitter();
+        proxy();
     }
 }
