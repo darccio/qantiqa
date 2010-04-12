@@ -8,6 +8,73 @@ public final class Protocol {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+  public enum AuthResult
+      implements com.google.protobuf.ProtocolMessageEnum {
+    VALID(0, 0),
+    NOT_VALID(1, 1),
+    ;
+    
+    
+    public final int getNumber() { return value; }
+    
+    public static AuthResult valueOf(int value) {
+      switch (value) {
+        case 0: return VALID;
+        case 1: return NOT_VALID;
+        default: return null;
+      }
+    }
+    
+    public static com.google.protobuf.Internal.EnumLiteMap<AuthResult>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<AuthResult>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<AuthResult>() {
+            public AuthResult findValueByNumber(int number) {
+              return AuthResult.valueOf(number)
+    ;        }
+          };
+    
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.getDescriptor().getEnumTypes().get(0);
+    }
+    
+    private static final AuthResult[] VALUES = {
+      VALID, NOT_VALID, 
+    };
+    public static AuthResult valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+    private final int index;
+    private final int value;
+    private AuthResult(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+    
+    static {
+      im.dario.qantiqa.common.protocol.Protocol.getDescriptor();
+    }
+    
+    // @@protoc_insertion_point(enum_scope:AuthResult)
+  }
+  
   public static final class hash extends
       com.google.protobuf.GeneratedMessage {
     // Use hash.newBuilder() to construct.
@@ -3001,6 +3068,630 @@ public final class Protocol {
     // @@protoc_insertion_point(class_scope:validation)
   }
   
+  public static final class authentication extends
+      com.google.protobuf.GeneratedMessage {
+    // Use authentication.newBuilder() to construct.
+    private authentication() {
+      initFields();
+    }
+    private authentication(boolean noInit) {}
+    
+    private static final authentication defaultInstance;
+    public static authentication getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public authentication getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_authentication_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_authentication_fieldAccessorTable;
+    }
+    
+    // optional string username = 1;
+    public static final int USERNAME_FIELD_NUMBER = 1;
+    private boolean hasUsername;
+    private java.lang.String username_ = "";
+    public boolean hasUsername() { return hasUsername; }
+    public java.lang.String getUsername() { return username_; }
+    
+    // optional string password = 2;
+    public static final int PASSWORD_FIELD_NUMBER = 2;
+    private boolean hasPassword;
+    private java.lang.String password_ = "";
+    public boolean hasPassword() { return hasPassword; }
+    public java.lang.String getPassword() { return password_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasUsername()) {
+        output.writeString(1, getUsername());
+      }
+      if (hasPassword()) {
+        output.writeString(2, getPassword());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasUsername()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(1, getUsername());
+      }
+      if (hasPassword()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(2, getPassword());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(im.dario.qantiqa.common.protocol.Protocol.authentication prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private im.dario.qantiqa.common.protocol.Protocol.authentication result;
+      
+      // Construct using im.dario.qantiqa.common.protocol.Protocol.authentication.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new im.dario.qantiqa.common.protocol.Protocol.authentication();
+        return builder;
+      }
+      
+      protected im.dario.qantiqa.common.protocol.Protocol.authentication internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new im.dario.qantiqa.common.protocol.Protocol.authentication();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.authentication.getDescriptor();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.authentication getDefaultInstanceForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.authentication.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.authentication build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private im.dario.qantiqa.common.protocol.Protocol.authentication buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.authentication buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        im.dario.qantiqa.common.protocol.Protocol.authentication returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof im.dario.qantiqa.common.protocol.Protocol.authentication) {
+          return mergeFrom((im.dario.qantiqa.common.protocol.Protocol.authentication)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(im.dario.qantiqa.common.protocol.Protocol.authentication other) {
+        if (other == im.dario.qantiqa.common.protocol.Protocol.authentication.getDefaultInstance()) return this;
+        if (other.hasUsername()) {
+          setUsername(other.getUsername());
+        }
+        if (other.hasPassword()) {
+          setPassword(other.getPassword());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              setUsername(input.readString());
+              break;
+            }
+            case 18: {
+              setPassword(input.readString());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional string username = 1;
+      public boolean hasUsername() {
+        return result.hasUsername();
+      }
+      public java.lang.String getUsername() {
+        return result.getUsername();
+      }
+      public Builder setUsername(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasUsername = true;
+        result.username_ = value;
+        return this;
+      }
+      public Builder clearUsername() {
+        result.hasUsername = false;
+        result.username_ = getDefaultInstance().getUsername();
+        return this;
+      }
+      
+      // optional string password = 2;
+      public boolean hasPassword() {
+        return result.hasPassword();
+      }
+      public java.lang.String getPassword() {
+        return result.getPassword();
+      }
+      public Builder setPassword(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasPassword = true;
+        result.password_ = value;
+        return this;
+      }
+      public Builder clearPassword() {
+        result.hasPassword = false;
+        result.password_ = getDefaultInstance().getPassword();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:authentication)
+    }
+    
+    static {
+      defaultInstance = new authentication(true);
+      im.dario.qantiqa.common.protocol.Protocol.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:authentication)
+  }
+  
+  public static final class authentication_response extends
+      com.google.protobuf.GeneratedMessage {
+    // Use authentication_response.newBuilder() to construct.
+    private authentication_response() {
+      initFields();
+    }
+    private authentication_response(boolean noInit) {}
+    
+    private static final authentication_response defaultInstance;
+    public static authentication_response getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public authentication_response getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_authentication_response_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_authentication_response_fieldAccessorTable;
+    }
+    
+    // required .AuthResult result = 1;
+    public static final int RESULT_FIELD_NUMBER = 1;
+    private boolean hasResult;
+    private im.dario.qantiqa.common.protocol.Protocol.AuthResult result_;
+    public boolean hasResult() { return hasResult; }
+    public im.dario.qantiqa.common.protocol.Protocol.AuthResult getResult() { return result_; }
+    
+    private void initFields() {
+      result_ = im.dario.qantiqa.common.protocol.Protocol.AuthResult.VALID;
+    }
+    public final boolean isInitialized() {
+      if (!hasResult) return false;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasResult()) {
+        output.writeEnum(1, getResult().getNumber());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasResult()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, getResult().getNumber());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.authentication_response parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(im.dario.qantiqa.common.protocol.Protocol.authentication_response prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private im.dario.qantiqa.common.protocol.Protocol.authentication_response result;
+      
+      // Construct using im.dario.qantiqa.common.protocol.Protocol.authentication_response.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new im.dario.qantiqa.common.protocol.Protocol.authentication_response();
+        return builder;
+      }
+      
+      protected im.dario.qantiqa.common.protocol.Protocol.authentication_response internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new im.dario.qantiqa.common.protocol.Protocol.authentication_response();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.authentication_response.getDescriptor();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.authentication_response getDefaultInstanceForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.authentication_response.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.authentication_response build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private im.dario.qantiqa.common.protocol.Protocol.authentication_response buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.authentication_response buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        im.dario.qantiqa.common.protocol.Protocol.authentication_response returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof im.dario.qantiqa.common.protocol.Protocol.authentication_response) {
+          return mergeFrom((im.dario.qantiqa.common.protocol.Protocol.authentication_response)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(im.dario.qantiqa.common.protocol.Protocol.authentication_response other) {
+        if (other == im.dario.qantiqa.common.protocol.Protocol.authentication_response.getDefaultInstance()) return this;
+        if (other.hasResult()) {
+          setResult(other.getResult());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              im.dario.qantiqa.common.protocol.Protocol.AuthResult value = im.dario.qantiqa.common.protocol.Protocol.AuthResult.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                setResult(value);
+              }
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // required .AuthResult result = 1;
+      public boolean hasResult() {
+        return result.hasResult();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.AuthResult getResult() {
+        return result.getResult();
+      }
+      public Builder setResult(im.dario.qantiqa.common.protocol.Protocol.AuthResult value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasResult = true;
+        result.result_ = value;
+        return this;
+      }
+      public Builder clearResult() {
+        result.hasResult = false;
+        result.result_ = im.dario.qantiqa.common.protocol.Protocol.AuthResult.VALID;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:authentication_response)
+    }
+    
+    static {
+      defaultInstance = new authentication_response(true);
+      im.dario.qantiqa.common.protocol.Protocol.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:authentication_response)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_hash_descriptor;
   private static
@@ -3026,6 +3717,16 @@ public final class Protocol {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_validation_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_authentication_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_authentication_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_authentication_response_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_authentication_response_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -3059,8 +3760,12 @@ public final class Protocol {
       "ly_to_user_id\030\007 \001(\003\022\021\n\tfavorited\030\010 \001(\010\022\037" +
       "\n\027in_reply_to_screen_name\030\t \001(\t\022\013\n\003geo\030\n" +
       " \001(\t\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidat" +
-      "ion\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(\tB\"\n im" +
-      ".dario.qantiqa.common.protocol"
+      "ion\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016au" +
+      "thentication\022\020\n\010username\030\001 \001(\t\022\020\n\010passwo" +
+      "rd\030\002 \001(\t\"6\n\027authentication_response\022\033\n\006r" +
+      "esult\030\001 \002(\0162\013.AuthResult*&\n\nAuthResult\022\t" +
+      "\n\005VALID\020\000\022\r\n\tNOT_VALID\020\001B\"\n im.dario.qan" +
+      "tiqa.common.protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3107,6 +3812,22 @@ public final class Protocol {
               new java.lang.String[] { "IsOk", "Message", },
               im.dario.qantiqa.common.protocol.Protocol.validation.class,
               im.dario.qantiqa.common.protocol.Protocol.validation.Builder.class);
+          internal_static_authentication_descriptor =
+            getDescriptor().getMessageTypes().get(5);
+          internal_static_authentication_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_authentication_descriptor,
+              new java.lang.String[] { "Username", "Password", },
+              im.dario.qantiqa.common.protocol.Protocol.authentication.class,
+              im.dario.qantiqa.common.protocol.Protocol.authentication.Builder.class);
+          internal_static_authentication_response_descriptor =
+            getDescriptor().getMessageTypes().get(6);
+          internal_static_authentication_response_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_authentication_response_descriptor,
+              new java.lang.String[] { "Result", },
+              im.dario.qantiqa.common.protocol.Protocol.authentication_response.class,
+              im.dario.qantiqa.common.protocol.Protocol.authentication_response.Builder.class);
           return null;
         }
       };

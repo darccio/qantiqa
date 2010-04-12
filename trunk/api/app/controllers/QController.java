@@ -232,7 +232,6 @@ public abstract class QController extends Controller {
 
     protected static void renderProtobuf(Builder builder) {
         Message msg = builder.build();
-
         renderProtobuf(msg);
     }
 

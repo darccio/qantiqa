@@ -1,28 +1,31 @@
 package network;
 
 import im.dario.qantiqa.common.higgs.HiggsWS;
+import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
+import im.dario.qantiqa.common.protocol.Protocol.authentication;
+import im.dario.qantiqa.common.utils.Reference;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import rice.environment.Environment;
+import network.utils.QastContent;
+import network.utils.QastListener;
 import rice.p2p.commonapi.NodeHandle;
-import rice.pastry.PastryNode;
 import rice.pastry.socket.SocketNodeHandle;
-import rice.pastry.socket.SocketPastryNodeFactory;
-import rice.pastry.standard.RandomNodeIdFactory;
-import utils.Reference;
 
+import com.google.protobuf.Message;
+import com.google.protobuf.Message.Builder;
 import com.google.protobuf.XmlFormat.ParseException;
 
-import easypastry.cast.CastContent;
 import easypastry.cast.CastHandler;
-import easypastry.cast.CastListener;
 import easypastry.core.PastryConnection;
 import easypastry.core.PastryKernel;
 import easypastry.sample.AppCastContent;
@@ -30,7 +33,7 @@ import easypastry.sample.AppCastContent;
 public class Overlay {
 
     private final PastryConnection conn;
-    private final NodeHandle gluon;
+    private final Reference<NodeHandle> gluon;
 
     public static Overlay init(String configPath) {
         if (configPath == null) {
@@ -71,21 +74,64 @@ public class Overlay {
         return ov;
     }
 
+    public static Overlay initGluon(String configPath) {
+        Overlay overlay = new Overlay(configPath);
+
+        final CastHandler cast = PastryKernel.getCastHandler();
+        cast.addDeliverListener(Protocol.authentication.class.getSimpleName(),
+                new QastListener() {
+
+                    @Override
+                    public void hostUpdate(NodeHandle nh, boolean joined) {
+                        if (joined) {
+                            System.out.println(nh + " joined.");
+                        }
+                    }
+
+                    @Override
+                    public void contentDelivery(AppCastContent qc) {
+                        NodeHandle nh = qc.getSource();
+
+                        // Message msg = qc.getMessage(type);
+                        Message msg;
+                        try {
+                            Field field = qc.getClass().getDeclaredField("txt");
+                            field.setAccessible(true);
+
+                            msg = QastContent.getMessage(
+                                    Protocol.authentication.class,
+                                    (String) field.get(qc));
+
+                            Protocol.authentication auth = (authentication) msg;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        // TODO check authentication
+
+                        Protocol.authentication_response.Builder rs = Protocol.authentication_response
+                                .newBuilder();
+                        rs.setResult(AuthResult.VALID);
+
+                        System.out.println("Delivering...");
+                        sendToPeer(nh, rs);
+                        System.out.println("Delivered.");
+                    }
+                });
+
+        System.out.println("All loaded...");
+
+        return overlay;
+    }
+
     private Overlay(String configPath, final String host, String sPort)
             throws IOException, Exception {
-        try {
-            PastryKernel.init(configPath);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        this.conn = PastryKernel.getPastryConnection();
-        CastHandler cast = PastryKernel.getCastHandler();
+        this(configPath);
 
         final Integer port = Integer.valueOf(sPort);
-        final Reference<NodeHandle> gluon = new Reference<NodeHandle>();
-        cast.addDeliverListener("gluons", new CastListener() {
+        CastHandler cast = PastryKernel.getCastHandler();
 
+        cast.addDeliverListener("gluon", new QastListener() {
             @Override
             public void hostUpdate(rice.p2p.commonapi.NodeHandle nh,
                     boolean joined) {
@@ -93,31 +139,38 @@ public class Overlay {
                     if (nh instanceof SocketNodeHandle) {
                         SocketNodeHandle snh = (SocketNodeHandle) nh;
                         InetSocketAddress address = snh.getInetSocketAddress();
-                        if (address.getHostName().equals(host)) {
+                        if (address.getAddress().getHostAddress().equals(host)) {
                             if (address.getPort() == port) {
                                 // This is our gluon.
                                 gluon.set(nh);
-                                gluon.notifyAll();
                             }
                         }
                     }
                 }
             }
-
-            @Override
-            public void contentDelivery(CastContent content) {
-            }
-
-            @Override
-            public boolean contentAnycasting(CastContent content) {
-                return true;
-            }
         });
 
-        gluon.wait();
-        this.gluon = gluon.get();
-
         this.conn.bootNode();
+    }
+
+    public Overlay(String configPath) {
+        try {
+            PastryKernel.init(configPath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.conn = PastryKernel.getPastryConnection();
+        this.gluon = new Reference<NodeHandle>();
+        this.gluon.set(conn.getNode().getLocalNodeHandle());
+    }
+
+    public void bootGluon() {
+        try {
+            this.conn.bootNode();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void modifyConfig(String easyPastryConfigPath, String host,
@@ -136,19 +189,42 @@ public class Overlay {
         fos.close();
     }
 
-    public void sendToGluon() {
+    public void sendToGluon(Builder builder, final Reference<?> result,
+            final Class<? extends Message> messageClass) {
+        Message msg = builder.build();
+        String subject = msg.getDescriptorForType().getName();
+
         CastHandler cast = PastryKernel.getCastHandler();
-        PastryNode node = (PastryNode) conn.getNode();
-        Environment env = node.getEnvironment();
-        try {
-            SocketPastryNodeFactory factory = new SocketPastryNodeFactory(
-                    new RandomNodeIdFactory(env), 5009, env);
-            NodeHandle nh = factory.getNodeHandle(new InetSocketAddress(
-                    "192.168.0.12", 5009));
-            cast.sendDirect(nh, new AppCastContent("test", "test1"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        cast.sendDirect(this.gluon.get(), new AppCastContent(subject,
+                new String(msg.toByteArray())));
+
+        cast.addDeliverListener(subject + "_response", new QastListener() {
+
+            @Override
+            public void contentDelivery(AppCastContent qc) {
+                try {
+                    Field field = qc.getClass().getDeclaredField("txt");
+                    field.setAccessible(true);
+
+                    // Message msg = qc.getMessage(type);
+                    Message msg = QastContent.getMessage(messageClass,
+                            (String) field.get(qc));
+                    Method m = msg.getClass().getMethod("getResult");
+
+                    result.set(m.invoke(msg));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private static void sendToPeer(NodeHandle nh, Builder builder) {
+        Message msg = builder.build();
+        String subject = msg.getDescriptorForType().getName();
+
+        CastHandler cast = PastryKernel.getCastHandler();
+        cast.sendDirect(nh, new AppCastContent(subject, new String(msg
+                .toByteArray())));
     }
 }
