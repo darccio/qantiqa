@@ -32,13 +32,13 @@ public class Qusers extends QController {
     @Methods( { GET })
     @Formats( { XML, JSON })
     public static void show(String id) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void search(String q) {
-        proxyToTwitter();
+        proxy();
     }
 }

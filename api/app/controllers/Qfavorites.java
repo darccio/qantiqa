@@ -32,6 +32,6 @@ public class Qfavorites extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void create(Long id) {
-        proxyToTwitter();
+        proxy();
     }
 }

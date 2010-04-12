@@ -20,24 +20,30 @@
 package controllers;
 
 import im.dario.qantiqa.common.protocol.Protocol.hash;
+import im.dario.qantiqa.common.protocol.format.XmlFormat;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import network.Overlay;
+import network.requests.ProxyRequest;
+import network.requests.QantiqaRequest;
+
 import org.apache.commons.httpclient.Header;
 
+import play.Play;
 import play.cache.Cache;
 import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
 import utils.NotAcceptable;
-import utils.TwitterRequest;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
 import com.google.protobuf.JsonFormat;
-import com.google.protobuf.XmlFormat;
+import com.google.protobuf.Message;
+import com.google.protobuf.Message.Builder;
 
 import constants.Format;
 import constants.HttpMethod;
@@ -54,16 +60,28 @@ import edu.emory.mathcs.backport.java.util.Arrays;
  */
 public abstract class QController extends Controller {
 
-    // PastryKernel.init(Play.getFile("conf/easypastry-config.xml")
-    // .getAbsolutePath());
-
     @Before
     static void checkRequest() {
         Method m = request.invokedMethod;
 
+        checkOverlay();
         checkFormat(m);
         checkAuthentication(m);
         checkMethod(m);
+    }
+
+    static Overlay getOverlay() {
+        return (Overlay) Play.configuration.get("qantiqa._overlay");
+    }
+
+    private synchronized static void checkOverlay() {
+        if (getProxyTo().toLowerCase().equals("qantiqa")) {
+            Overlay ov = getOverlay();
+            if (ov == null) {
+                ov = Overlay.init(Play.conf.getRealFile().getParent());
+                Play.configuration.put("qantiqa._overlay", ov);
+            }
+        }
     }
 
     @After
@@ -150,31 +168,85 @@ public abstract class QController extends Controller {
         }
     }
 
-    protected static void proxyToTwitter() {
+    protected static void proxy() {
         Format format = Cache.get(getFormatKey(), Format.class);
 
-        TwitterRequest twitter = new TwitterRequest();
-        twitter.proxy(request);
+        String proxyTo = getProxyTo();
 
-        response.current().status = twitter.getStatus();
-        response.current().contentType = twitter.getContentType();
+        ProxyRequest pr;
+        try {
+            Class<?> prClass = Class.forName("network.requests." + proxyTo
+                    + "Request");
+            pr = (ProxyRequest) prClass.newInstance();
+        } catch (Exception e) {
+            // TODO Mimic Twitter error response
+            throw new IllegalStateException(
+                    "qantiqa.proxyTo not properly configured");
+        }
 
-        Header[] headers = twitter.getHeaders();
+        if (proxyTo.toLowerCase().equals("qantiqa")) {
+            QantiqaRequest qr = (QantiqaRequest) pr;
+            qr.setOverlay(getOverlay());
+        }
+
+        pr.proxy(request);
+
+        response.current().status = pr.getStatus();
+        response.current().contentType = pr.getContentType();
+
+        Header[] headers = pr.getHeaders();
         for (Header header : headers) {
-            response.current().setHeader(header.getName(), header.getValue());
+            String name = header.getName();
+
+            if (!name.equals("Content-Length") && !name.equals("Content-Type")) {
+                response.current().setHeader(header.getName(),
+                        header.getValue());
+            }
         }
 
         switch (format) {
         case ATOM:
         case RSS:
         case XML:
-            renderXml(twitter.getXml());
+            renderXml(pr.getXml());
             break;
         case JSON:
-            renderText(twitter.getJson());
+            renderText(pr.getJson());
             break;
         case RAW:
-            renderBinary(twitter.getStream());
+            renderBinary(pr.getStream());
+            break;
+        }
+    }
+
+    private static String getProxyTo() {
+        String proxyTo = Play.configuration.getProperty("qantiqa.proxyTo");
+
+        if (proxyTo == null) {
+            // TODO Mimic Twitter error response
+            throw new IllegalStateException("qantiqa.proxyTo not configured");
+        }
+
+        return proxyTo;
+    }
+
+    protected static void renderProtobuf(Builder builder) {
+        Message msg = builder.build();
+
+        renderProtobuf(msg);
+    }
+
+    protected static void renderProtobuf(Message msg) {
+        Format format = Cache.get(getFormatKey(), Format.class);
+
+        switch (format) {
+        case ATOM:
+        case RSS:
+        case XML:
+            renderXml(XmlFormat.printToString(msg));
+            break;
+        case JSON:
+            renderText(JsonFormat.printToString(msg));
             break;
         }
     }

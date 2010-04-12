@@ -34,6 +34,6 @@ public class Qdirect_messages extends QController {
     @Formats( { XML, JSON, RSS, ATOM })
     @RequiresAuthentication
     public static void index(Integer count) {
-        proxyToTwitter();
+        proxy();
     }
 }

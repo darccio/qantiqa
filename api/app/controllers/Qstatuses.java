@@ -37,33 +37,33 @@ public class Qstatuses extends QController {
     @Formats( { XML, JSON, ATOM })
     @RequiresAuthentication
     public static void home_timeline(Integer count, Long since_id) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     @RequiresAuthentication
     public static void mentions(Integer count) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     public static void user_timeline(String id, Integer count) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, ATOM })
     @RequiresAuthentication
     public static void retweeted_by_me(Integer count) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON })
     public static void show(Long id) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { POST })
@@ -71,20 +71,20 @@ public class Qstatuses extends QController {
     @RequiresAuthentication
     public static void update(String status, Long in_reply_to_status_id,
             String source) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { POST, DELETE })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void destroy(Long id) {
-        proxyToTwitter();
+        proxy();
     }
 
     @Methods( { POST, PUT })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void retweet(Long id, String source) {
-        proxyToTwitter();
+        proxy();
     }
 }
