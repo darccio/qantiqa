@@ -1,7 +1,8 @@
 bin
 *.war
 */public/playmanual
-*/war
+*/war/WEB-INF/appengine-generated
+*/war/WEB-INF/lib
 */tmp
 */logs
 */eclipse/classes
