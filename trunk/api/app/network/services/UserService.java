@@ -2,7 +2,7 @@ package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
-import im.dario.qantiqa.common.utils.Reference;
+import im.dario.qantiqa.common.utils.AsyncResult;
 import network.Overlay;
 
 public class UserService extends Service {
@@ -11,14 +11,14 @@ public class UserService extends Service {
         super(overlay);
     }
 
-    public Reference<AuthResult> authenticate(String username, String password) {
+    public AsyncResult<AuthResult> authenticate(String username, String password) {
         Protocol.authentication.Builder auth = Protocol.authentication
                 .newBuilder();
 
         auth.setUsername(username);
         auth.setPassword(password);
 
-        Reference<AuthResult> result = new Reference<AuthResult>();
+        AsyncResult<AuthResult> result = new AsyncResult<AuthResult>();
         overlay.sendToGluon(auth, result,
                 Protocol.authentication_response.class);
 

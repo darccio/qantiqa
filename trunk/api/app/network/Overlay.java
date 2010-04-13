@@ -4,7 +4,7 @@ import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import im.dario.qantiqa.common.protocol.Protocol.authentication;
-import im.dario.qantiqa.common.utils.Reference;
+import im.dario.qantiqa.common.utils.AsyncResult;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,7 +23,6 @@ import rice.pastry.socket.SocketNodeHandle;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
-import com.google.protobuf.XmlFormat.ParseException;
 
 import easypastry.cast.CastHandler;
 import easypastry.core.PastryConnection;
@@ -33,7 +32,7 @@ import easypastry.sample.AppCastContent;
 public class Overlay {
 
     private final PastryConnection conn;
-    private final Reference<NodeHandle> gluon;
+    private final AsyncResult<NodeHandle> gluon;
 
     public static Overlay init(String configPath) {
         if (configPath == null) {
@@ -42,33 +41,30 @@ public class Overlay {
 
         Overlay ov = null;
         String easyPastryConfigPath = configPath + "/easypastry-config.xml";
-        try {
-            for (String gluon : HiggsWS.gluons().getGluonList()) {
-                String[] data = gluon.split(":");
-                try {
-                    modifyConfig(easyPastryConfigPath, data[0], data[1]);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
 
-                try {
-                    ov = new Overlay(easyPastryConfigPath, data[0], data[1]);
-                } catch (IOException e) {
-                    ov = null;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-                if (ov != null) {
-                    break;
-                }
+        for (String gluon : HiggsWS.gluons().getGluonList()) {
+            String[] data = gluon.split(":");
+            try {
+                modifyConfig(easyPastryConfigPath, data[0], data[1]);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
-            if (ov == null) {
-                throw new RuntimeException("Unable to join Qantiqa overlay");
+            try {
+                ov = new Overlay(easyPastryConfigPath, data[0], data[1]);
+            } catch (IOException e) {
+                ov = null;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        } catch (ParseException e) {
-            throw new RuntimeException("Exception while getting gluon list", e);
+
+            if (ov != null) {
+                break;
+            }
+        }
+
+        if (ov == null) {
+            throw new RuntimeException("Unable to join Qantiqa overlay");
         }
 
         return ov;
@@ -161,7 +157,7 @@ public class Overlay {
         }
 
         this.conn = PastryKernel.getPastryConnection();
-        this.gluon = new Reference<NodeHandle>();
+        this.gluon = new AsyncResult<NodeHandle>();
         this.gluon.set(conn.getNode().getLocalNodeHandle());
     }
 
@@ -189,7 +185,7 @@ public class Overlay {
         fos.close();
     }
 
-    public void sendToGluon(Builder builder, final Reference<?> result,
+    public void sendToGluon(Builder builder, final AsyncResult<?> result,
             final Class<? extends Message> messageClass) {
         Message msg = builder.build();
         String subject = msg.getDescriptorForType().getName();

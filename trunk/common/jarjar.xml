@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Helper ant script to bundle protobuf in our common jar and deploy it to our 
+different projects.
+
+Only for development. This depends on http://code.google.com/p/jarjar/ 
+-->
 <project name="KitUtils" default="jar" basedir=".">
 	<target name="jar">
 		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="../../deps/jarjar-1.0.jar" />
