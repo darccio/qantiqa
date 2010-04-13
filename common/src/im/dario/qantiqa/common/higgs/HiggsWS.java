@@ -20,7 +20,7 @@
 package im.dario.qantiqa.common.higgs;
 
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.format.XmlFormat;
+import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class HiggsWS {
      */
     private static <V extends Builder> V getMessageFromXML(HttpResponse rs,
             V builder) {
-        XmlFormat.merge(rs.getStream(), builder);
+        QantiqaFormat.merge(rs.getStream(), builder);
 
         return builder;
     }
