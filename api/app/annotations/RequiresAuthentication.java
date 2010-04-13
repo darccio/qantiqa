@@ -26,6 +26,11 @@ import java.lang.annotation.Target;
 
 import constants.HttpMethod;
 
+/**
+ * Annotates a REST API method requires authentication.
+ * 
+ * @author Dario
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiresAuthentication {

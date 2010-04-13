@@ -46,11 +46,23 @@ import com.google.protobuf.Message.Builder;
 import easypastry.cast.CastHandler;
 import easypastry.core.PastryConnection;
 import easypastry.core.PastryKernel;
-import easypastry.sample.AppCastContent;
 
+/**
+ * Qantiqa overlay
+ * 
+ * Handles all the request done by peers to other peers and gluons.
+ * 
+ * @author Dario
+ */
 public class Overlay {
 
     private final PastryConnection conn;
+
+    private final CastHandler cast;
+
+    /**
+     * Reference to our bootstrap gluon.
+     */
     private final AsyncResult<NodeHandle> gluon;
 
     public static Overlay init(String configPath) {
@@ -61,6 +73,7 @@ public class Overlay {
         Overlay ov = null;
         String easyPastryConfigPath = configPath + "/easypastry-config.xml";
 
+        // Get the current gluon list and try to connect.
         for (String gluon : HiggsWS.gluons().getGluonList()) {
             String[] data = gluon.split(":");
             try {
@@ -89,63 +102,43 @@ public class Overlay {
         return ov;
     }
 
+    /**
+     * Debugging method used by qa-gluon-mock to simulate the gluon
+     * initialization.
+     * 
+     * @param configPath
+     *            easypastry-config.xml path
+     * @return
+     */
     public static Overlay initGluon(String configPath) {
         Overlay overlay = new Overlay(configPath);
 
         final CastHandler cast = PastryKernel.getCastHandler();
-        cast.addDeliverListener(Protocol.authentication.class.getSimpleName(),
-                new QastListener() {
-
-                    @Override
-                    public void hostUpdate(NodeHandle nh, boolean joined) {
-                        if (joined) {
-                            System.out.println(nh + " joined.");
-                        }
-                    }
-
-                    @Override
-                    public void contentDelivery(AppCastContent qc) {
-                        NodeHandle nh = qc.getSource();
-
-                        // Message msg = qc.getMessage(type);
-                        Message msg;
-                        try {
-                            Field field = qc.getClass().getDeclaredField("txt");
-                            field.setAccessible(true);
-
-                            msg = QastContent.getMessage(
-                                    Protocol.authentication.class,
-                                    (String) field.get(qc));
-
-                            Protocol.authentication auth = (authentication) msg;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        // TODO check authentication
-
-                        Protocol.authentication_response.Builder rs = Protocol.authentication_response
-                                .newBuilder();
-                        rs.setResult(AuthResult.VALID);
-
-                        System.out.println("Delivering...");
-                        sendToPeer(nh, rs);
-                        System.out.println("Delivered.");
-                    }
-                });
-
-        System.out.println("All loaded...");
 
         return overlay;
     }
 
+    /**
+     * Private constructor.
+     * 
+     * @param configPath
+     *            easypastry-config.xml path
+     * @param host
+     *            Bootstrap gluon IP
+     * @param sPort
+     *            Bootstrap gluon port
+     * @throws IOException
+     * @throws Exception
+     */
     private Overlay(String configPath, final String host, String sPort)
             throws IOException, Exception {
         this(configPath);
 
+        /*
+         * This is a dumb listener just used to get the NodeHandler of our
+         * bootstrap gluon.
+         */
         final Integer port = Integer.valueOf(sPort);
-        CastHandler cast = PastryKernel.getCastHandler();
-
         cast.addDeliverListener("gluon", new QastListener() {
             @Override
             public void hostUpdate(rice.p2p.commonapi.NodeHandle nh,
@@ -165,10 +158,49 @@ public class Overlay {
             }
         });
 
+        // TODO Create a protocol listeners registry.
+        // Register authentication subject/topic.
+        cast.addDeliverListener(Protocol.authentication.class.getSimpleName(),
+                new QastListener() {
+
+                    @Override
+                    public void hostUpdate(NodeHandle nh, boolean joined) {
+                        if (joined) {
+                            System.out.println(nh + " joined.");
+                        }
+                    }
+
+                    @Override
+                    public void contentDelivery(QastContent qc) {
+                        NodeHandle nh = qc.getSource();
+
+                        try {
+                            Protocol.authentication auth = qc
+                                    .getMessage(Protocol.authentication.class);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        // TODO check authentication
+
+                        Protocol.authentication_response.Builder rs = Protocol.authentication_response
+                                .newBuilder();
+                        rs.setResult(AuthResult.VALID);
+
+                        sendToPeer(nh, rs);
+                    }
+                });
+
         this.conn.bootNode();
     }
 
-    public Overlay(String configPath) {
+    /**
+     * 
+     * @param configPath
+     *            easypastry-config.xml path
+     * @return
+     */
+    private Overlay(String configPath) {
         try {
             PastryKernel.init(configPath);
         } catch (Exception e) {
@@ -176,10 +208,15 @@ public class Overlay {
         }
 
         this.conn = PastryKernel.getPastryConnection();
+        this.cast = PastryKernel.getCastHandler();
+
         this.gluon = new AsyncResult<NodeHandle>();
         this.gluon.set(conn.getNode().getLocalNodeHandle());
     }
 
+    /**
+     * Debugging method to boot qa-gluon-mock node.
+     */
     public void bootGluon() {
         try {
             this.conn.bootNode();
@@ -188,6 +225,19 @@ public class Overlay {
         }
     }
 
+    /**
+     * Auxiliary method used to modify the easypastry-config.xml because there
+     * is no way to do this programmatically, so this is a workaround.
+     * 
+     * @param easyPastryConfigPath
+     * @param host
+     *            Bootstrap gluon IP
+     * @param port
+     *            Bootstrap gluon port
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws InvalidPropertiesFormatException
+     */
     private static void modifyConfig(String easyPastryConfigPath, String host,
             String port) throws FileNotFoundException, IOException,
             InvalidPropertiesFormatException {
@@ -204,26 +254,32 @@ public class Overlay {
         fos.close();
     }
 
+    /**
+     * Auxiliary method to send a direct protobuf message to our bootstrap
+     * gluon.
+     * 
+     * This registers a handle for the corresponding answer from gluon (kind of
+     * client/server interaction over Pastry).
+     * 
+     * TODO Find a way to destroy this registered handle after receiving the
+     * result.
+     * 
+     * @param builder
+     * @param result
+     *            Async result handler
+     * @param messageClass
+     *            Class of the message built by the builder
+     */
     public void sendToGluon(Builder builder, final AsyncResult<?> result,
             final Class<? extends Message> messageClass) {
-        Message msg = builder.build();
-        String subject = msg.getDescriptorForType().getName();
-
-        CastHandler cast = PastryKernel.getCastHandler();
-        cast.sendDirect(this.gluon.get(), new AppCastContent(subject,
-                new String(msg.toByteArray())));
+        String subject = builder.getDescriptorForType().getName();
+        sendToPeer(this.gluon.get(), builder);
 
         cast.addDeliverListener(subject + "_response", new QastListener() {
-
             @Override
-            public void contentDelivery(AppCastContent qc) {
+            public void contentDelivery(QastContent qc) {
                 try {
-                    Field field = qc.getClass().getDeclaredField("txt");
-                    field.setAccessible(true);
-
-                    // Message msg = qc.getMessage(type);
-                    Message msg = QastContent.getMessage(messageClass,
-                            (String) field.get(qc));
+                    Message msg = qc.getMessage(messageClass);
                     Method m = msg.getClass().getMethod("getResult");
 
                     result.set(m.invoke(msg));
@@ -234,12 +290,16 @@ public class Overlay {
         });
     }
 
-    private static void sendToPeer(NodeHandle nh, Builder builder) {
+    /**
+     * Sends a direct protobuf message to a peer/gluon.
+     * 
+     * @param nh
+     * @param builder
+     */
+    private void sendToPeer(NodeHandle nh, Builder builder) {
         Message msg = builder.build();
         String subject = msg.getDescriptorForType().getName();
 
-        CastHandler cast = PastryKernel.getCastHandler();
-        cast.sendDirect(nh, new AppCastContent(subject, new String(msg
-                .toByteArray())));
+        cast.sendDirect(nh, new QastContent(subject, msg));
     }
 }

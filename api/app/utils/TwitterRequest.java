@@ -21,8 +21,6 @@ package utils;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.httpclient.Header;
 import org.w3c.dom.Document;
@@ -32,6 +30,14 @@ import play.libs.WS.WSRequest;
 import play.mvc.Http.Request;
 import constants.HttpMethod;
 
+/**
+ * Proxies to Twitter REST API. Just for building purposes.
+ * 
+ * TODO Drop it.
+ * 
+ * @author Dario
+ */
+@Deprecated
 public class TwitterRequest {
 
     private static final String target = "http://twitter.com";

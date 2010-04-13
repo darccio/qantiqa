@@ -26,6 +26,11 @@ import java.lang.annotation.Target;
 
 import constants.HttpMethod;
 
+/**
+ * Annotates the valid HTTP methods handled by a REST API method.
+ * 
+ * @author Dario
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Methods {

@@ -26,12 +26,17 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
+/**
+ * REST API methods for favorites.
+ * 
+ * @author Dario
+ */
 public class Qfavorites extends QController {
 
     @Methods( { POST })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void create(Long id) {
-        proxy();
+        proxyToTwitter();
     }
 }

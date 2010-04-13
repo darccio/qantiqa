@@ -30,6 +30,11 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
+/**
+ * REST API methods for accounts.
+ * 
+ * @author Dario
+ */
 public class Qaccount extends QController {
 
     @Methods( { GET })
@@ -40,15 +45,10 @@ public class Qaccount extends QController {
 
         String md5Passwd = play.libs.Codec.hexMD5(request.password);
 
-        System.out.println("Authenticating...");
         AuthResult result = svc.authenticate(request.user, md5Passwd).get();
-        System.out.println("Authenticated: " + result.toString());
         switch (result) {
         case VALID:
-            // Protocol.user user = svc.get(request.user);
-            Protocol.hash.Builder user = Protocol.hash.newBuilder();
-            user.setRequest(request.path);
-            user.setError("It works!!!");
+            Protocol.user user = svc.get(request.user);
             renderProtobuf(user);
             break;
         case NOT_VALID:
@@ -64,6 +64,7 @@ public class Qaccount extends QController {
     @Methods( { GET })
     @Formats( { RAW })
     public static void profile_image(String screen_name) {
-        proxy();
+        // TODO Return an static image.
+        proxyToTwitter();
     }
 }

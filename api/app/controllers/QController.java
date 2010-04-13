@@ -26,8 +26,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import network.Overlay;
-import network.requests.ProxyRequest;
-import network.requests.QantiqaRequest;
 
 import org.apache.commons.httpclient.Header;
 
@@ -37,6 +35,7 @@ import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
 import utils.NotAcceptable;
+import utils.TwitterRequest;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -49,46 +48,64 @@ import constants.Format;
 import constants.HttpMethod;
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-/* TODO Pending headers
+/**
+ * Main class for all the REST API controllers.
  * 
- < ETag: "ab28e246529faf2077c973fceef6e7b8"
- < Last-Modified: Thu, 25 Mar 2010 23:24:19 GMT
- < Cache-Control: no-cache, no-store, must-revalidate, pre-check=0, post-check=0
- < Server: hi
- < Content-Type: application/xml; charset=utf-8
- < Cache-Control: no-cache, max-age=1800
+ * @author Dario
  */
 public abstract class QController extends Controller {
 
+    /**
+     * Aspect that checks everything before processing the request by any API
+     * method.
+     */
     @Before
     static void checkRequest() {
         Method m = request.invokedMethod;
 
         checkOverlay();
-        checkFormat(m);
-        checkAuthentication(m);
-        checkMethod(m);
+        checkRequestedFormat(m);
+        checkIfAuthenticationIsRequired(m);
+        checkRequestHttpMethod(m);
     }
 
-    static Overlay getOverlay() {
-        return (Overlay) Play.configuration.get("qantiqa._overlay");
-    }
-
-    private synchronized static void checkOverlay() {
-        if (getProxyTo().toLowerCase().equals("qantiqa")) {
-            Overlay ov = getOverlay();
-            if (ov == null) {
-                ov = Overlay.init(Play.conf.getRealFile().getParent());
-                Play.configuration.put("qantiqa._overlay", ov);
-            }
-        }
-    }
-
+    /**
+     * Clean cache up aspect.
+     */
     @After
     static void cleanup() {
         Cache.delete(getFormatKey());
     }
 
+    /**
+     * Obtains the overlay object from global configuration hash.
+     * 
+     * Yes, this is a dirty hack ;) but it is not serializable so I need to hold
+     * it somewhere and I don't feel sure having it as an static field of this
+     * class (yet).
+     * 
+     * @return
+     */
+    protected static Overlay getOverlay() {
+        return (Overlay) Play.configuration.get("qantiqa._overlay");
+    }
+
+    /**
+     * Checks if the overlay is active. If not, it creates it and store it.
+     */
+    private synchronized static void checkOverlay() {
+        Overlay ov = getOverlay();
+        if (ov == null) {
+            ov = Overlay.init(Play.conf.getRealFile().getParent());
+            Play.configuration.put("qantiqa._overlay", ov);
+        }
+    }
+
+    /**
+     * Builds cache key for format data stored in it.
+     * 
+     * @return
+     */
     private static String getFormatKey() {
         return session.getId() + "-format";
     }
@@ -100,11 +117,18 @@ public abstract class QController extends Controller {
         throw new NotAcceptable();
     }
 
-    private static void checkFormat(Method m) {
+    /**
+     * Check all the valid formats supported by the requested API method.
+     * 
+     * @param m
+     *            Reflected method obtained from Play.
+     */
+    private static void checkRequestedFormat(Method m) {
         Formats ann = m.getAnnotation(Formats.class);
 
         Format format = null;
         if (ann == null) {
+            // Assumes raw format if no one found.
             format = Format.RAW;
         } else {
             try {
@@ -124,7 +148,13 @@ public abstract class QController extends Controller {
         }
     }
 
-    private static void checkMethod(Method m) {
+    /**
+     * Check all the valid HTTP methods supported by the requested API method.
+     * 
+     * @param m
+     *            Reflected method obtained from Play.
+     */
+    private static void checkRequestHttpMethod(Method m) {
         Methods ann = m.getAnnotation(Methods.class);
 
         HttpMethod method = null;
@@ -142,11 +172,22 @@ public abstract class QController extends Controller {
         }
     }
 
-    private static void checkAuthentication(Method m) {
+    /**
+     * Check if authentication is required by the requested API method.
+     * 
+     * It renders the errors in an independent way because it needs to throw an
+     * unauthorized response (Play works with Exceptions as renderers).
+     * 
+     * @param m
+     *            Reflected method obtained from Play.
+     */
+    private static void checkIfAuthenticationIsRequired(Method m) {
         Annotation ann = m.getAnnotation(RequiresAuthentication.class);
 
         if (ann != null) {
             if (request.user == null || request.password == null) {
+                // We don't have all the required authentication info.
+
                 // TODO Send patch to protobuf-java-format to override root tag.
                 hash h = hash.newBuilder().setError(
                         "Could not authenticate you.").setRequest(request.path)
@@ -168,27 +209,14 @@ public abstract class QController extends Controller {
         }
     }
 
-    protected static void proxy() {
+    /**
+     * Proxies to Twitter. Just for building purposes.
+     */
+    @Deprecated
+    protected static void proxyToTwitter() {
         Format format = Cache.get(getFormatKey(), Format.class);
 
-        String proxyTo = getProxyTo();
-
-        ProxyRequest pr;
-        try {
-            Class<?> prClass = Class.forName("network.requests." + proxyTo
-                    + "Request");
-            pr = (ProxyRequest) prClass.newInstance();
-        } catch (Exception e) {
-            // TODO Mimic Twitter error response
-            throw new IllegalStateException(
-                    "qantiqa.proxyTo not properly configured");
-        }
-
-        if (proxyTo.toLowerCase().equals("qantiqa")) {
-            QantiqaRequest qr = (QantiqaRequest) pr;
-            qr.setOverlay(getOverlay());
-        }
-
+        TwitterRequest pr = new TwitterRequest();
         pr.proxy(request);
 
         response.current().status = pr.getStatus();
@@ -219,22 +247,24 @@ public abstract class QController extends Controller {
         }
     }
 
-    private static String getProxyTo() {
-        String proxyTo = Play.configuration.getProperty("qantiqa.proxyTo");
-
-        if (proxyTo == null) {
-            // TODO Mimic Twitter error response
-            throw new IllegalStateException("qantiqa.proxyTo not configured");
-        }
-
-        return proxyTo;
-    }
-
+    /**
+     * Helper method to render our Protobuf builders.
+     * 
+     * It is not the used in Higgs because the different treatment of output
+     * format (requested by the REST API caller).
+     * 
+     * @param builder
+     */
     protected static void renderProtobuf(Builder builder) {
         Message msg = builder.build();
         renderProtobuf(msg);
     }
 
+    /**
+     * Helper method to render Protobuf message according the request format.
+     * 
+     * @param msg
+     */
     protected static void renderProtobuf(Message msg) {
         Format format = Cache.get(getFormatKey(), Format.class);
 
@@ -242,6 +272,8 @@ public abstract class QController extends Controller {
         case ATOM:
         case RSS:
         case XML:
+            // We currently don't support ATOM and RSS but they are XML formats,
+            // so we return XML.
             renderXml(XmlFormat.printToString(msg));
             break;
         case JSON:

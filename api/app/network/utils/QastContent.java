@@ -19,32 +19,52 @@
 
 package network.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import com.google.protobuf.Message;
 
-import easypastry.cast.CastContent;
+import easypastry.sample.AppCastContent;
 
-public class QastContent extends CastContent {
-
-    // private final byte[] msg;
+/**
+ * Improved {@link AppCastContent} class for Protobuf handling.
+ * 
+ * It uses the {@link AppCastContent} fields because extending from CastContent
+ * causes a weird exception with Java serialization.
+ * 
+ * @author Dario
+ */
+public class QastContent extends AppCastContent {
 
     public QastContent(String subject, Message msg) {
-        super(subject);
-
-        // this.msg = msg.toByteArray();
+        super(subject, new String(msg.toByteArray()));
     }
 
-    public static <V extends Message> V getMessage(Class<V> klass, String sMsg) {
+    /**
+     * Parses a message from a String for a given class.
+     * 
+     * @param sMsg
+     *            Message in serialized form
+     * @param klass
+     *            Message class
+     * @return Message deserialized.
+     * @throws NoSuchFieldException
+     * @throws SecurityException
+     */
+    public <V extends Message> V getMessage(Class<V> klass)
+            throws SecurityException, NoSuchFieldException {
         V msg;
 
         if (klass == null) {
             msg = null;
         } else {
+            Field field = this.getClass().getDeclaredField("txt");
+            field.setAccessible(true);
+
             try {
                 Method m = klass.getDeclaredMethod("parseFrom",
                         new Class<?>[] { byte[].class });
-                msg = (V) m.invoke(null, sMsg.getBytes());
+                msg = (V) m.invoke(null, ((String) field.get(this)).getBytes());
             } catch (Exception e) {
                 msg = null;
             }

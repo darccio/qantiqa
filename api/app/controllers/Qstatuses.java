@@ -31,39 +31,44 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
+/**
+ * REST API methods for statuses/tweets/quarks.
+ * 
+ * @author Dario
+ */
 public class Qstatuses extends QController {
 
     @Methods( { GET })
     @Formats( { XML, JSON, ATOM })
     @RequiresAuthentication
     public static void home_timeline(Integer count, Long since_id) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     @RequiresAuthentication
     public static void mentions(Integer count) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     public static void user_timeline(String id, Integer count) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, ATOM })
     @RequiresAuthentication
     public static void retweeted_by_me(Integer count) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON })
     public static void show(Long id) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { POST })
@@ -71,20 +76,20 @@ public class Qstatuses extends QController {
     @RequiresAuthentication
     public static void update(String status, Long in_reply_to_status_id,
             String source) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { POST, DELETE })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void destroy(Long id) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { POST, PUT })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void retweet(Long id, String source) {
-        proxy();
+        proxyToTwitter();
     }
 }
