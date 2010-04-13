@@ -185,7 +185,7 @@ public class Overlay {
 
                         Protocol.authentication_response.Builder rs = Protocol.authentication_response
                                 .newBuilder();
-                        rs.setResult(AuthResult.VALID);
+                        rs.setResult(AuthResult.NOT_VALID);
 
                         sendToPeer(nh, rs);
                     }
