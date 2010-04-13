@@ -28,12 +28,17 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
+/**
+ * REST API methods for direct messages.
+ * 
+ * @author Dario
+ */
 public class Qdirect_messages extends QController {
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     @RequiresAuthentication
     public static void index(Integer count) {
-        proxy();
+        proxyToTwitter();
     }
 }

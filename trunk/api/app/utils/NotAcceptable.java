@@ -25,7 +25,7 @@ import play.mvc.Http.Response;
 import play.mvc.results.Result;
 
 /**
- * 406 Not Acceptable
+ * 406 Not Acceptable HTTP error
  */
 public class NotAcceptable extends Result {
 

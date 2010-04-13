@@ -21,6 +21,11 @@ package controllers;
 
 import play.mvc.Controller;
 
+/**
+ * Main page.
+ * 
+ * @author Dario
+ */
 public class Main extends Controller {
 
     public static void index() {

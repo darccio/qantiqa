@@ -19,17 +19,35 @@
 
 package network.services;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import im.dario.qantiqa.common.utils.AsyncResult;
 import network.Overlay;
 
+/**
+ * User service.
+ * 
+ * Allows to authenticate user against the user database stored in gluons and
+ * query them.
+ * 
+ * @author Dario
+ */
 public class UserService extends Service {
 
     public UserService(Overlay overlay) {
         super(overlay);
     }
 
+    /**
+     * Authenticates an user.
+     * 
+     * @param username
+     * @param password
+     *            Password in MD5
+     * @return If the authentication is successful or not.
+     */
     public AsyncResult<AuthResult> authenticate(String username, String password) {
         Protocol.authentication.Builder auth = Protocol.authentication
                 .newBuilder();
@@ -44,7 +62,13 @@ public class UserService extends Service {
         return result;
     }
 
-    public Protocol.user get(String key) {
-        return null;
+    /**
+     * Queries an user.
+     * 
+     * @param username
+     * @return
+     */
+    public Protocol.user get(String username) {
+        throw new NotImplementedException();
     }
 }

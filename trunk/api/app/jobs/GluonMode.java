@@ -29,33 +29,45 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.utils.Properties;
 
+/**
+ * Job which loads if a peer will work as gluon (supernode).
+ * 
+ * TODO Maybe it can be off-loaded to Overlay initialization.
+ * 
+ * @author Dario
+ */
 @OnApplicationStart
 public class GluonMode extends Job {
 
     public void doJob() throws Exception {
-        String proxyTo = Play.configuration.getProperty("qantiqa.proxyTo");
+        /*
+         * Qantiqa can proxy to Twitter and its own overlay. Anyway, in the
+         * final release we are going to drop Twitter support, just used to test
+         * out the initial REST API.
+         * 
+         * TODO Remove Twitter functionality.
+         */
+        Boolean isGluon = Boolean.valueOf(Play.configuration
+                .getProperty("qantiqa.isGluon"));
 
-        if (proxyTo != null) {
-            if (proxyTo.toLowerCase().equals("qantiqa")) {
-                Boolean isGluon = Boolean.valueOf(Play.configuration
-                        .getProperty("qantiqa.isGluon"));
+        // If this property is true, it will activate the gluon mode.
+        if (isGluon) {
+            String secret = Play.configuration
+            // Secret generated with "play secret"
+                    .getProperty("application.secret");
 
-                if (isGluon) {
-                    String secret = Play.configuration
-                            .getProperty("application.secret");
-
-                    Properties p = new Properties();
-                    p.load(new FileInputStream(Play
+            Properties p = new Properties();
+            p
+                    .load(new FileInputStream(Play
                             .getFile("conf/bunshin.properties")));
 
-                    Protocol.validation rs = HiggsWS.validate(Integer.valueOf(p
-                            .get("BUNSHIN_PORT")), secret);
+            // Contacting with Higgs...
+            Protocol.validation rs = HiggsWS.validate(Integer.valueOf(p
+                    .get("BUNSHIN_PORT")), secret);
 
-                    if (!rs.getIsOk()) {
-                        play.Logger.error(rs.getMessage());
-                        Play.configuration.put("qantiqa.isGluon", "false");
-                    }
-                }
+            if (!rs.getIsOk()) {
+                play.Logger.error(rs.getMessage());
+                Play.configuration.put("qantiqa.isGluon", "false");
             }
         }
     }

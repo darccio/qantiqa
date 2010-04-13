@@ -19,6 +19,11 @@
 
 package constants;
 
+/**
+ * Valid HTTP methods available.
+ * 
+ * @author Dario
+ */
 public enum HttpMethod {
     GET, POST, PUT, DELETE
 }

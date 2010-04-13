@@ -28,20 +28,25 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
+/**
+ * REST API methods for friendships.
+ * 
+ * @author Dario
+ */
 public class Qfriendships extends QController {
 
     @Methods( { POST })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void create(String id) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { POST, DELETE })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void destroy(String id) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { GET })
@@ -49,6 +54,6 @@ public class Qfriendships extends QController {
     @RequiresAuthentication
     public static void show(Long source_id, String source_screen_name,
             Long target_id, String target_screen_name) {
-        proxy();
+        proxyToTwitter();
     }
 }

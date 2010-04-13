@@ -19,6 +19,11 @@
 
 package constants;
 
+/**
+ * Valid formats accepted by Qantiqa/Twitter.
+ * 
+ * @author Dario
+ */
 public enum Format {
     XML, RSS, ATOM, JSON, RAW
 }

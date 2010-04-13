@@ -21,6 +21,11 @@ package network.services;
 
 import network.Overlay;
 
+/**
+ * Qantiqa decentralized service abstraction.
+ * 
+ * @author Dario
+ */
 public abstract class Service {
 
     protected final Overlay overlay;

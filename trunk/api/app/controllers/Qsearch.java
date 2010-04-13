@@ -25,11 +25,16 @@ import static constants.HttpMethod.GET;
 import annotations.Formats;
 import annotations.Methods;
 
+/**
+ * REST API methods for searching.
+ * 
+ * @author Dario
+ */
 public class Qsearch extends QController {
 
     @Methods( { GET })
     @Formats( { ATOM, JSON })
     public static void index(String q) {
-        proxy();
+        proxyToTwitter();
     }
 }

@@ -27,18 +27,23 @@ import annotations.Methods;
 import annotations.RequiresAuthentication;
 import play.mvc.Controller;
 
+/**
+ * REST API methods for users.
+ * 
+ * @author Dario
+ */
 public class Qusers extends QController {
 
     @Methods( { GET })
     @Formats( { XML, JSON })
     public static void show(String id) {
-        proxy();
+        proxyToTwitter();
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void search(String q) {
-        proxy();
+        proxyToTwitter();
     }
 }
