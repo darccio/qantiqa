@@ -58,7 +58,8 @@ public class QastContent extends AppCastContent {
         if (klass == null) {
             msg = null;
         } else {
-            Field field = this.getClass().getDeclaredField("txt");
+            Field field = this.getClass().getSuperclass().getDeclaredField(
+                    "txt");
             field.setAccessible(true);
 
             try {
