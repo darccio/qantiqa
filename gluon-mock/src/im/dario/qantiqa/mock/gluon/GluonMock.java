@@ -35,6 +35,9 @@ import network.Overlay;
  */
 public class GluonMock {
 
+    /**
+     * Initialize the gluon, using the Overlay class.
+     */
     public void start() {
         // Path relative to $workspace/qantiqa/gluon-mock/
         String cfgPath = "../api/conf/easypastry-config.xml";

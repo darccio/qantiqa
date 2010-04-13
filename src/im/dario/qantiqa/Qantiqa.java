@@ -19,14 +19,7 @@
 
 package im.dario.qantiqa;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.URL;
 
 import org.mortbay.jetty.Connector;
@@ -36,6 +29,14 @@ import org.mortbay.jetty.webapp.WebAppContext;
 
 import com.sun.akuma.Daemon;
 
+/**
+ * Server daemon class.
+ * 
+ * Handles all daemon functionality with an embedded Jetty on which deploy
+ * qa-api-node war (generated with "play war api -o bin/war" command).
+ * 
+ * @author Dario
+ */
 public class Qantiqa {
 
     /**
@@ -62,6 +63,7 @@ public class Qantiqa {
         connector.setHost("127.0.0.1");
         httpSrv.addConnector(connector);
 
+        // Deploying qa-api-node war...
         final URL warUrl = this.getClass().getClassLoader().getResource("war");
         httpSrv.addHandler(new WebAppContext(warUrl.toExternalForm(), "/"));
 
@@ -70,30 +72,6 @@ public class Qantiqa {
 
     private void start() throws Exception {
         httpSrv.start();
-
-        try {
-            ServerSocket ss = new ServerSocket(11575);
-
-            for (;;) {
-                Socket s = ss.accept();
-
-                InputStream is = s.getInputStream();
-                OutputStream os = s.getOutputStream();
-
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(is));
-                PrintStream ps = new PrintStream(os);
-
-                String buffer;
-                while ((buffer = br.readLine()) != null) {
-                    ps.println(buffer);
-                }
-
-                s.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String... args) throws Exception {
