@@ -1,6 +1,28 @@
-# Dependencies
+# Qantiqa
+
+## Project structure
+~~~
+qantiqa				main project: contains wrapper for qa-node-api with Jetty and Akuma.
+	\_ api			subproject qa-node-api: contains the REST API for our Twitter/Qantiqa client.
+	\_ artwork		svg designs for our webapps (qa-node-api and qa-higgs).
+	\_ common		subproject qa-common: contains all the common classes used across all the projects.
+	\_ gluon-mock	subproject qa-gluon-mock: auxiliary project to mock a gluon to easy debugging.
+	\_ higgs		subproject qa-higgs: webservice hosted in Google App Engine (http://qa-higgs.appspot.com) to admin the gluons on Qantiqa overlay.
+~~~
+
+## Dependencies
 * [Akuma 1.3 - with dependencies](https://akuma.dev.java.net/)
 * [EasyPastry 0.2](http://ast-deim.urv.cat/easypastry/)
+* [Jetty 6.1.22](http://jetty.codehaus.org/jetty/)
+* [Google Protocol Buffers 2.3.0](http://code.google.com/apis/protocolbuffers/docs/overview.html)
+* [protobuf-java-format 1.1](http://code.google.com/p/protobuf-java-format/)
+* [Java SE Runtime Environment 1.6.0_18](http://java.sun.com/javase/6/)
 
-# References
+## Development dependencies
+* [JarJar 1.0](http://code.google.com/p/jarjar/)
+* [Play Framework 1.0.1](http://www.playframework.org)
+* [Java Development Kit 1.6.0_18](http://java.sun.com/javase/6/)
+
+## References
 * [Unix Daemon Server Programming](http://www.enderunix.org/docs/eng/daemon.php)
+* [FreePastry source code](http://www.freepastry.org/)
