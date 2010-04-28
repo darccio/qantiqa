@@ -3,6 +3,7 @@
 	<classpathentry excluding="views/**" kind="src" path="app"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Joda Time"/>
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/play.jar" sourcepath="/home/dario/software/play-1.0.1/framework"/>
 	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/bunshin.jar"/>
 	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/dom4j.jar"/>

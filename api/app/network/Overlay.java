@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
@@ -46,6 +47,9 @@ import com.google.protobuf.Message.Builder;
 import easypastry.cast.CastHandler;
 import easypastry.core.PastryConnection;
 import easypastry.core.PastryKernel;
+import easypastry.dht.DHTException;
+import easypastry.dht.DHTHandler;
+import easypastry.util.Utilities;
 
 /**
  * Qantiqa overlay
@@ -113,8 +117,6 @@ public class Overlay {
     public static Overlay initGluon(String configPath) {
         Overlay overlay = new Overlay(configPath);
 
-        final CastHandler cast = PastryKernel.getCastHandler();
-
         return overlay;
     }
 
@@ -174,18 +176,22 @@ public class Overlay {
                     public void contentDelivery(QastContent qc) {
                         NodeHandle nh = qc.getSource();
 
+                        Protocol.authentication auth = null;
                         try {
-                            Protocol.authentication auth = qc
-                                    .getMessage(Protocol.authentication.class);
+                            auth = qc.getMessage(Protocol.authentication.class);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        // TODO check authentication
-
                         Protocol.authentication_response.Builder rs = Protocol.authentication_response
                                 .newBuilder();
-                        rs.setResult(AuthResult.NOT_VALID);
+                        if (auth == null) {
+                            rs.setResult(AuthResult.NOT_VALID);
+                        } else {
+                            rs
+                                    .setResult(HiggsWS.authenticate(auth)
+                                            .getResult());
+                        }
 
                         sendToPeer(nh, rs);
                     }
@@ -280,9 +286,7 @@ public class Overlay {
             public void contentDelivery(QastContent qc) {
                 try {
                     Message msg = qc.getMessage(messageClass);
-                    Method m = msg.getClass().getMethod("getResult");
-
-                    result.set(m.invoke(msg));
+                    result.set(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -296,10 +300,22 @@ public class Overlay {
      * @param nh
      * @param builder
      */
-    private void sendToPeer(NodeHandle nh, Builder builder) {
+    public void sendToPeer(NodeHandle nh, Builder builder) {
         Message msg = builder.build();
         String subject = msg.getDescriptorForType().getName();
 
         cast.sendDirect(nh, new QastContent(subject, msg));
+    }
+
+    public void store(Storage storage, Object key, Serializable value)
+            throws DHTException {
+        DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+        dht.put(key.toString(), value);
+    }
+
+    public Serializable retrieve(Storage storage, Object key)
+            throws DHTException {
+        DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+        return dht.get(key.toString());
     }
 }

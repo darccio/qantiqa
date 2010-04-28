@@ -3431,6 +3431,13 @@ public final class Protocol {
     public boolean hasResult() { return hasResult; }
     public im.dario.qantiqa.common.protocol.Protocol.AuthResult getResult() { return result_; }
     
+    // optional int64 user_id = 2;
+    public static final int USER_ID_FIELD_NUMBER = 2;
+    private boolean hasUserId;
+    private long userId_ = 0L;
+    public boolean hasUserId() { return hasUserId; }
+    public long getUserId() { return userId_; }
+    
     private void initFields() {
       result_ = im.dario.qantiqa.common.protocol.Protocol.AuthResult.VALID;
     }
@@ -3445,6 +3452,9 @@ public final class Protocol {
       if (hasResult()) {
         output.writeEnum(1, getResult().getNumber());
       }
+      if (hasUserId()) {
+        output.writeInt64(2, getUserId());
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -3457,6 +3467,10 @@ public final class Protocol {
       if (hasResult()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, getResult().getNumber());
+      }
+      if (hasUserId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, getUserId());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3619,6 +3633,9 @@ public final class Protocol {
         if (other.hasResult()) {
           setResult(other.getResult());
         }
+        if (other.hasUserId()) {
+          setUserId(other.getUserId());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -3654,6 +3671,10 @@ public final class Protocol {
               }
               break;
             }
+            case 16: {
+              setUserId(input.readInt64());
+              break;
+            }
           }
         }
       }
@@ -3677,6 +3698,24 @@ public final class Protocol {
       public Builder clearResult() {
         result.hasResult = false;
         result.result_ = im.dario.qantiqa.common.protocol.Protocol.AuthResult.VALID;
+        return this;
+      }
+      
+      // optional int64 user_id = 2;
+      public boolean hasUserId() {
+        return result.hasUserId();
+      }
+      public long getUserId() {
+        return result.getUserId();
+      }
+      public Builder setUserId(long value) {
+        result.hasUserId = true;
+        result.userId_ = value;
+        return this;
+      }
+      public Builder clearUserId() {
+        result.hasUserId = false;
+        result.userId_ = 0L;
         return this;
       }
       
@@ -3762,10 +3801,10 @@ public final class Protocol {
       " \001(\t\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidat" +
       "ion\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016au" +
       "thentication\022\020\n\010username\030\001 \001(\t\022\020\n\010passwo" +
-      "rd\030\002 \001(\t\"6\n\027authentication_response\022\033\n\006r" +
-      "esult\030\001 \002(\0162\013.AuthResult*&\n\nAuthResult\022\t" +
-      "\n\005VALID\020\000\022\r\n\tNOT_VALID\020\001B\"\n im.dario.qan" +
-      "tiqa.common.protocol"
+      "rd\030\002 \001(\t\"G\n\027authentication_response\022\033\n\006r" +
+      "esult\030\001 \002(\0162\013.AuthResult\022\017\n\007user_id\030\002 \001(" +
+      "\003*&\n\nAuthResult\022\t\n\005VALID\020\000\022\r\n\tNOT_VALID\020" +
+      "\001B\"\n im.dario.qantiqa.common.protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3825,7 +3864,7 @@ public final class Protocol {
           internal_static_authentication_response_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_authentication_response_descriptor,
-              new java.lang.String[] { "Result", },
+              new java.lang.String[] { "Result", "UserId", },
               im.dario.qantiqa.common.protocol.Protocol.authentication_response.class,
               im.dario.qantiqa.common.protocol.Protocol.authentication_response.Builder.class);
           return null;

@@ -12,6 +12,7 @@ Only for development. This depends on http://code.google.com/p/jarjar/
 			<fileset dir="bin/" />
 			<zipfileset src="../../deps/protobuf-java-2.3.0.jar" />
 			<zipfileset src="../../deps/protobuf-format-java-1.1.jar" />
+			<zipfileset src="../../deps/joda-time-1.6/joda-time-1.6.jar" />
 		</jarjar>
 		<copy file="../api/lib/qa-common.jar" todir="../higgs/lib/" />
 	</target>

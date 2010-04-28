@@ -91,4 +91,5 @@ enum AuthResult {
 
 message authentication_response {
 	required AuthResult result = 1;
+	optional int64 user_id = 2;
 }

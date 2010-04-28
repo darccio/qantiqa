@@ -16,5 +16,7 @@ GET		/gluons									Higgs.gluons
 
 POST	/validate								Higgs.validate
 
+POST	/authenticate							Higgs.authenticate
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
