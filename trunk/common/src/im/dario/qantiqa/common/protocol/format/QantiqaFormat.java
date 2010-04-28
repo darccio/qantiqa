@@ -19,7 +19,9 @@
 
 package im.dario.qantiqa.common.protocol.format;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
@@ -34,6 +36,17 @@ public class QantiqaFormat {
 
     public static void merge(InputStream input, Builder builder) {
         XmlFormat.merge(input, builder);
+    }
+
+    public static void merge(String data, Builder builder) {
+        ByteArrayInputStream bais;
+        try {
+            bais = new ByteArrayInputStream(data.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        QantiqaFormat.merge(bais, builder);
     }
 
     public static String printToString(Message message) {

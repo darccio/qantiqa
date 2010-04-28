@@ -74,6 +74,25 @@ public class HiggsWS {
     }
 
     /**
+     * Authenticate given user credentials auth.
+     * 
+     * @param auth
+     * @return Authentication response (AuthResult)
+     */
+    public static Protocol.authentication_response authenticate(
+            Protocol.authentication auth) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("password", auth.getPassword());
+        params.put("user", auth.getUsername());
+
+        HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/authenticate")
+                .params(params).post();
+
+        return getMessageFromXML(rs,
+                Protocol.authentication_response.newBuilder()).build();
+    }
+
+    /**
      * Auxiliary method to retrieve Protobuf messages from an HTTP XML stream.
      * 
      * @param rs

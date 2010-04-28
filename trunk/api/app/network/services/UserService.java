@@ -19,12 +19,25 @@
 
 package network.services;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
+import im.dario.qantiqa.common.protocol.Protocol.user;
+import im.dario.qantiqa.common.protocol.Protocol.user.Builder;
+import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 import im.dario.qantiqa.common.utils.AsyncResult;
+import im.dario.qantiqa.common.utils.TwitterDate;
+
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.Random;
+
 import network.Overlay;
+import network.Storage;
+import easypastry.core.PastryKernel;
+import easypastry.dht.DHTException;
+import easypastry.dht.DHTHandler;
+import easypastry.util.Utilities;
 
 /**
  * User service.
@@ -48,14 +61,15 @@ public class UserService extends Service {
      *            Password in MD5
      * @return If the authentication is successful or not.
      */
-    public AsyncResult<AuthResult> authenticate(String username, String password) {
+    public AsyncResult<Protocol.authentication_response> authenticate(
+            String username, String password) {
         Protocol.authentication.Builder auth = Protocol.authentication
                 .newBuilder();
 
         auth.setUsername(username);
         auth.setPassword(password);
 
-        AsyncResult<AuthResult> result = new AsyncResult<AuthResult>();
+        AsyncResult<Protocol.authentication_response> result = new AsyncResult<Protocol.authentication_response>();
         overlay.sendToGluon(auth, result,
                 Protocol.authentication_response.class);
 
@@ -63,12 +77,87 @@ public class UserService extends Service {
     }
 
     /**
+     * Queries an user and creates it if it doesn't exist, with Id from Higgs.
+     * 
+     * @param username
+     * @param id
+     * @return
+     * @throws DHTException
+     */
+    public user get(String username, long id) throws DHTException {
+        Protocol.user user = get(username);
+
+        if (user == null) {
+            Protocol.user.Builder builder = Protocol.user.newBuilder();
+            initUser(builder, username, id);
+
+            user = builder.build();
+            set(user);
+        }
+
+        return user;
+    }
+
+    /**
      * Queries an user.
      * 
      * @param username
      * @return
+     * @throws DHTException
      */
-    public Protocol.user get(String username) {
-        throw new NotImplementedException();
+    public Protocol.user get(String username) throws DHTException {
+        String data = (String) overlay.retrieve(Storage.users, username);
+
+        Protocol.user user = null;
+        if (data != null) {
+            Protocol.user.Builder builder = Protocol.user.newBuilder();
+
+            QantiqaFormat.merge(data, builder);
+            user = builder.build();
+        }
+
+        return user;
+    }
+
+    /**
+     * Initialize a new user.
+     * 
+     * @param builder
+     * @param username
+     *            Screen name.
+     * @throws DHTException
+     */
+    private void initUser(Builder builder, String username, long id)
+            throws DHTException {
+        builder.setId(id);
+        builder.setScreenName(username);
+        // TODO Improve
+        builder
+                .setProfileImageUrl("http://127.0.0.1:9000/account/profile_image/"
+                        + username + ".png");
+        builder.setProtected(false);
+        builder.setFollowersCount(0);
+        builder.setFriendsCount(0);
+        builder.setCreatedAt(new TwitterDate().toString());
+        builder.setFavouritesCount(0);
+        builder.setNotifications(false);
+        builder.setGeoEnabled(false);
+        builder.setVerified(false);
+        builder.setFollowing(false);
+        builder.setStatusesCount(0);
+    }
+
+    /**
+     * Stores an user.
+     * 
+     * @param username
+     * @return
+     * @throws DHTException
+     */
+    public void set(Protocol.user user) throws DHTException {
+        String data = QantiqaFormat.printToString(user);
+
+        overlay.store(Storage.users, user.getScreenName(), data);
+        overlay.store(Storage.usersById, user.getId(), data);
     }
 }

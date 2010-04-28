@@ -23,6 +23,7 @@ import static constants.Format.JSON;
 import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
+import easypastry.dht.DHTException;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import network.services.UserService;
@@ -43,15 +44,26 @@ public class Qaccount extends QController {
     public static void verify_credentials() {
         UserService svc = new UserService(getOverlay());
 
+        boolean notValid = false;
         String md5Passwd = play.libs.Codec.hexMD5(request.password);
 
-        AuthResult result = svc.authenticate(request.user, md5Passwd).get();
-        switch (result) {
+        Protocol.authentication_response auth = svc.authenticate(request.user,
+                md5Passwd).get();
+        switch (auth.getResult()) {
         case VALID:
-            Protocol.user user = svc.get(request.user);
-            renderProtobuf(user);
+            Protocol.user user;
+            try {
+                user = svc.get(request.user, auth.getUserId());
+                renderProtobuf(user);
+            } catch (DHTException e) {
+                notValid = true;
+            }
             break;
         case NOT_VALID:
+            notValid = true;
+        }
+
+        if (notValid) {
             Protocol.hash.Builder bh = Protocol.hash.newBuilder();
             bh.setRequest(request.path);
             bh.setError("Could not authenticate you.");
