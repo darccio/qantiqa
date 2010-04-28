@@ -92,4 +92,12 @@ enum AuthResult {
 message authentication_response {
 	required AuthResult result = 1;
 	optional int64 user_id = 2;
+	optional string user_ip = 3;
+	optional string session_id = 4;
+}
+
+message session {
+	optional int64 user_id = 1;
+	optional string user_address = 2;
+	optional string id = 3;
 }

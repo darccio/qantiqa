@@ -22,7 +22,6 @@ package network;
 import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
-import im.dario.qantiqa.common.protocol.Protocol.authentication;
 import im.dario.qantiqa.common.utils.AsyncResult;
 
 import java.io.FileInputStream;
@@ -30,8 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
@@ -49,7 +46,6 @@ import easypastry.core.PastryConnection;
 import easypastry.core.PastryKernel;
 import easypastry.dht.DHTException;
 import easypastry.dht.DHTHandler;
-import easypastry.util.Utilities;
 
 /**
  * Qantiqa overlay
@@ -307,12 +303,37 @@ public class Overlay {
         cast.sendDirect(nh, new QastContent(subject, msg));
     }
 
+    public void sendToEverybody(Builder builder) {
+        Message msg = builder.build();
+        String subject = msg.getDescriptorForType().getName();
+
+        cast.sendAnycast(subject, new QastContent(subject, msg));
+    }
+
+    /**
+     * 
+     * @param storage
+     *            DHT where to store the object
+     * @param key
+     *            Identifier of the object in the DHT
+     * @param value
+     * @throws DHTException
+     */
     public void store(Storage storage, Object key, Serializable value)
             throws DHTException {
         DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
         dht.put(key.toString(), value);
     }
 
+    /**
+     * 
+     * @param storage
+     *            DHT where to retrieve the object
+     * @param key
+     *            Identifier of the object in the DHT
+     * @return
+     * @throws DHTException
+     */
     public Serializable retrieve(Storage storage, Object key)
             throws DHTException {
         DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());

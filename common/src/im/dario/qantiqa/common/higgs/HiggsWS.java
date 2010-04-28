@@ -93,6 +93,26 @@ public class HiggsWS {
     }
 
     /**
+     * 
+     * @param user
+     * @param userAddress
+     * @param sessionId
+     * @return
+     */
+    public static Protocol.validation verify_session(Protocol.user user,
+            String userAddress, String sessionId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("user_id", user.getId());
+        params.put("user_address", userAddress);
+        params.put("session_id", sessionId);
+
+        HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/verify_session")
+                .params(params).post();
+
+        return getMessageFromXML(rs, Protocol.validation.newBuilder()).build();
+    }
+
+    /**
      * Auxiliary method to retrieve Protobuf messages from an HTTP XML stream.
      * 
      * @param rs

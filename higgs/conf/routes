@@ -18,5 +18,7 @@ POST	/validate								Higgs.validate
 
 POST	/authenticate							Higgs.authenticate
 
+POST	/verify_session							Higgs.verify_session
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
