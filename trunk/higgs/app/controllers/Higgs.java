@@ -30,6 +30,7 @@ import models.User;
 import play.data.validation.Required;
 import play.modules.gae.GAE;
 import play.mvc.Controller;
+import play.mvc.Scope.Session;
 
 import com.google.protobuf.AbstractMessage.Builder;
 
@@ -138,9 +139,32 @@ public class Higgs extends Controller {
         }
 
         if (isValid) {
+            String session = Session.current().getId();
             response.current.get().status = 200;
+
             builder.setResult(AuthResult.VALID);
             builder.setUserId(u.id);
+            builder.setUserIp(request.remoteAddress);
+            builder.setSessionId(session);
+
+            models.Session.expireByUser(u.id);
+            new models.Session(u.id, request.remoteAddress, session).insert();
+        }
+
+        renderProtobuf(builder);
+    }
+
+    public static void verify_session(@Required Long user_id,
+            @Required String user_address, @Required String session_id) {
+        Protocol.validation.Builder builder = Protocol.validation.newBuilder();
+        builder.setIsOk(false);
+
+        models.Session expected = new models.Session(user_id, user_address,
+                session_id);
+
+        models.Session actual = models.Session.find(session_id);
+        if (expected.equals(actual)) {
+            builder.setIsOk(true);
         }
 
         renderProtobuf(builder);

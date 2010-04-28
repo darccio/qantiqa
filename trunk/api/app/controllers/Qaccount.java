@@ -23,13 +23,13 @@ import static constants.Format.JSON;
 import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
-import easypastry.dht.DHTException;
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
+import network.services.SessionService;
 import network.services.UserService;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
+import easypastry.dht.DHTException;
 
 /**
  * REST API methods for accounts.
@@ -42,18 +42,22 @@ public class Qaccount extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void verify_credentials() {
-        UserService svc = new UserService(getOverlay());
+        UserService usv = new UserService(getOverlay());
 
         boolean notValid = false;
         String md5Passwd = play.libs.Codec.hexMD5(request.password);
 
-        Protocol.authentication_response auth = svc.authenticate(request.user,
+        Protocol.authentication_response auth = usv.authenticate(request.user,
                 md5Passwd).get();
         switch (auth.getResult()) {
         case VALID:
             Protocol.user user;
             try {
-                user = svc.get(request.user, auth.getUserId());
+                user = usv.get(request.user, auth.getUserId());
+
+                // TODO Continuará...
+                new SessionService(getOverlay()).replicate(user, auth
+                        .getUserIp(), auth.getSessionId());
                 renderProtobuf(user);
             } catch (DHTException e) {
                 notValid = true;
