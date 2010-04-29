@@ -58,6 +58,10 @@ public class SessionService extends Service {
 
     public boolean verify(Protocol.user user, String userAddress,
             String sessionId) {
-        return HiggsWS.verify_session(user, userAddress, sessionId).getIsOk();
+        return verify(user.getId(), userAddress, sessionId);
+    }
+
+    public boolean verify(Long userId, String userAddress, String sessionId) {
+        return HiggsWS.verify_session(userId, userAddress, sessionId).getIsOk();
     }
 }

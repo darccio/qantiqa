@@ -94,15 +94,15 @@ public class HiggsWS {
 
     /**
      * 
-     * @param user
+     * @param userId
      * @param userAddress
      * @param sessionId
      * @return
      */
-    public static Protocol.validation verify_session(Protocol.user user,
+    public static Protocol.validation verify_session(Long userId,
             String userAddress, String sessionId) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("user_id", user.getId());
+        params.put("user_id", userId);
         params.put("user_address", userAddress);
         params.put("session_id", sessionId);
 

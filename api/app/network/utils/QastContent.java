@@ -47,26 +47,24 @@ public class QastContent extends AppCastContent {
      *            Message in serialized form
      * @param klass
      *            Message class
-     * @return Message deserialized.
-     * @throws NoSuchFieldException
-     * @throws SecurityException
+     * @return Message deserialized or null if there is an exception.
      */
-    public <V extends Message> V getMessage(Class<V> klass)
-            throws SecurityException, NoSuchFieldException {
+    public <V extends Message> V getMessage(Class<V> klass) {
         V msg;
 
         if (klass == null) {
             msg = null;
         } else {
-            Field field = this.getClass().getSuperclass().getDeclaredField(
-                    "txt");
-            field.setAccessible(true);
-
+            Field field;
             try {
+                field = this.getClass().getSuperclass().getDeclaredField("txt");
+                field.setAccessible(true);
+
                 Method m = klass.getDeclaredMethod("parseFrom",
                         new Class<?>[] { byte[].class });
                 msg = (V) m.invoke(null, ((String) field.get(this)).getBytes());
             } catch (Exception e) {
+                e.printStackTrace();
                 msg = null;
             }
         }
