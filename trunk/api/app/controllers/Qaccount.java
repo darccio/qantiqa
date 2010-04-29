@@ -55,7 +55,6 @@ public class Qaccount extends QController {
             try {
                 user = usv.get(request.user, auth.getUserId());
 
-                // TODO Continuará...
                 new SessionService(getOverlay()).replicate(user, auth
                         .getUserIp(), auth.getSessionId());
                 renderProtobuf(user);

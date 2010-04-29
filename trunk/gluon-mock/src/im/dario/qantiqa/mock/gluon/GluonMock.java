@@ -42,8 +42,9 @@ public class GluonMock {
         // Path relative to $workspace/qantiqa/gluon-mock/
         String cfgPath = "../api/conf/easypastry-config.xml";
 
-        Overlay overlay = Overlay.initGluon(cfgPath);
-        overlay.bootGluon();
+        Overlay overlay = Overlay.init(cfgPath);
+        overlay.initGluon();
+        overlay.boot();
     }
 
     public static void main(String[] args) {

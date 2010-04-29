@@ -98,6 +98,8 @@ public abstract class QController extends Controller {
         if (ov == null) {
             ov = Overlay.init(Play.conf.getRealFile().getParent());
             Play.configuration.put("qantiqa._overlay", ov);
+
+            ov.boot();
         }
     }
 

@@ -30,9 +30,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
+import network.services.SessionService;
 import network.utils.QastContent;
 import network.utils.QastListener;
 import rice.p2p.commonapi.NodeHandle;
@@ -41,7 +43,10 @@ import rice.pastry.socket.SocketNodeHandle;
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 
+import easypastry.cast.CastContent;
+import easypastry.cast.CastFilter;
 import easypastry.cast.CastHandler;
+import easypastry.cast.CastListener;
 import easypastry.core.PastryConnection;
 import easypastry.core.PastryKernel;
 import easypastry.dht.DHTException;
@@ -103,17 +108,29 @@ public class Overlay {
     }
 
     /**
-     * Debugging method used by qa-gluon-mock to simulate the gluon
-     * initialization.
-     * 
-     * @param configPath
-     *            easypastry-config.xml path
-     * @return
+     * Initializes the Gluon functionality.
      */
-    public static Overlay initGluon(String configPath) {
-        Overlay overlay = new Overlay(configPath);
+    public void initGluon() {
+        // Register authentication subject/topic.
+        subscribe(Cast.auth, new QastListener() {
 
-        return overlay;
+            @Override
+            public void contentDelivery(QastContent qc) {
+                NodeHandle nh = qc.getSource();
+
+                Protocol.authentication auth = qc
+                        .getMessage(Protocol.authentication.class);
+                Protocol.authentication_response.Builder rs = Protocol.authentication_response
+                        .newBuilder();
+                if (auth == null) {
+                    rs.setResult(AuthResult.NOT_VALID);
+                } else {
+                    rs.setResult(HiggsWS.authenticate(auth).getResult());
+                }
+
+                sendToPeer(nh, rs);
+            }
+        });
     }
 
     /**
@@ -137,10 +154,9 @@ public class Overlay {
          * bootstrap gluon.
          */
         final Integer port = Integer.valueOf(sPort);
-        cast.addDeliverListener("gluon", new QastListener() {
+        subscribe(Cast.gluon, new QastListener() {
             @Override
-            public void hostUpdate(rice.p2p.commonapi.NodeHandle nh,
-                    boolean joined) {
+            public void hostUpdate(NodeHandle nh, boolean joined) {
                 if (joined) {
                     if (nh instanceof SocketNodeHandle) {
                         SocketNodeHandle snh = (SocketNodeHandle) nh;
@@ -156,44 +172,37 @@ public class Overlay {
             }
         });
 
-        // TODO Create a protocol listeners registry.
-        // Register authentication subject/topic.
-        cast.addDeliverListener(Protocol.authentication.class.getSimpleName(),
-                new QastListener() {
+        /*
+         * Session handling.
+         */
+        final SessionService ssv = new SessionService(this);
+        subscribe(Cast.session, new QastListener() {
 
-                    @Override
-                    public void hostUpdate(NodeHandle nh, boolean joined) {
-                        if (joined) {
-                            System.out.println(nh + " joined.");
-                        }
+            private final HashMap<Long, Protocol.session> sessions = new HashMap<Long, Protocol.session>();
+
+            @Override
+            public boolean contentAnycasting(QastContent qc) {
+                Protocol.session expected = qc
+                        .getMessage(Protocol.session.class);
+                Protocol.session actual = sessions.get(expected.getUserId());
+
+                boolean isValid = false;
+                if (expected != null) {
+                    if (actual == null) {
+                        isValid = ssv.verify(expected.getUserId(), expected
+                                .getUserAddress(), expected.getId());
+                    } else {
+                        isValid = actual.equals(expected);
                     }
+                }
 
-                    @Override
-                    public void contentDelivery(QastContent qc) {
-                        NodeHandle nh = qc.getSource();
+                if (isValid) {
+                    sessions.put(expected.getUserId(), expected);
+                }
 
-                        Protocol.authentication auth = null;
-                        try {
-                            auth = qc.getMessage(Protocol.authentication.class);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        Protocol.authentication_response.Builder rs = Protocol.authentication_response
-                                .newBuilder();
-                        if (auth == null) {
-                            rs.setResult(AuthResult.NOT_VALID);
-                        } else {
-                            rs
-                                    .setResult(HiggsWS.authenticate(auth)
-                                            .getResult());
-                        }
-
-                        sendToPeer(nh, rs);
-                    }
-                });
-
-        this.conn.bootNode();
+                return !isValid; // mustResend
+            }
+        });
     }
 
     /**
@@ -217,9 +226,9 @@ public class Overlay {
     }
 
     /**
-     * Debugging method to boot qa-gluon-mock node.
+     * Starts the node.
      */
-    public void bootGluon() {
+    public void boot() {
         try {
             this.conn.bootNode();
         } catch (Exception e) {
@@ -257,6 +266,20 @@ public class Overlay {
     }
 
     /**
+     * Subscribes to a Cast (anycast, multicast, direct and hopped message).
+     * 
+     * @param cast
+     * @param listener
+     */
+    public void subscribe(Cast cast, CastListener listener) {
+        subscribe(cast.toString(), listener);
+    }
+
+    private void subscribe(String castId, CastListener listener) {
+        this.cast.addDeliverListener(castId, listener);
+    }
+
+    /**
      * Auxiliary method to send a direct protobuf message to our bootstrap
      * gluon.
      * 
@@ -277,15 +300,11 @@ public class Overlay {
         String subject = builder.getDescriptorForType().getName();
         sendToPeer(this.gluon.get(), builder);
 
-        cast.addDeliverListener(subject + "_response", new QastListener() {
+        subscribe(subject + "_response", new QastListener() {
             @Override
             public void contentDelivery(QastContent qc) {
-                try {
-                    Message msg = qc.getMessage(messageClass);
-                    result.set(msg);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Message msg = qc.getMessage(messageClass);
+                result.set(msg);
             }
         });
     }
@@ -303,6 +322,11 @@ public class Overlay {
         cast.sendDirect(nh, new QastContent(subject, msg));
     }
 
+    /**
+     * Anycasts a protobuf message.
+     * 
+     * @param builder
+     */
     public void sendToEverybody(Builder builder) {
         Message msg = builder.build();
         String subject = msg.getDescriptorForType().getName();
