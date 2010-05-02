@@ -24,8 +24,12 @@ import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import im.dario.qantiqa.common.protocol.Protocol;
+
+import java.io.File;
+
 import network.services.SessionService;
 import network.services.UserService;
+import play.Play;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -53,7 +57,7 @@ public class Qaccount extends QController {
         case VALID:
             Protocol.user user;
             try {
-                user = usv.get(request.user, auth.getUserId());
+                user = usv.getAndInit(request.user, auth.getUserId());
 
                 new SessionService(getOverlay()).replicate(user, auth
                         .getUserIp(), auth.getSessionId());
@@ -67,19 +71,19 @@ public class Qaccount extends QController {
         }
 
         if (notValid) {
-            Protocol.hash.Builder bh = Protocol.hash.newBuilder();
-            bh.setRequest(request.path);
-            bh.setError("Could not authenticate you.");
-
-            response.current().status = 401;
-            renderProtobuf(bh);
+            unauthorized();
         }
     }
 
     @Methods( { GET })
-    @Formats( { RAW })
     public static void profile_image(String screen_name) {
-        // TODO Return an static image.
-        proxyToTwitter();
+        // TODO Pending of updating profile (screen_name -> dht)
+        File avatar = new File(Play.applicationPath
+                + "/public/images/avatar.png");
+
+        response.setHeader("Content-Length", String.valueOf(avatar.length()));
+        response.contentType = "image/png";
+
+        renderBinary(avatar);
     }
 }

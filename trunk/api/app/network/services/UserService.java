@@ -84,7 +84,7 @@ public class UserService extends Service {
      * @return
      * @throws DHTException
      */
-    public user get(String username, long id) throws DHTException {
+    public user getAndInit(String username, long id) throws DHTException {
         Protocol.user user = get(username);
 
         if (user == null) {
@@ -103,17 +103,42 @@ public class UserService extends Service {
      * 
      * @param username
      * @return
+     */
+    public Protocol.user get(String username) {
+        return overlay.retrieve(Storage.users, username);
+    }
+
+    /**
+     * Queries an user by numeric id.
+     * 
+     * @param id
+     * @return
+     */
+    public Protocol.user get(Long id) {
+        return overlay.retrieve(Storage.usersById, id);
+    }
+
+    /**
+     * Queries an user based on data content (if it is a valid numeric ID or
+     * something else).
+     * 
+     * @param data
+     * @return
      * @throws DHTException
      */
-    public Protocol.user get(String username) throws DHTException {
-        String data = (String) overlay.retrieve(Storage.users, username);
+    public Protocol.user getFromUnknown(String data) {
+        Long nId;
+        try {
+            nId = Long.valueOf(data);
+        } catch (NumberFormatException e) {
+            nId = null;
+        }
 
         Protocol.user user = null;
-        if (data != null) {
-            Protocol.user.Builder builder = Protocol.user.newBuilder();
-
-            QantiqaFormat.merge(data, builder);
-            user = builder.build();
+        if (nId == null) {
+            user = this.get(data);
+        } else {
+            user = this.get(nId);
         }
 
         return user;
@@ -127,14 +152,13 @@ public class UserService extends Service {
      *            Screen name.
      * @throws DHTException
      */
-    private void initUser(Builder builder, String username, long id)
-            throws DHTException {
+    private void initUser(Builder builder, String username, long id) {
         builder.setId(id);
         builder.setScreenName(username);
         // TODO Improve
         builder
                 .setProfileImageUrl("http://127.0.0.1:9000/account/profile_image/"
-                        + username + ".png");
+                        + username);
         builder.setProtected(false);
         builder.setFollowersCount(0);
         builder.setFriendsCount(0);
@@ -155,9 +179,7 @@ public class UserService extends Service {
      * @throws DHTException
      */
     public void set(Protocol.user user) throws DHTException {
-        String data = QantiqaFormat.printToString(user);
-
-        overlay.store(Storage.users, user.getScreenName(), data);
-        overlay.store(Storage.usersById, user.getId(), data);
+        overlay.store(Storage.users, user.getScreenName(), user);
+        overlay.store(Storage.usersById, user.getId(), user);
     }
 }

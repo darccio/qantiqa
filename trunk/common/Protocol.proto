@@ -68,6 +68,8 @@ message status {
 	optional string geo = 10;
 }
 
+
+
 // Higgs API protocol definitions (qa-higgs)
 message gluons {
 	repeated string gluon = 1; 
