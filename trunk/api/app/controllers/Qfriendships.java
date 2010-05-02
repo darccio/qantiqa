@@ -26,14 +26,15 @@ import static constants.HttpMethod.GET;
 import static constants.HttpMethod.POST;
 import im.dario.qantiqa.common.protocol.Protocol;
 
+import java.util.HashMap;
 import java.util.Vector;
 
+import network.Storage;
 import network.services.RelationshipService;
 import network.services.UserService;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
-import easypastry.dht.DHTException;
 
 /**
  * REST API methods for friendships.
@@ -48,23 +49,32 @@ public class Qfriendships extends QController {
     public static void create(String id) {
         UserService usv = new UserService(getOverlay());
 
-        Protocol.user target = usv.getFromUnknown(id);
-        if (target == null) {
-            notFound();
-        }
+        Protocol.user target = getUser(id, "target");
+        Protocol.user source = getUser(null, request.user, "source");
 
         RelationshipService rsv = new RelationshipService(getOverlay());
         try {
-            Vector<Long> followers = rsv.follow(usv.get(request.user), target);
+            HashMap<Storage, Vector<Long>> data = rsv.follow(source, target);
+            Vector<Long> followers = data.get(Storage.followers);
 
             Protocol.user.Builder builder = Protocol.user.newBuilder(target);
             builder.setFollowersCount(followers.size());
+
+            Protocol.user.Builder definitive = builder.clone();
             target = builder.build();
 
             usv.set(target);
-        } catch (DHTException e) {
-            // TODO Return 500 errors in any not handled exception?
-            e.printStackTrace();
+
+            definitive.setFollowing(true);
+            target = definitive.build();
+
+            Vector<Long> following = data.get(Storage.following);
+            builder = Protocol.user.newBuilder(source);
+            builder.setFriendsCount(following.size());
+
+            usv.set(builder.build());
+        } catch (Exception e) {
+            renderError(e);
         }
 
         renderProtobuf(target);
@@ -74,7 +84,32 @@ public class Qfriendships extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void destroy(String id) {
-        proxyToTwitter();
+        UserService usv = new UserService(getOverlay());
+
+        Protocol.user target = getUser(id, "target");
+        Protocol.user source = getUser(null, request.user, "source");
+
+        RelationshipService rsv = new RelationshipService(getOverlay());
+        try {
+            HashMap<Storage, Vector<Long>> data = rsv.unfollow(source, target);
+            Vector<Long> followers = data.get(Storage.followers);
+
+            Protocol.user.Builder builder = Protocol.user.newBuilder(target);
+            builder.setFollowersCount(followers.size());
+            target = builder.build();
+
+            usv.set(target);
+
+            Vector<Long> following = data.get(Storage.following);
+            builder = Protocol.user.newBuilder(source);
+            builder.setFriendsCount(following.size());
+
+            usv.set(builder.build());
+        } catch (Exception e) {
+            renderError(e);
+        }
+
+        renderProtobuf(target);
     }
 
     @Methods( { GET })
@@ -83,14 +118,52 @@ public class Qfriendships extends QController {
             Long target_id, String target_screen_name) {
         if (request.user != null) {
             source_screen_name = request.user;
-        } else {
-            if (source_id == null && source_screen_name == null) {
-                forbidden("Could not determine source user.");
-            }
         }
 
-        if (target_id == null && target_screen_name == null) {
-            forbidden("Could not determine target user.");
+        Protocol.user source = getUser(source_id, source_screen_name, "source");
+        Protocol.user target = getUser(target_id, target_screen_name, "target");
+
+        Protocol.relationship.Builder builder = Protocol.relationship
+                .newBuilder();
+        builder
+                .setTarget(initRelationshipMember(builder, target, source,
+                        false));
+        builder
+                .setSource(initRelationshipMember(builder, source, target, true));
+
+        renderProtobuf(builder);
+    }
+
+    private static Protocol.relationship_member.Builder initRelationshipMember(
+            Protocol.relationship.Builder relationship, Protocol.user member,
+            Protocol.user other, boolean isSource) {
+        Protocol.relationship_member.Builder builder = Protocol.relationship_member
+                .newBuilder();
+        builder.setScreenName(member.getScreenName());
+        builder.setId(member.getId());
+
+        RelationshipService rsv = new RelationshipService(getOverlay());
+        Vector<Long> followersMember = rsv.followers(member);
+        Vector<Long> followersOther = rsv.followers(other);
+
+        if (isSource) {
+            builder.setNotificationsEnabled(false);
+            // TODO Future spam service
+            builder.setBlocking(false);
         }
+
+        boolean followedBy = false;
+        if (followersMember.contains(other.getId())) {
+            followedBy = true;
+        }
+        builder.setFollowedBy(followedBy);
+
+        boolean following = false;
+        if (followersOther.contains(member.getId())) {
+            following = true;
+        }
+        builder.setFollowing(following);
+
+        return builder;
     }
 }

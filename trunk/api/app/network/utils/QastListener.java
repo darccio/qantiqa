@@ -32,7 +32,7 @@ import easypastry.cast.CastListener;
 public abstract class QastListener implements CastListener {
 
     public final boolean contentAnycasting(CastContent cc) {
-        return contentAnycasting((QastContent) cc);
+        return contentAnycasting(new QastContent(cc));
     }
 
     public boolean contentAnycasting(QastContent qc) {
@@ -40,7 +40,7 @@ public abstract class QastListener implements CastListener {
     }
 
     public final void contentDelivery(CastContent cc) {
-        contentDelivery((QastContent) cc);
+        contentDelivery(new QastContent(cc));
     }
 
     public void contentDelivery(QastContent qc) {

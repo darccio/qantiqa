@@ -1,13 +1,13 @@
 package network;
 
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.session.Builder;
 import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 
 import java.io.Serializable;
 import java.util.Vector;
 
 import com.google.protobuf.Message;
+import com.google.protobuf.Message.Builder;
 
 import easypastry.util.Utilities;
 
@@ -19,6 +19,8 @@ public class Storage<E> {
             "usersById", Protocol.user.newBuilder());
     public static final Storage<Vector<Long>> followers = new Storage(
             "followers");
+    public static final Storage<Vector<Long>> following = new Storage(
+            "following");
 
     private final String id;
     private final String hash;
@@ -35,6 +37,10 @@ public class Storage<E> {
     }
 
     protected Serializable marshal(E value) {
+        if (value == null) {
+            return null;
+        }
+
         if (value instanceof Message) {
             return QantiqaFormat.printToString((Message) value);
         } else {
@@ -51,8 +57,12 @@ public class Storage<E> {
         if (protobufBuilder != null) {
             E msg = null;
             if (value != null) {
+                Builder clean = protobufBuilder.clone();
+
                 QantiqaFormat.merge((String) value, protobufBuilder);
                 msg = (E) protobufBuilder.build();
+
+                protobufBuilder = clean.clone();
             }
 
             return msg;

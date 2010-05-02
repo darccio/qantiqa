@@ -68,7 +68,19 @@ message status {
 	optional string geo = 10;
 }
 
+message relationship {
+	required relationship_member target = 1;
+	required relationship_member source = 2;
+}
 
+message relationship_member {
+	optional bool followed_by = 1;
+	optional bool following = 2;
+	optional bool blocking = 3;
+	optional bool notifications_enabled = 4;
+	optional string screen_name = 5;
+	optional int64 id = 6;
+}
 
 // Higgs API protocol definitions (qa-higgs)
 message gluons {
@@ -89,6 +101,7 @@ message authentication {
 enum AuthResult {
 	VALID = 0;
 	NOT_VALID = 1;
+	ERROR = 2;
 }
 
 message authentication_response {

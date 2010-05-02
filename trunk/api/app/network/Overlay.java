@@ -24,33 +24,36 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import im.dario.qantiqa.common.utils.AsyncResult;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
-import java.util.Properties;
 
 import network.services.SessionService;
 import network.utils.QastContent;
 import network.utils.QastListener;
+import play.Play;
+import play.utils.Properties;
 import rice.p2p.commonapi.NodeHandle;
 import rice.pastry.socket.SocketNodeHandle;
+import utils.QantiqaException;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 
 import easypastry.cast.CastContent;
-import easypastry.cast.CastFilter;
 import easypastry.cast.CastHandler;
 import easypastry.cast.CastListener;
 import easypastry.core.PastryConnection;
 import easypastry.core.PastryKernel;
 import easypastry.dht.DHTException;
 import easypastry.dht.DHTHandler;
+import easypastry.sample.AppCastContent;
 
 /**
  * Qantiqa overlay
@@ -70,47 +73,94 @@ public class Overlay {
      */
     private final AsyncResult<NodeHandle> gluon;
 
-    public static Overlay init(String configPath) {
+    public static Overlay init(String configPath) throws QantiqaException {
         if (configPath == null) {
-            throw new RuntimeException("Invalid config path");
+            throw new QantiqaException("Invalid config path");
+        } else {
+            File configFile = new File(configPath);
+            if (!configFile.exists()) {
+                throw new QantiqaException("Invalid config path");
+            }
         }
 
         Overlay ov = null;
         String easyPastryConfigPath = configPath + "/easypastry-config.xml";
 
-        // Get the current gluon list and try to connect.
-        for (String gluon : HiggsWS.gluons().getGluonList()) {
-            String[] data = gluon.split(":");
+        boolean isGluon = checkIfGluon();
+        if (isGluon) {
             try {
-                modifyConfig(easyPastryConfigPath, data[0], data[1]);
+                ov = new Overlay(easyPastryConfigPath, isGluon);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new QantiqaException(e);
+            }
+        } else {
+            // Get the current gluon list and try to connect.
+            for (String gluon : HiggsWS.gluons().getGluonList()) {
+                String[] data = gluon.split(":");
+                try {
+                    modifyConfig(easyPastryConfigPath, data[0], data[1]);
+                } catch (Exception e) {
+                    throw new QantiqaException(e);
+                }
+
+                try {
+                    ov = new Overlay(easyPastryConfigPath, data[0], data[1],
+                            isGluon);
+                } catch (IOException e) {
+                    ov = null;
+                } catch (Exception e) {
+                    throw new QantiqaException(e);
+                }
+
+                if (ov != null) {
+                    break;
+                }
             }
 
-            try {
-                ov = new Overlay(easyPastryConfigPath, data[0], data[1]);
-            } catch (IOException e) {
-                ov = null;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            if (ov == null) {
+                throw new QantiqaException("Unable to join Qantiqa overlay");
             }
-
-            if (ov != null) {
-                break;
-            }
-        }
-
-        if (ov == null) {
-            throw new RuntimeException("Unable to join Qantiqa overlay");
         }
 
         return ov;
     }
 
+    private static boolean checkIfGluon() {
+        boolean isGluon = Boolean.valueOf(Play.configuration
+                .getProperty("qantiqa.isGluon"));
+
+        if (isGluon) {
+            String secret = Play.configuration
+            // Secret generated with "play secret"
+                    .getProperty("application.secret");
+
+            Properties p = new Properties();
+            try {
+                p.load(new FileInputStream(Play
+                        .getFile("conf/bunshin.properties")));
+
+                // Contacting with Higgs...
+                Protocol.validation rs = HiggsWS.validate(Integer.valueOf(p
+                        .get("BUNSHIN_PORT")), secret);
+
+                if (!rs.getIsOk()) {
+                    play.Logger.error(rs.getMessage());
+
+                    Play.configuration.put("qantiqa.isGluon", "false");
+                    isGluon = false;
+                }
+            } catch (IOException e) {
+                // We are not a gluon...
+                e.printStackTrace();
+            }
+        }
+        return isGluon;
+    }
+
     /**
      * Initializes the Gluon functionality.
      */
-    public void initGluon() {
+    private void initGluon() {
         // Register authentication subject/topic.
         subscribe(Cast.auth, new QastListener() {
 
@@ -120,12 +170,13 @@ public class Overlay {
 
                 Protocol.authentication auth = qc
                         .getMessage(Protocol.authentication.class);
-                Protocol.authentication_response.Builder rs = Protocol.authentication_response
-                        .newBuilder();
+                Protocol.authentication_response.Builder rs;
                 if (auth == null) {
+                    rs = Protocol.authentication_response.newBuilder();
                     rs.setResult(AuthResult.NOT_VALID);
                 } else {
-                    rs.setResult(HiggsWS.authenticate(auth).getResult());
+                    rs = Protocol.authentication_response.newBuilder(HiggsWS
+                            .authenticate(auth));
                 }
 
                 sendToPeer(nh, rs);
@@ -142,35 +193,40 @@ public class Overlay {
      *            Bootstrap gluon IP
      * @param sPort
      *            Bootstrap gluon port
+     * @param isGluon
      * @throws IOException
      * @throws Exception
      */
-    private Overlay(String configPath, final String host, String sPort)
-            throws IOException, Exception {
-        this(configPath);
+    private Overlay(String configPath, final String host, String sPort,
+            boolean isGluon) throws IOException, Exception {
+        this(configPath, isGluon);
 
         /*
          * This is a dumb listener just used to get the NodeHandler of our
          * bootstrap gluon.
          */
-        final Integer port = Integer.valueOf(sPort);
-        subscribe(Cast.gluon, new QastListener() {
-            @Override
-            public void hostUpdate(NodeHandle nh, boolean joined) {
-                if (joined) {
-                    if (nh instanceof SocketNodeHandle) {
-                        SocketNodeHandle snh = (SocketNodeHandle) nh;
-                        InetSocketAddress address = snh.getInetSocketAddress();
-                        if (address.getAddress().getHostAddress().equals(host)) {
-                            if (address.getPort() == port) {
-                                // This is our gluon.
-                                gluon.set(nh);
+        if (!isGluon) {
+            final Integer port = Integer.valueOf(sPort);
+            subscribe(Cast.gluon, new QastListener() {
+                @Override
+                public void hostUpdate(NodeHandle nh, boolean joined) {
+                    if (joined) {
+                        if (nh instanceof SocketNodeHandle) {
+                            SocketNodeHandle snh = (SocketNodeHandle) nh;
+                            InetSocketAddress address = snh
+                                    .getInetSocketAddress();
+                            if (address.getAddress().getHostAddress().equals(
+                                    host)) {
+                                if (address.getPort() == port) {
+                                    // This is our gluon.
+                                    gluon.set(nh);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
         /*
          * Session handling.
@@ -200,7 +256,7 @@ public class Overlay {
                     sessions.put(expected.getUserId(), expected);
                 }
 
-                return !isValid; // mustResend
+                return isValid; // mustResend
             }
         });
     }
@@ -209,11 +265,16 @@ public class Overlay {
      * 
      * @param configPath
      *            easypastry-config.xml path
+     * @param isGluon
      * @return
      */
-    private Overlay(String configPath) {
+    private Overlay(String configPath, boolean isGluon) {
         try {
-            PastryKernel.init(configPath);
+            if (isGluon) {
+                PastryKernel.init("192.168.0.12", configPath);
+            } else {
+                PastryKernel.init(configPath);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -222,17 +283,22 @@ public class Overlay {
         this.cast = PastryKernel.getCastHandler();
 
         this.gluon = new AsyncResult<NodeHandle>();
-        this.gluon.set(conn.getNode().getLocalNodeHandle());
+        if (isGluon) {
+            this.gluon.set(conn.getNode().getLocalNodeHandle());
+            initGluon();
+        }
     }
 
     /**
      * Starts the node.
+     * 
+     * @throws QantiqaException
      */
-    public void boot() {
+    public void boot() throws QantiqaException {
         try {
             this.conn.bootNode();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new QantiqaException(e);
         }
     }
 
@@ -253,7 +319,7 @@ public class Overlay {
             String port) throws FileNotFoundException, IOException,
             InvalidPropertiesFormatException {
         FileInputStream fis = new FileInputStream(easyPastryConfigPath);
-        Properties prop = new Properties();
+        java.util.Properties prop = new java.util.Properties();
         prop.loadFromXML(fis);
         fis.close();
 
@@ -286,8 +352,6 @@ public class Overlay {
      * This registers a handle for the corresponding answer from gluon (kind of
      * client/server interaction over Pastry).
      * 
-     * TODO Find a way to destroy this registered handle after receiving the
-     * result.
      * 
      * @param builder
      * @param result
@@ -316,10 +380,9 @@ public class Overlay {
      * @param builder
      */
     public void sendToPeer(NodeHandle nh, Builder builder) {
-        Message msg = builder.build();
-        String subject = msg.getDescriptorForType().getName();
+        CastContent cc = buildCastContent(builder);
 
-        cast.sendDirect(nh, new QastContent(subject, msg));
+        cast.sendDirect(nh, cc);
     }
 
     /**
@@ -328,10 +391,16 @@ public class Overlay {
      * @param builder
      */
     public void sendToEverybody(Builder builder) {
+        CastContent cc = buildCastContent(builder);
+
+        cast.sendAnycast(cc.getSubject(), cc);
+    }
+
+    private AppCastContent buildCastContent(Builder builder) {
         Message msg = builder.build();
         String subject = msg.getDescriptorForType().getName();
 
-        cast.sendAnycast(subject, new QastContent(subject, msg));
+        return new AppCastContent(subject, new String(msg.toByteArray()));
     }
 
     /**

@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <entry key="port">5009</entry>
-<entry key="host">192.168.0.12</entry>
+<entry key="host">127.0.0.1</entry>
 <entry key="dht_config">bunshin.properties</entry>
 <entry key="dht_impl">Bunshin</entry>
 </properties>
