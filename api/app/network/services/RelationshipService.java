@@ -21,12 +21,13 @@ package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
 
+import java.util.HashMap;
 import java.util.Vector;
-
-import easypastry.dht.DHTException;
 
 import network.Overlay;
 import network.Storage;
+import utils.QantiqaException;
+import easypastry.dht.DHTException;
 
 /**
  * Relationship service.
@@ -41,33 +42,89 @@ public class RelationshipService extends Service {
         super(overlay);
     }
 
-    public Vector<Long> follow(Protocol.user source, Protocol.user target)
-            throws DHTException {
-        Vector<Long> followers = followers(target);
+    public HashMap<Storage, Vector<Long>> follow(Protocol.user source,
+            Protocol.user target) throws DHTException, QantiqaException {
+        HashMap<Storage, Vector<Long>> data = new HashMap<Storage, Vector<Long>>();
+        data.put(Storage.followers, addTo(Storage.followers, source, target));
+        data.put(Storage.following, addTo(Storage.following, target, source));
+
+        return data;
+    }
+
+    public HashMap<Storage, Vector<Long>> unfollow(Protocol.user source,
+            Protocol.user target) throws DHTException, QantiqaException {
+        HashMap<Storage, Vector<Long>> data = new HashMap<Storage, Vector<Long>>();
+        data.put(Storage.followers, removeFrom(Storage.followers, source,
+                target));
+        data.put(Storage.following, removeFrom(Storage.following, target,
+                source));
+
+        return data;
+    }
+
+    private Vector<Long> addTo(Storage storage, Protocol.user source,
+            Protocol.user target) throws DHTException, QantiqaException {
+        Vector<Long> data = getData(storage, target);
+        data.add(source.getId());
+
+        overlay.store(storage, target.getId(), data);
+
+        return data;
+    }
+
+    private Vector<Long> removeFrom(Storage storage, Protocol.user source,
+            Protocol.user target) throws QantiqaException, DHTException {
+        Vector<Long> data = getData(storage, target);
+        data.remove(source.getId());
+
+        overlay.store(storage, target.getId(), data);
+
+        return data;
+    }
+
+    private Vector<Long> getData(Storage storage, Protocol.user target)
+            throws QantiqaException {
+        Vector<Long> data = null;
+        if (storage == Storage.followers) {
+            data = followers(target);
+        }
+
+        if (storage == Storage.following) {
+            data = following(target);
+        }
+
+        if (data == null) {
+            throw new QantiqaException("Invalid storage");
+        }
+
+        return data;
+    }
+
+    public Vector<Long> followers(Protocol.user user) {
+        Vector<Long> followers = overlay.retrieve(Storage.followers, user
+                .getId());
 
         if (followers == null) {
             followers = new Vector();
         }
 
-        followers.add(source.getId());
-        overlay.store(Storage.followers, target.getId(), followers);
-
         return followers;
     }
 
-    public Vector<Long> unfollow(Protocol.user source, Protocol.user target)
-            throws DHTException {
-        Vector<Long> followers = followers(target);
+    public Vector<Long> following(Protocol.user user) {
+        Vector<Long> following = overlay.retrieve(Storage.following, user
+                .getId());
 
-        if (followers != null) {
-            followers.remove(source.getId());
-            overlay.store(Storage.followers, target.getId(), followers);
+        if (following == null) {
+            following = new Vector();
         }
 
-        return followers;
+        return following;
     }
 
-    public Vector<Long> followers(Protocol.user user) {
-        return overlay.retrieve(Storage.followers, user.getId());
+    public boolean isFollower(Protocol.user source, Protocol.user target) {
+        Vector<Long> followers = this.followers(target);
+
+        return followers.contains(source.getId());
     }
 }

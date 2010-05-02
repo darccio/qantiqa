@@ -127,7 +127,7 @@ public class Higgs extends Controller {
 
         User u = User.findByName(username);
         if (u == null) {
-            new User(username, password).insert();
+            (u = new User(username, password)).insert();
             isValid = true;
         } else {
             if (u.password.equals(password)) {

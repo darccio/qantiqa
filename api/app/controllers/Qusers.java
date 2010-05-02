@@ -22,10 +22,11 @@ package controllers;
 import static constants.Format.JSON;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
+import network.services.RelationshipService;
+import im.dario.qantiqa.common.protocol.Protocol;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
-import play.mvc.Controller;
 
 /**
  * REST API methods for users.
@@ -37,7 +38,19 @@ public class Qusers extends QController {
     @Methods( { GET })
     @Formats( { XML, JSON })
     public static void show(String id) {
-        proxyToTwitter();
+        Protocol.user target = getUser(id, "target");
+        Protocol.user source = getUser(request.user, "source");
+
+        RelationshipService rsv = new RelationshipService(getOverlay());
+        boolean isFollower = rsv.isFollower(source, target);
+        if (isFollower) {
+            Protocol.user.Builder builder = Protocol.user.newBuilder(target);
+
+            builder.setFollowing(isFollower);
+            target = builder.build();
+        }
+
+        renderProtobuf(target);
     }
 
     @Methods( { GET })

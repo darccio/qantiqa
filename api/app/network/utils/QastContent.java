@@ -22,22 +22,27 @@ package network.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import rice.p2p.commonapi.NodeHandle;
+
 import com.google.protobuf.Message;
 
+import easypastry.cast.CastContent;
 import easypastry.sample.AppCastContent;
 
 /**
- * Improved {@link AppCastContent} class for Protobuf handling.
+ * {@link AppCastContent} class wrapper for Protobuf handling.
  * 
  * It uses the {@link AppCastContent} fields because extending from CastContent
  * causes a weird exception with Java serialization.
  * 
  * @author Dario
  */
-public class QastContent extends AppCastContent {
+public class QastContent {
 
-    public QastContent(String subject, Message msg) {
-        super(subject, new String(msg.toByteArray()));
+    private final AppCastContent acc;
+
+    public QastContent(CastContent acc) {
+        this.acc = (AppCastContent) acc;
     }
 
     /**
@@ -57,12 +62,12 @@ public class QastContent extends AppCastContent {
         } else {
             Field field;
             try {
-                field = this.getClass().getSuperclass().getDeclaredField("txt");
+                field = acc.getClass().getDeclaredField("txt");
                 field.setAccessible(true);
 
                 Method m = klass.getDeclaredMethod("parseFrom",
                         new Class<?>[] { byte[].class });
-                msg = (V) m.invoke(null, ((String) field.get(this)).getBytes());
+                msg = (V) m.invoke(null, ((String) field.get(acc)).getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
                 msg = null;
@@ -70,5 +75,9 @@ public class QastContent extends AppCastContent {
         }
 
         return msg;
+    }
+
+    public NodeHandle getSource() {
+        return acc.getSource();
     }
 }

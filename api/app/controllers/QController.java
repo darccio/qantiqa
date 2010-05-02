@@ -26,6 +26,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import network.Overlay;
+import network.services.UserService;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +37,7 @@ import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
 import utils.NotAcceptable;
+import utils.QantiqaException;
 import utils.TwitterRequest;
 import annotations.Formats;
 import annotations.Methods;
@@ -64,10 +66,10 @@ public abstract class QController extends Controller {
     static void checkRequest() {
         Method m = request.invokedMethod;
 
-        checkOverlay();
+        checkRequestedFormat(m);
         checkIfAuthenticationIsRequired(m);
         checkRequestHttpMethod(m);
-        checkRequestedFormat(m);
+        checkOverlay();
     }
 
     /**
@@ -97,10 +99,15 @@ public abstract class QController extends Controller {
     private synchronized static void checkOverlay() {
         Overlay ov = getOverlay();
         if (ov == null) {
-            ov = Overlay.init(Play.conf.getRealFile().getParent());
-            Play.configuration.put("qantiqa._overlay", ov);
+            try {
+                ov = Overlay.init(Play.conf.getRealFile().getParent());
 
-            ov.boot();
+                Play.configuration.put("qantiqa._overlay", ov);
+                ov.boot();
+            } catch (QantiqaException e) {
+                renderError(e);
+            }
+
         }
     }
 
@@ -120,6 +127,11 @@ public abstract class QController extends Controller {
 
         response.current().status = status;
         renderProtobuf(bh);
+    }
+
+    protected static void renderError(Exception e) {
+        e.printStackTrace();
+        renderError(500, e.getMessage());
     }
 
     /**
@@ -148,7 +160,11 @@ public abstract class QController extends Controller {
      * Send a 404 Not found response
      */
     protected static void notFound() {
-        renderError(404, "Not found");
+        notFound("Not found");
+    }
+
+    protected static void notFound(String why) {
+        renderError(404, why);
     }
 
     /**
@@ -229,8 +245,6 @@ public abstract class QController extends Controller {
         if (ann != null) {
             if (request.user == null || request.password == null) {
                 // We don't have all the required authentication info.
-
-                // TODO Send patch to protobuf-java-format to override root tag.
                 unauthorized();
             }
         }
@@ -307,5 +321,60 @@ public abstract class QController extends Controller {
             renderText(JsonFormat.printToString(msg));
             break;
         }
+    }
+
+    /**
+     * Common method to get users from unknown data.
+     * 
+     * @param unknown
+     * @param kind
+     * @return
+     */
+    protected static Protocol.user getUser(String unknown, String kind) {
+        Long nId;
+        try {
+            nId = Long.valueOf(unknown);
+        } catch (NumberFormatException e) {
+            nId = null;
+        }
+
+        Protocol.user user = null;
+        if (nId == null) {
+            user = getUser(null, unknown, kind);
+        } else {
+            user = getUser(nId, null, kind);
+        }
+
+        return user;
+    }
+
+    /**
+     * Enhanced version to handle different possible parameters.
+     * 
+     * @param id
+     * @param screen_name
+     * @param kind
+     * @return
+     */
+    protected static Protocol.user getUser(Long id, String screen_name,
+            String kind) {
+        if (id == null && screen_name == null) {
+            forbidden("Could not determine " + kind + " user.");
+        }
+
+        Protocol.user user;
+        UserService usv = new UserService(getOverlay());
+
+        if (screen_name == null) {
+            user = usv.get(id);
+        } else {
+            user = usv.get(screen_name);
+        }
+
+        if (user == null) {
+            notFound("Could not find " + kind + " user");
+        }
+
+        return user;
     }
 }

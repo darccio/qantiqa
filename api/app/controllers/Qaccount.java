@@ -30,6 +30,7 @@ import java.io.File;
 import network.services.SessionService;
 import network.services.UserService;
 import play.Play;
+import utils.QantiqaException;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -63,11 +64,14 @@ public class Qaccount extends QController {
                         .getUserIp(), auth.getSessionId());
                 renderProtobuf(user);
             } catch (DHTException e) {
+                e.printStackTrace();
                 notValid = true;
             }
             break;
         case NOT_VALID:
             notValid = true;
+        case ERROR:
+            renderError(500, "Could not authenticate you.");
         }
 
         if (notValid) {

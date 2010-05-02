@@ -20,6 +20,7 @@
 package im.dario.qantiqa.common.higgs;
 
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 
 import java.util.HashMap;
@@ -83,13 +84,22 @@ public class HiggsWS {
             Protocol.authentication auth) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("password", auth.getPassword());
-        params.put("user", auth.getUsername());
+        params.put("username", auth.getUsername());
 
         HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/authenticate")
                 .params(params).post();
 
-        return getMessageFromXML(rs,
-                Protocol.authentication_response.newBuilder()).build();
+        Protocol.authentication_response response;
+        try {
+            response = getMessageFromXML(rs,
+                    Protocol.authentication_response.newBuilder()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = Protocol.authentication_response.newBuilder().setResult(
+                    AuthResult.ERROR).build();
+        }
+
+        return response;
     }
 
     /**

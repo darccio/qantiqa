@@ -119,32 +119,6 @@ public class UserService extends Service {
     }
 
     /**
-     * Queries an user based on data content (if it is a valid numeric ID or
-     * something else).
-     * 
-     * @param data
-     * @return
-     * @throws DHTException
-     */
-    public Protocol.user getFromUnknown(String data) {
-        Long nId;
-        try {
-            nId = Long.valueOf(data);
-        } catch (NumberFormatException e) {
-            nId = null;
-        }
-
-        Protocol.user user = null;
-        if (nId == null) {
-            user = this.get(data);
-        } else {
-            user = this.get(nId);
-        }
-
-        return user;
-    }
-
-    /**
      * Initialize a new user.
      * 
      * @param builder
