@@ -49,6 +49,7 @@ public class SessionService extends Service {
     public void replicate(Protocol.user user, String userAddress,
             String sessionId) {
         Protocol.session.Builder builder = Protocol.session.newBuilder();
+
         builder.setId(sessionId);
         builder.setUserId(user.getId());
         builder.setUserAddress(userAddress);

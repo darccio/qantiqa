@@ -19,7 +19,7 @@
 
 package controllers;
 
-import im.dario.qantiqa.common.protocol.Protocol.hash;
+import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.format.XmlFormat;
 
 import java.lang.annotation.Annotation;
@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import network.Overlay;
 
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.lang.StringUtils;
 
 import play.Play;
 import play.cache.Cache;
@@ -64,9 +65,9 @@ public abstract class QController extends Controller {
         Method m = request.invokedMethod;
 
         checkOverlay();
-        checkRequestedFormat(m);
         checkIfAuthenticationIsRequired(m);
         checkRequestHttpMethod(m);
+        checkRequestedFormat(m);
     }
 
     /**
@@ -112,8 +113,46 @@ public abstract class QController extends Controller {
         return session.getId() + "-format";
     }
 
+    protected static void renderError(Integer status, String error) {
+        Protocol.hash.Builder bh = Protocol.hash.newBuilder();
+        bh.setRequest(request.path);
+        bh.setError(error);
+
+        response.current().status = status;
+        renderProtobuf(bh);
+    }
+
     /**
-     * Send a 406 Not Acceptable response
+     * Send a 400 Bad request response
+     */
+    protected static void badRequest(String why) {
+        renderError(400, why);
+    }
+
+    /**
+     * Send a 401 Unauthorized response
+     */
+    protected static void unauthorized() {
+        response.setHeader("WWW-Authenticate", "Basic realm=\"Qantiqa API\"");
+        renderError(401, "Could not authenticate you.");
+    }
+
+    /**
+     * Send a 403 Unauthorized response
+     */
+    protected static void forbidden(String why) {
+        renderError(401, why);
+    }
+
+    /**
+     * Send a 404 Not found response
+     */
+    protected static void notFound() {
+        renderError(404, "Not found");
+    }
+
+    /**
+     * Send a 406 Not acceptable response
      */
     protected static void notAcceptable() {
         throw new NotAcceptable();
@@ -164,12 +203,13 @@ public abstract class QController extends Controller {
             try {
                 method = HttpMethod.valueOf(request.method);
             } catch (IllegalArgumentException e) {
-                notAcceptable();
+                badRequest("Unknown HTTP method.");
             }
 
             int pos = Arrays.binarySearch(ann.value(), method);
             if (pos < 0) {
-                notAcceptable();
+                badRequest("This method requires a "
+                        + StringUtils.join(ann.value(), " or ") + ".");
             }
         }
     }
@@ -191,22 +231,7 @@ public abstract class QController extends Controller {
                 // We don't have all the required authentication info.
 
                 // TODO Send patch to protobuf-java-format to override root tag.
-                hash h = hash.newBuilder().setError(
-                        "Could not authenticate you.").setRequest(request.path)
-                        .build();
-
-                String content = null;
-                switch (Cache.get(getFormatKey(), Format.class)) {
-                case XML:
-                    content = XmlFormat.printToString(h);
-                    break;
-                case JSON:
-                    content = JsonFormat.printToString(h);
-                    break;
-                }
-
-                response.print(content);
-                unauthorized("Qantiqa API");
+                unauthorized();
             }
         }
     }

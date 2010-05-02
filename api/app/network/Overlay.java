@@ -343,10 +343,10 @@ public class Overlay {
      * @param value
      * @throws DHTException
      */
-    public void store(Storage storage, Object key, Serializable value)
+    public <E> void store(Storage<E> storage, Object key, E value)
             throws DHTException {
         DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
-        dht.put(key.toString(), value);
+        dht.put(key.toString(), storage.marshal(value));
     }
 
     /**
@@ -358,9 +358,17 @@ public class Overlay {
      * @return
      * @throws DHTException
      */
-    public Serializable retrieve(Storage storage, Object key)
-            throws DHTException {
-        DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
-        return dht.get(key.toString());
+    public <E> E retrieve(Storage<E> storage, Object key) {
+        E value = null;
+
+        try {
+            DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+            value = storage.unmarshal(dht.get(key.toString()));
+        } catch (DHTException e) {
+            e.printStackTrace();
+            value = null;
+        }
+
+        return value;
     }
 }
