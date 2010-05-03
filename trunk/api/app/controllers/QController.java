@@ -20,12 +20,16 @@
 package controllers;
 
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.session;
 import im.dario.qantiqa.common.protocol.format.XmlFormat;
+import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import network.Overlay;
+import network.services.SessionService;
 import network.services.UserService;
 
 import org.apache.commons.httpclient.Header;
@@ -37,7 +41,6 @@ import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
 import utils.NotAcceptable;
-import utils.QantiqaException;
 import utils.TwitterRequest;
 import annotations.Formats;
 import annotations.Methods;
@@ -59,6 +62,11 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 public abstract class QController extends Controller {
 
     /**
+     * Sessions started from this node.
+     */
+    private static HashMap<String, Protocol.session> sessions = new HashMap();
+
+    /**
      * Aspect that checks everything before processing the request by any API
      * method.
      */
@@ -67,9 +75,9 @@ public abstract class QController extends Controller {
         Method m = request.invokedMethod;
 
         checkRequestedFormat(m);
+        checkOverlay();
         checkIfAuthenticationIsRequired(m);
         checkRequestHttpMethod(m);
-        checkOverlay();
     }
 
     /**
@@ -246,6 +254,17 @@ public abstract class QController extends Controller {
             if (request.user == null || request.password == null) {
                 // We don't have all the required authentication info.
                 unauthorized();
+            } else {
+                // Only if we are not verifying our credentials...
+                if (!request.actionMethod.equals("verify_credentials")) {
+                    switch (authenticate().getResult()) {
+                    case NOT_VALID:
+                        unauthorized();
+                        break;
+                    case ERROR:
+                        renderError(500, "Could not authenticate you.");
+                    }
+                }
             }
         }
     }
@@ -376,5 +395,25 @@ public abstract class QController extends Controller {
         }
 
         return user;
+    }
+
+    protected static void startSession(Protocol.authentication_response auth,
+            Protocol.user user) {
+        sessions.put(user.getScreenName(), SessionService.buildSession(user,
+                auth.getUserIp(), auth.getSessionId()));
+    }
+
+    protected static Protocol.session currentSession() {
+        return sessions.get(request.user);
+    }
+
+    protected static Protocol.authentication_response authenticate() {
+        UserService usv = new UserService(getOverlay());
+
+        String md5Passwd = play.libs.Codec.hexMD5(request.password);
+        Protocol.authentication_response auth = usv.authenticate(request.user,
+                md5Passwd).get();
+
+        return auth;
     }
 }

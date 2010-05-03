@@ -24,13 +24,12 @@ import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.io.File;
 
-import network.services.SessionService;
 import network.services.UserService;
 import play.Play;
-import utils.QantiqaException;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -50,18 +49,14 @@ public class Qaccount extends QController {
         UserService usv = new UserService(getOverlay());
 
         boolean notValid = false;
-        String md5Passwd = play.libs.Codec.hexMD5(request.password);
-
-        Protocol.authentication_response auth = usv.authenticate(request.user,
-                md5Passwd).get();
+        Protocol.authentication_response auth = authenticate();
         switch (auth.getResult()) {
         case VALID:
             Protocol.user user;
             try {
                 user = usv.getAndInit(request.user, auth.getUserId());
+                startSession(auth, user);
 
-                new SessionService(getOverlay()).replicate(user, auth
-                        .getUserIp(), auth.getSessionId());
                 renderProtobuf(user);
             } catch (DHTException e) {
                 e.printStackTrace();
@@ -70,6 +65,7 @@ public class Qaccount extends QController {
             break;
         case NOT_VALID:
             notValid = true;
+            break;
         case ERROR:
             renderError(500, "Could not authenticate you.");
         }

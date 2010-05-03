@@ -22,6 +22,7 @@ package im.dario.qantiqa.common.higgs;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
+import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,9 @@ import com.google.protobuf.Message.Builder;
  */
 public class HiggsWS {
 
+    private static HashMap<String, Protocol.authentication> cachedAuths = new HashMap<String, Protocol.authentication>();
+    private static HashMap<String, Protocol.authentication_response> cachedAuthResponses = new HashMap<String, Protocol.authentication_response>();
+
     /**
      * Validates a gluon against our official list.
      * 
@@ -51,27 +55,39 @@ public class HiggsWS {
      * @param secret
      *            Secret used to validate the gluon against the list.
      * @return Validation result message
+     * @throws QantiqaException
      */
-    public static Protocol.validation validate(Integer port, String secret) {
+    public static Protocol.validation validate(Integer port, String secret)
+            throws QantiqaException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("secret", play.libs.Codec.hexMD5(secret));
         params.put("port", port);
 
-        HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/validate").params(
-                params).post();
+        try {
+            HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/validate")
+                    .params(params).post();
 
-        return getMessageFromXML(rs, Protocol.validation.newBuilder()).build();
+            return getMessageFromXML(rs, Protocol.validation.newBuilder())
+                    .build();
+        } catch (Exception e) {
+            throw new QantiqaException(e);
+        }
     }
 
     /**
      * Get the official gluon (supernode) list from Higgs.
      * 
      * @return Gluon list message
+     * @throws QantiqaException
      */
-    public static Protocol.gluons gluons() {
-        HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/gluons").get();
+    public static Protocol.gluons gluons() throws QantiqaException {
+        try {
+            HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/gluons").get();
 
-        return getMessageFromXML(rs, Protocol.gluons.newBuilder()).build();
+            return getMessageFromXML(rs, Protocol.gluons.newBuilder()).build();
+        } catch (Exception e) {
+            throw new QantiqaException(e);
+        }
     }
 
     /**
@@ -79,24 +95,36 @@ public class HiggsWS {
      * 
      * @param auth
      * @return Authentication response (AuthResult)
+     * @throws QantiqaException
      */
     public static Protocol.authentication_response authenticate(
             Protocol.authentication auth) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("password", auth.getPassword());
-        params.put("username", auth.getUsername());
-
-        HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/authenticate")
-                .params(params).post();
-
         Protocol.authentication_response response;
-        try {
-            response = getMessageFromXML(rs,
-                    Protocol.authentication_response.newBuilder()).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            response = Protocol.authentication_response.newBuilder().setResult(
-                    AuthResult.ERROR).build();
+        Protocol.authentication cached = cachedAuths.get(auth.getUsername());
+
+        if (auth.equals(cached)) {
+            response = cachedAuthResponses.get(auth.getUsername());
+        } else {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("password", auth.getPassword());
+            params.put("username", auth.getUsername());
+
+            try {
+                HttpResponse rs = play.libs.WS.url(
+                        getHiggsURL() + "/authenticate").params(params).post();
+
+                response = getMessageFromXML(rs,
+                        Protocol.authentication_response.newBuilder()).build();
+            } catch (Exception e) {
+                e.printStackTrace();
+                response = Protocol.authentication_response.newBuilder()
+                        .setResult(AuthResult.ERROR).build();
+            }
+
+            if (response.getResult().equals(AuthResult.VALID)) {
+                cachedAuths.put(auth.getUsername(), auth);
+                cachedAuthResponses.put(auth.getUsername(), response);
+            }
         }
 
         return response;
@@ -108,18 +136,24 @@ public class HiggsWS {
      * @param userAddress
      * @param sessionId
      * @return
+     * @throws QantiqaException
      */
     public static Protocol.validation verify_session(Long userId,
-            String userAddress, String sessionId) {
+            String userAddress, String sessionId) throws QantiqaException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("user_id", userId);
         params.put("user_address", userAddress);
         params.put("session_id", sessionId);
 
-        HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/verify_session")
-                .params(params).post();
+        try {
+            HttpResponse rs = play.libs.WS.url(
+                    getHiggsURL() + "/verify_session").params(params).post();
 
-        return getMessageFromXML(rs, Protocol.validation.newBuilder()).build();
+            return getMessageFromXML(rs, Protocol.validation.newBuilder())
+                    .build();
+        } catch (Exception e) {
+            throw new QantiqaException(e);
+        }
     }
 
     /**

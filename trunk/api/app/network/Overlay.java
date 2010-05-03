@@ -23,16 +23,19 @@ import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
 import im.dario.qantiqa.common.utils.AsyncResult;
+import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
+import java.util.Vector;
 
 import network.services.SessionService;
 import network.utils.QastContent;
@@ -41,7 +44,6 @@ import play.Play;
 import play.utils.Properties;
 import rice.p2p.commonapi.NodeHandle;
 import rice.pastry.socket.SocketNodeHandle;
-import utils.QantiqaException;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
@@ -125,7 +127,7 @@ public class Overlay {
         return ov;
     }
 
-    private static boolean checkIfGluon() {
+    private static boolean checkIfGluon() throws QantiqaException {
         boolean isGluon = Boolean.valueOf(Play.configuration
                 .getProperty("qantiqa.isGluon"));
 
@@ -175,8 +177,7 @@ public class Overlay {
                     rs = Protocol.authentication_response.newBuilder();
                     rs.setResult(AuthResult.NOT_VALID);
                 } else {
-                    rs = Protocol.authentication_response.newBuilder(HiggsWS
-                            .authenticate(auth));
+                    rs = HiggsWS.authenticate(auth).toBuilder();
                 }
 
                 sendToPeer(nh, rs);
@@ -227,38 +228,6 @@ public class Overlay {
                 }
             });
         }
-
-        /*
-         * Session handling.
-         */
-        final SessionService ssv = new SessionService(this);
-        subscribe(Cast.session, new QastListener() {
-
-            private final HashMap<Long, Protocol.session> sessions = new HashMap<Long, Protocol.session>();
-
-            @Override
-            public boolean contentAnycasting(QastContent qc) {
-                Protocol.session expected = qc
-                        .getMessage(Protocol.session.class);
-                Protocol.session actual = sessions.get(expected.getUserId());
-
-                boolean isValid = false;
-                if (expected != null) {
-                    if (actual == null) {
-                        isValid = ssv.verify(expected.getUserId(), expected
-                                .getUserAddress(), expected.getId());
-                    } else {
-                        isValid = actual.equals(expected);
-                    }
-                }
-
-                if (isValid) {
-                    sessions.put(expected.getUserId(), expected);
-                }
-
-                return isValid; // mustResend
-            }
-        });
     }
 
     /**
@@ -338,7 +307,12 @@ public class Overlay {
      * @param listener
      */
     public void subscribe(Cast cast, CastListener listener) {
-        subscribe(cast.toString(), listener);
+        String castId = cast.toString();
+        if (cast.isAnycast()) {
+            this.cast.subscribe(castId);
+        }
+
+        subscribe(castId, listener);
     }
 
     private void subscribe(String castId, CastListener listener) {
@@ -393,7 +367,7 @@ public class Overlay {
     public void sendToEverybody(Builder builder) {
         CastContent cc = buildCastContent(builder);
 
-        cast.sendAnycast(cc.getSubject(), cc);
+        cast.sendMulticast(cc.getSubject(), cc);
     }
 
     private AppCastContent buildCastContent(Builder builder) {

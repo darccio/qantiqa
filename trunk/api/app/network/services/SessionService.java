@@ -19,50 +19,69 @@
 
 package network.services;
 
+import java.util.HashMap;
+
 import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.authentication_response;
 import im.dario.qantiqa.common.protocol.Protocol.user;
+import im.dario.qantiqa.common.utils.QantiqaException;
 import network.Overlay;
 
 /**
  * Session service.
  * 
- * Allows to handle user's session around the overlay.
+ * Allows to handle received sessions on the overlay.
  * 
  * @author Dario
  */
 public class SessionService extends Service {
 
+    private final HashMap<Long, Protocol.session> sessions = new HashMap<Long, Protocol.session>();
+
     public SessionService(Overlay overlay) {
         super(overlay);
     }
 
+    public boolean verify(Protocol.session expected) {
+        Long userId = expected.getUserId();
+        String userAddress = expected.getUserAddress();
+        String sessionId = expected.getId();
+
+        Protocol.session session = sessions.get(userId);
+        boolean isValid = session.equals(expected);
+
+        if (!isValid) {
+            try {
+                // TODO validate on bootstrap gluon
+                isValid = HiggsWS
+                        .verify_session(userId, userAddress, sessionId)
+                        .getIsOk();
+            } catch (QantiqaException e) {
+                e.printStackTrace();
+                isValid = false;
+            }
+        }
+
+        if (isValid) {
+            sessions.put(expected.getUserId(), expected);
+        }
+
+        return isValid;
+    }
+
     /**
-     * Replicates (anycast) the session of the current user.
+     * Helper method to reduce clutter from repeating code for building
+     * sessions.
      * 
      * @param user
      * @param userAddress
-     *            (captured on Higgs)
      * @param sessionId
+     * @return
      */
-    public void replicate(Protocol.user user, String userAddress,
-            String sessionId) {
-        Protocol.session.Builder builder = Protocol.session.newBuilder();
-
-        builder.setId(sessionId);
-        builder.setUserId(user.getId());
-        builder.setUserAddress(userAddress);
-
-        overlay.sendToEverybody(builder);
-    }
-
-    public boolean verify(Protocol.user user, String userAddress,
-            String sessionId) {
-        return verify(user.getId(), userAddress, sessionId);
-    }
-
-    public boolean verify(Long userId, String userAddress, String sessionId) {
-        return HiggsWS.verify_session(userId, userAddress, sessionId).getIsOk();
+    public static Protocol.session buildSession(Protocol.user user,
+            String userAddress, String sessionId) {
+        return Protocol.session.newBuilder().setId(sessionId).setUserId(
+                user.getId()).setUserAddress(userAddress).build();
     }
 }

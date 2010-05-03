@@ -57,7 +57,7 @@ public class Qfriendships extends QController {
             HashMap<Storage, Vector<Long>> data = rsv.follow(source, target);
             Vector<Long> followers = data.get(Storage.followers);
 
-            Protocol.user.Builder builder = Protocol.user.newBuilder(target);
+            Protocol.user.Builder builder = target.toBuilder();
             builder.setFollowersCount(followers.size());
 
             Protocol.user.Builder definitive = builder.clone();
@@ -69,7 +69,7 @@ public class Qfriendships extends QController {
             target = definitive.build();
 
             Vector<Long> following = data.get(Storage.following);
-            builder = Protocol.user.newBuilder(source);
+            builder = source.toBuilder();
             builder.setFriendsCount(following.size());
 
             usv.set(builder.build());
@@ -94,14 +94,14 @@ public class Qfriendships extends QController {
             HashMap<Storage, Vector<Long>> data = rsv.unfollow(source, target);
             Vector<Long> followers = data.get(Storage.followers);
 
-            Protocol.user.Builder builder = Protocol.user.newBuilder(target);
+            Protocol.user.Builder builder = target.toBuilder();
             builder.setFollowersCount(followers.size());
             target = builder.build();
 
             usv.set(target);
 
             Vector<Long> following = data.get(Storage.following);
-            builder = Protocol.user.newBuilder(source);
+            builder = source.toBuilder();
             builder.setFriendsCount(following.size());
 
             usv.set(builder.build());
