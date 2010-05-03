@@ -1,4 +1,4 @@
-package utils;
+package im.dario.qantiqa.common.utils;
 
 public class QantiqaException extends Exception {
 

@@ -20,13 +20,13 @@
 package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.util.HashMap;
 import java.util.Vector;
 
 import network.Overlay;
 import network.Storage;
-import utils.QantiqaException;
 import easypastry.dht.DHTException;
 
 /**

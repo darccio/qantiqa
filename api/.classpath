@@ -5,7 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Joda Time"/>
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/play.jar" sourcepath="/home/dario/software/play-1.0.1/framework"/>
-	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/bunshin.jar"/>
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/bunshin.jar" sourcepath="/home/dario/uoc/8e/tfc/forge/deps/pastry-2.1/src"/>
 	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/dom4j.jar"/>
 	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/easypastry.jar" sourcepath="/home/dario/uoc/8e/tfc/forge/deps/easypastry/src"/>
 	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/api/lib/jdom.jar"/>
