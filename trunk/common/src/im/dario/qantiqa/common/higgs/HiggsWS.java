@@ -63,15 +63,8 @@ public class HiggsWS {
         params.put("secret", play.libs.Codec.hexMD5(secret));
         params.put("port", port);
 
-        try {
-            HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/validate")
-                    .params(params).post();
-
-            return getMessageFromXML(rs, Protocol.validation.newBuilder())
-                    .build();
-        } catch (Exception e) {
-            throw new QantiqaException(e);
-        }
+        return get("validate", params, Protocol.validation.newBuilder())
+                .build();
     }
 
     /**
@@ -81,13 +74,7 @@ public class HiggsWS {
      * @throws QantiqaException
      */
     public static Protocol.gluons gluons() throws QantiqaException {
-        try {
-            HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/gluons").get();
-
-            return getMessageFromXML(rs, Protocol.gluons.newBuilder()).build();
-        } catch (Exception e) {
-            throw new QantiqaException(e);
-        }
+        return get("gluons", null, Protocol.gluons.newBuilder()).build();
     }
 
     /**
@@ -110,12 +97,9 @@ public class HiggsWS {
             params.put("username", auth.getUsername());
 
             try {
-                HttpResponse rs = play.libs.WS.url(
-                        getHiggsURL() + "/authenticate").params(params).post();
-
-                response = getMessageFromXML(rs,
+                response = get("authenticate", params,
                         Protocol.authentication_response.newBuilder()).build();
-            } catch (Exception e) {
+            } catch (QantiqaException e) {
                 e.printStackTrace();
                 response = Protocol.authentication_response.newBuilder()
                         .setResult(AuthResult.ERROR).build();
@@ -145,31 +129,30 @@ public class HiggsWS {
         params.put("user_address", userAddress);
         params.put("session_id", sessionId);
 
-        try {
-            HttpResponse rs = play.libs.WS.url(
-                    getHiggsURL() + "/verify_session").params(params).post();
-
-            return getMessageFromXML(rs, Protocol.validation.newBuilder())
-                    .build();
-        } catch (Exception e) {
-            throw new QantiqaException(e);
-        }
+        return get("verify_session", params, Protocol.validation.newBuilder())
+                .build();
     }
 
     /**
-     * Auxiliary method to retrieve Protobuf messages from an HTTP XML stream.
+     * Auxiliary method to retrieve data in Protobuf format from Higgs.
      * 
-     * @param rs
-     *            HTTP request response
+     * @param action
+     * @param params
      * @param builder
-     *            Protobuf message builder
-     * @return Builder after merging with XML stream.
+     * @return
+     * @throws QantiqaException
      */
-    private static <V extends Builder> V getMessageFromXML(HttpResponse rs,
-            V builder) {
-        QantiqaFormat.merge(rs.getStream(), builder);
+    private static <V extends Builder> V get(String action,
+            Map<String, Object> params, V builder) throws QantiqaException {
+        try {
+            HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/" + action)
+                    .params(params).get();
+            QantiqaFormat.merge(rs.getStream(), builder);
 
-        return builder;
+            return builder;
+        } catch (Exception e) {
+            throw new QantiqaException(e);
+        }
     }
 
     /**

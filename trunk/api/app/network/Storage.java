@@ -4,6 +4,8 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import com.google.protobuf.Message;
@@ -12,11 +14,45 @@ import com.google.protobuf.Message.Builder;
 import easypastry.util.Utilities;
 
 public class Storage<E> {
+    private static abstract class StorageCallback {
+        private HashSet<String> stems = new HashSet<String>();
+
+        public abstract HashSet<String> stem(Object o);
+
+        protected void add(String value) {
+            stems.add(value);
+            StringTokenizer tk = new StringTokenizer(value, " _.,;");
+            while (tk.hasMoreElements()) {
+                String next = tk.nextToken().trim();
+                if (!next.equals("")) {
+                    stems.add(tk.nextToken());
+                }
+            }
+        }
+
+        public HashSet<String> get() {
+            return stems;
+        }
+    }
 
     public static final Storage<Protocol.user> users = new Storage("users",
             Protocol.user.newBuilder());
     public static final Storage<Protocol.user> usersById = new Storage(
-            "usersById", Protocol.user.newBuilder());
+            "usersById", Protocol.user.newBuilder()).indexed(Integer.class,
+            new StorageCallback() {
+
+                @Override
+                public HashSet<String> stem(Object o) {
+                    Protocol.user user = (Protocol.user) o;
+
+                    add(user.getScreenName());
+                    add(user.getName());
+                    add(user.getLocation());
+                    add(user.getDescription());
+
+                    return get();
+                }
+            });
     public static final Storage<Vector<Long>> followers = new Storage(
             "followers");
     public static final Storage<Vector<Long>> following = new Storage(
@@ -24,7 +60,9 @@ public class Storage<E> {
 
     private final String id;
     private final String hash;
-    private Message.Builder protobufBuilder;
+    private Message.Builder protobufBuilder = null;
+    private Object index;
+    private StorageCallback callback;
 
     private Storage(String id) {
         this.id = id;
@@ -69,6 +107,31 @@ public class Storage<E> {
         } else {
             return (E) value;
         }
+    }
+
+    private <P> Storage<E> indexed(Class<P> klass, StorageCallback callback) {
+        Storage<HashSet<P>> ix = new Storage<HashSet<P>>(id + "_ix");
+        ix.setCallback(callback);
+
+        this.index = ix;
+
+        return this;
+    }
+
+    public Object getIndex() {
+        return this.index;
+    }
+
+    public void setCallback(StorageCallback callback) {
+        this.callback = callback;
+    }
+
+    public HashSet<String> stem(Object o) {
+        if (this.callback == null) {
+            return new HashSet<String>();
+        }
+
+        return this.callback.stem(o);
     }
 
     public String getHash() {

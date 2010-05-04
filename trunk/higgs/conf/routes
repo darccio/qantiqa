@@ -14,11 +14,11 @@ GET     /public/                                staticDir:public
 
 GET		/gluons									Higgs.gluons
 
-POST	/validate								Higgs.validate
+GET		/validate								Higgs.validate
 
-POST	/authenticate							Higgs.authenticate
+GET		/authenticate							Higgs.authenticate
 
-POST	/verify_session							Higgs.verify_session
+GET		/verify_session							Higgs.verify_session
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
