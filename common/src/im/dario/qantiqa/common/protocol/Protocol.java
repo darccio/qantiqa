@@ -1771,6 +1771,337 @@ public final class Protocol {
     // @@protoc_insertion_point(class_scope:user)
   }
   
+  public static final class users extends
+      com.google.protobuf.GeneratedMessage {
+    // Use users.newBuilder() to construct.
+    private users() {
+      initFields();
+    }
+    private users(boolean noInit) {}
+    
+    private static final users defaultInstance;
+    public static users getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public users getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_users_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_users_fieldAccessorTable;
+    }
+    
+    // repeated .user user = 1;
+    public static final int USER_FIELD_NUMBER = 1;
+    private java.util.List<im.dario.qantiqa.common.protocol.Protocol.user> user_ =
+      java.util.Collections.emptyList();
+    public java.util.List<im.dario.qantiqa.common.protocol.Protocol.user> getUserList() {
+      return user_;
+    }
+    public int getUserCount() { return user_.size(); }
+    public im.dario.qantiqa.common.protocol.Protocol.user getUser(int index) {
+      return user_.get(index);
+    }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (im.dario.qantiqa.common.protocol.Protocol.user element : getUserList()) {
+        output.writeMessage(1, element);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      for (im.dario.qantiqa.common.protocol.Protocol.user element : getUserList()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, element);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.users parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(im.dario.qantiqa.common.protocol.Protocol.users prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private im.dario.qantiqa.common.protocol.Protocol.users result;
+      
+      // Construct using im.dario.qantiqa.common.protocol.Protocol.users.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new im.dario.qantiqa.common.protocol.Protocol.users();
+        return builder;
+      }
+      
+      protected im.dario.qantiqa.common.protocol.Protocol.users internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new im.dario.qantiqa.common.protocol.Protocol.users();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.users.getDescriptor();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.users getDefaultInstanceForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.users.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.users build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private im.dario.qantiqa.common.protocol.Protocol.users buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.users buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        if (result.user_ != java.util.Collections.EMPTY_LIST) {
+          result.user_ =
+            java.util.Collections.unmodifiableList(result.user_);
+        }
+        im.dario.qantiqa.common.protocol.Protocol.users returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof im.dario.qantiqa.common.protocol.Protocol.users) {
+          return mergeFrom((im.dario.qantiqa.common.protocol.Protocol.users)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(im.dario.qantiqa.common.protocol.Protocol.users other) {
+        if (other == im.dario.qantiqa.common.protocol.Protocol.users.getDefaultInstance()) return this;
+        if (!other.user_.isEmpty()) {
+          if (result.user_.isEmpty()) {
+            result.user_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.user>();
+          }
+          result.user_.addAll(other.user_);
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              im.dario.qantiqa.common.protocol.Protocol.user.Builder subBuilder = im.dario.qantiqa.common.protocol.Protocol.user.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addUser(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // repeated .user user = 1;
+      public java.util.List<im.dario.qantiqa.common.protocol.Protocol.user> getUserList() {
+        return java.util.Collections.unmodifiableList(result.user_);
+      }
+      public int getUserCount() {
+        return result.getUserCount();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.user getUser(int index) {
+        return result.getUser(index);
+      }
+      public Builder setUser(int index, im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.user_.set(index, value);
+        return this;
+      }
+      public Builder setUser(int index, im.dario.qantiqa.common.protocol.Protocol.user.Builder builderForValue) {
+        result.user_.set(index, builderForValue.build());
+        return this;
+      }
+      public Builder addUser(im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        if (result.user_.isEmpty()) {
+          result.user_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.user>();
+        }
+        result.user_.add(value);
+        return this;
+      }
+      public Builder addUser(im.dario.qantiqa.common.protocol.Protocol.user.Builder builderForValue) {
+        if (result.user_.isEmpty()) {
+          result.user_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.user>();
+        }
+        result.user_.add(builderForValue.build());
+        return this;
+      }
+      public Builder addAllUser(
+          java.lang.Iterable<? extends im.dario.qantiqa.common.protocol.Protocol.user> values) {
+        if (result.user_.isEmpty()) {
+          result.user_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.user>();
+        }
+        super.addAll(values, result.user_);
+        return this;
+      }
+      public Builder clearUser() {
+        result.user_ = java.util.Collections.emptyList();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:users)
+    }
+    
+    static {
+      defaultInstance = new users(true);
+      im.dario.qantiqa.common.protocol.Protocol.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:users)
+  }
+  
   public static final class status extends
       com.google.protobuf.GeneratedMessage {
     // Use status.newBuilder() to construct.
@@ -5053,6 +5384,11 @@ public final class Protocol {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_user_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_users_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_users_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_status_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -5118,28 +5454,29 @@ public final class Protocol {
       "ground_tile\030\025 \001(\010\022\026\n\016statuses_count\030\026 \001(" +
       "\003\022\025\n\rnotifications\030\027 \001(\010\022\021\n\tfollowing\030\030 " +
       "\001(\010\022\023\n\013geo_enabled\030\031 \001(\010\022\020\n\010verified\030\032 \001" +
-      "(\010\022\027\n\006status\030\033 \001(\0132\007.status\"\326\001\n\006status\022\022" +
-      "\n\ncreated_at\030\001 \001(\t\022\n\n\002id\030\002 \001(\003\022\014\n\004text\030\003" +
-      " \001(\t\022\016\n\006source\030\004 \001(\t\022\021\n\ttruncated\030\005 \001(\010\022",
-      "\035\n\025in_reply_to_status_id\030\006 \001(\003\022\033\n\023in_rep" +
-      "ly_to_user_id\030\007 \001(\003\022\021\n\tfavorited\030\010 \001(\010\022\037" +
-      "\n\027in_reply_to_screen_name\030\t \001(\t\022\013\n\003geo\030\n" +
-      " \001(\t\"Z\n\014relationship\022$\n\006target\030\001 \002(\0132\024.r" +
-      "elationship_member\022$\n\006source\030\002 \002(\0132\024.rel" +
-      "ationship_member\"\217\001\n\023relationship_member" +
-      "\022\023\n\013followed_by\030\001 \001(\010\022\021\n\tfollowing\030\002 \001(\010" +
-      "\022\020\n\010blocking\030\003 \001(\010\022\035\n\025notifications_enab" +
-      "led\030\004 \001(\010\022\023\n\013screen_name\030\005 \001(\t\022\n\n\002id\030\006 \001" +
-      "(\003\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidatio",
-      "n\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016auth" +
-      "entication\022\020\n\010username\030\001 \001(\t\022\020\n\010password" +
-      "\030\002 \001(\t\"l\n\027authentication_response\022\033\n\006res" +
-      "ult\030\001 \002(\0162\013.AuthResult\022\017\n\007user_id\030\002 \001(\003\022" +
-      "\017\n\007user_ip\030\003 \001(\t\022\022\n\nsession_id\030\004 \001(\t\"<\n\007" +
-      "session\022\017\n\007user_id\030\001 \001(\003\022\024\n\014user_address" +
-      "\030\002 \001(\t\022\n\n\002id\030\003 \001(\t*1\n\nAuthResult\022\t\n\005VALI" +
-      "D\020\000\022\r\n\tNOT_VALID\020\001\022\t\n\005ERROR\020\002B\"\n im.dari" +
-      "o.qantiqa.common.protocol"
+      "(\010\022\027\n\006status\030\033 \001(\0132\007.status\"\034\n\005users\022\023\n\004" +
+      "user\030\001 \003(\0132\005.user\"\326\001\n\006status\022\022\n\ncreated_" +
+      "at\030\001 \001(\t\022\n\n\002id\030\002 \001(\003\022\014\n\004text\030\003 \001(\t\022\016\n\006so",
+      "urce\030\004 \001(\t\022\021\n\ttruncated\030\005 \001(\010\022\035\n\025in_repl" +
+      "y_to_status_id\030\006 \001(\003\022\033\n\023in_reply_to_user" +
+      "_id\030\007 \001(\003\022\021\n\tfavorited\030\010 \001(\010\022\037\n\027in_reply" +
+      "_to_screen_name\030\t \001(\t\022\013\n\003geo\030\n \001(\t\"Z\n\014re" +
+      "lationship\022$\n\006target\030\001 \002(\0132\024.relationshi" +
+      "p_member\022$\n\006source\030\002 \002(\0132\024.relationship_" +
+      "member\"\217\001\n\023relationship_member\022\023\n\013follow" +
+      "ed_by\030\001 \001(\010\022\021\n\tfollowing\030\002 \001(\010\022\020\n\010blocki" +
+      "ng\030\003 \001(\010\022\035\n\025notifications_enabled\030\004 \001(\010\022" +
+      "\023\n\013screen_name\030\005 \001(\t\022\n\n\002id\030\006 \001(\003\"\027\n\006gluo",
+      "ns\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidation\022\014\n\004isOk\030" +
+      "\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016authentication" +
+      "\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"l\n\027" +
+      "authentication_response\022\033\n\006result\030\001 \002(\0162" +
+      "\013.AuthResult\022\017\n\007user_id\030\002 \001(\003\022\017\n\007user_ip" +
+      "\030\003 \001(\t\022\022\n\nsession_id\030\004 \001(\t\"<\n\007session\022\017\n" +
+      "\007user_id\030\001 \001(\003\022\024\n\014user_address\030\002 \001(\t\022\n\n\002" +
+      "id\030\003 \001(\t*1\n\nAuthResult\022\t\n\005VALID\020\000\022\r\n\tNOT" +
+      "_VALID\020\001\022\t\n\005ERROR\020\002B\"\n im.dario.qantiqa." +
+      "common.protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5162,8 +5499,16 @@ public final class Protocol {
               new java.lang.String[] { "Id", "Name", "ScreenName", "Location", "Description", "ProfileImageUrl", "Url", "Protected", "FollowersCount", "ProfileBackgroundColor", "ProfileTextColor", "ProfileLinkColor", "ProfileSidebarFillColor", "ProfileSidebarBoderColor", "FriendsCount", "CreatedAt", "FavouritesCount", "UtcOffset", "TimeZone", "ProfileBackgroundImageUrl", "ProfileBackgroundTile", "StatusesCount", "Notifications", "Following", "GeoEnabled", "Verified", "Status", },
               im.dario.qantiqa.common.protocol.Protocol.user.class,
               im.dario.qantiqa.common.protocol.Protocol.user.Builder.class);
-          internal_static_status_descriptor =
+          internal_static_users_descriptor =
             getDescriptor().getMessageTypes().get(2);
+          internal_static_users_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_users_descriptor,
+              new java.lang.String[] { "User", },
+              im.dario.qantiqa.common.protocol.Protocol.users.class,
+              im.dario.qantiqa.common.protocol.Protocol.users.Builder.class);
+          internal_static_status_descriptor =
+            getDescriptor().getMessageTypes().get(3);
           internal_static_status_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_status_descriptor,
@@ -5171,7 +5516,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.status.class,
               im.dario.qantiqa.common.protocol.Protocol.status.Builder.class);
           internal_static_relationship_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_relationship_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_relationship_descriptor,
@@ -5179,7 +5524,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.relationship.class,
               im.dario.qantiqa.common.protocol.Protocol.relationship.Builder.class);
           internal_static_relationship_member_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_relationship_member_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_relationship_member_descriptor,
@@ -5187,7 +5532,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.relationship_member.class,
               im.dario.qantiqa.common.protocol.Protocol.relationship_member.Builder.class);
           internal_static_gluons_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_gluons_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_gluons_descriptor,
@@ -5195,7 +5540,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.gluons.class,
               im.dario.qantiqa.common.protocol.Protocol.gluons.Builder.class);
           internal_static_validation_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_validation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_validation_descriptor,
@@ -5203,7 +5548,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.validation.class,
               im.dario.qantiqa.common.protocol.Protocol.validation.Builder.class);
           internal_static_authentication_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_authentication_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_authentication_descriptor,
@@ -5211,7 +5556,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.authentication.class,
               im.dario.qantiqa.common.protocol.Protocol.authentication.Builder.class);
           internal_static_authentication_response_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_authentication_response_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_authentication_response_descriptor,
@@ -5219,7 +5564,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.authentication_response.class,
               im.dario.qantiqa.common.protocol.Protocol.authentication_response.Builder.class);
           internal_static_session_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_session_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_session_descriptor,

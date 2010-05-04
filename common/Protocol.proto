@@ -55,6 +55,10 @@ message user {
 	optional status status = 27;	
 }
 
+message users {
+	repeated user user = 1;
+}
+
 message status {
 	optional string created_at = 1;
 	optional int64 id = 2;

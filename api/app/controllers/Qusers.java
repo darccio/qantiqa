@@ -23,7 +23,10 @@ import static constants.Format.JSON;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import network.services.RelationshipService;
+import network.services.SearchService;
+import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.utils.QantiqaException;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -44,7 +47,7 @@ public class Qusers extends QController {
         RelationshipService rsv = new RelationshipService(getOverlay());
         boolean isFollower = rsv.isFollower(source, target);
         if (isFollower) {
-            Protocol.user.Builder builder = Protocol.user.newBuilder(target);
+            Protocol.user.Builder builder = target.toBuilder();
 
             builder.setFollowing(isFollower);
             target = builder.build();
@@ -57,6 +60,13 @@ public class Qusers extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void search(String q) {
-        proxyToTwitter();
+        SearchService ssv = new SearchService(getOverlay());
+
+        try {
+            renderProtobuf(ssv.searchUsers(q));
+        } catch (QantiqaException e) {
+            e.printStackTrace();
+            renderError(e);
+        }
     }
 }

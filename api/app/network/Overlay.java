@@ -30,14 +30,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Vector;
 
-import network.services.SessionService;
 import network.utils.QastContent;
 import network.utils.QastListener;
 import play.Play;
@@ -390,6 +387,20 @@ public class Overlay {
             throws DHTException {
         DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
         dht.put(key.toString(), storage.marshal(value));
+
+        Storage<HashSet<Object>> ix = (Storage<HashSet<Object>>) storage
+                .getIndex();
+        if (ix != null) {
+            for (String stem : ix.stem(value)) {
+                HashSet<Object> set = retrieve(ix, stem);
+                if (set == null) {
+                    set = new HashSet<Object>();
+                }
+
+                set.add(key);
+                store(ix, stem, set);
+            }
+        }
     }
 
     /**
