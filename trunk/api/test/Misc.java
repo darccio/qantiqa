@@ -11,8 +11,7 @@ public class Misc {
 
     @Test
     public void testUniqueIdGenerator() {
-        System.out.println(Long
-                .toString(Double.doubleToLongBits(Math.random())));
+        System.out.println(Long.MAX_VALUE);
     }
 
     @Test
