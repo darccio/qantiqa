@@ -27,6 +27,9 @@ import static constants.HttpMethod.DELETE;
 import static constants.HttpMethod.GET;
 import static constants.HttpMethod.POST;
 import static constants.HttpMethod.PUT;
+import network.services.QuarkService;
+import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.utils.QantiqaException;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -76,7 +79,15 @@ public class Qstatuses extends QController {
     @RequiresAuthentication
     public static void update(String status, Long in_reply_to_status_id,
             String source) {
-        proxyToTwitter();
+        Protocol.user user = getRequestUser();
+        QuarkService qsv = new QuarkService(getOverlay());
+
+        try {
+            renderProtobuf(qsv.update(user, status, in_reply_to_status_id,
+                    source));
+        } catch (Exception e) {
+            renderError(e);
+        }
     }
 
     @Methods( { POST, DELETE })

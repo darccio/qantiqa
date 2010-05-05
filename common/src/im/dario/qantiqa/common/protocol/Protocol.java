@@ -2192,14 +2192,15 @@ public final class Protocol {
     public boolean hasInReplyToScreenName() { return hasInReplyToScreenName; }
     public java.lang.String getInReplyToScreenName() { return inReplyToScreenName_; }
     
-    // optional string geo = 10;
-    public static final int GEO_FIELD_NUMBER = 10;
-    private boolean hasGeo;
-    private java.lang.String geo_ = "";
-    public boolean hasGeo() { return hasGeo; }
-    public java.lang.String getGeo() { return geo_; }
+    // optional .user user = 10;
+    public static final int USER_FIELD_NUMBER = 10;
+    private boolean hasUser;
+    private im.dario.qantiqa.common.protocol.Protocol.user user_;
+    public boolean hasUser() { return hasUser; }
+    public im.dario.qantiqa.common.protocol.Protocol.user getUser() { return user_; }
     
     private void initFields() {
+      user_ = im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance();
     }
     public final boolean isInitialized() {
       return true;
@@ -2235,8 +2236,8 @@ public final class Protocol {
       if (hasInReplyToScreenName()) {
         output.writeString(9, getInReplyToScreenName());
       }
-      if (hasGeo()) {
-        output.writeString(10, getGeo());
+      if (hasUser()) {
+        output.writeMessage(10, getUser());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2283,9 +2284,9 @@ public final class Protocol {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(9, getInReplyToScreenName());
       }
-      if (hasGeo()) {
+      if (hasUser()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(10, getGeo());
+          .computeMessageSize(10, getUser());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2472,8 +2473,8 @@ public final class Protocol {
         if (other.hasInReplyToScreenName()) {
           setInReplyToScreenName(other.getInReplyToScreenName());
         }
-        if (other.hasGeo()) {
-          setGeo(other.getGeo());
+        if (other.hasUser()) {
+          mergeUser(other.getUser());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2537,7 +2538,12 @@ public final class Protocol {
               break;
             }
             case 82: {
-              setGeo(input.readString());
+              im.dario.qantiqa.common.protocol.Protocol.user.Builder subBuilder = im.dario.qantiqa.common.protocol.Protocol.user.newBuilder();
+              if (hasUser()) {
+                subBuilder.mergeFrom(getUser());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setUser(subBuilder.buildPartial());
               break;
             }
           }
@@ -2719,24 +2725,40 @@ public final class Protocol {
         return this;
       }
       
-      // optional string geo = 10;
-      public boolean hasGeo() {
-        return result.hasGeo();
+      // optional .user user = 10;
+      public boolean hasUser() {
+        return result.hasUser();
       }
-      public java.lang.String getGeo() {
-        return result.getGeo();
+      public im.dario.qantiqa.common.protocol.Protocol.user getUser() {
+        return result.getUser();
       }
-      public Builder setGeo(java.lang.String value) {
+      public Builder setUser(im.dario.qantiqa.common.protocol.Protocol.user value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasGeo = true;
-        result.geo_ = value;
+          throw new NullPointerException();
+        }
+        result.hasUser = true;
+        result.user_ = value;
         return this;
       }
-      public Builder clearGeo() {
-        result.hasGeo = false;
-        result.geo_ = getDefaultInstance().getGeo();
+      public Builder setUser(im.dario.qantiqa.common.protocol.Protocol.user.Builder builderForValue) {
+        result.hasUser = true;
+        result.user_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeUser(im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (result.hasUser() &&
+            result.user_ != im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance()) {
+          result.user_ =
+            im.dario.qantiqa.common.protocol.Protocol.user.newBuilder(result.user_).mergeFrom(value).buildPartial();
+        } else {
+          result.user_ = value;
+        }
+        result.hasUser = true;
+        return this;
+      }
+      public Builder clearUser() {
+        result.hasUser = false;
+        result.user_ = im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance();
         return this;
       }
       
@@ -5455,28 +5477,28 @@ public final class Protocol {
       "\003\022\025\n\rnotifications\030\027 \001(\010\022\021\n\tfollowing\030\030 " +
       "\001(\010\022\023\n\013geo_enabled\030\031 \001(\010\022\020\n\010verified\030\032 \001" +
       "(\010\022\027\n\006status\030\033 \001(\0132\007.status\"\034\n\005users\022\023\n\004" +
-      "user\030\001 \003(\0132\005.user\"\326\001\n\006status\022\022\n\ncreated_" +
+      "user\030\001 \003(\0132\005.user\"\336\001\n\006status\022\022\n\ncreated_" +
       "at\030\001 \001(\t\022\n\n\002id\030\002 \001(\003\022\014\n\004text\030\003 \001(\t\022\016\n\006so",
       "urce\030\004 \001(\t\022\021\n\ttruncated\030\005 \001(\010\022\035\n\025in_repl" +
       "y_to_status_id\030\006 \001(\003\022\033\n\023in_reply_to_user" +
       "_id\030\007 \001(\003\022\021\n\tfavorited\030\010 \001(\010\022\037\n\027in_reply" +
-      "_to_screen_name\030\t \001(\t\022\013\n\003geo\030\n \001(\t\"Z\n\014re" +
-      "lationship\022$\n\006target\030\001 \002(\0132\024.relationshi" +
-      "p_member\022$\n\006source\030\002 \002(\0132\024.relationship_" +
-      "member\"\217\001\n\023relationship_member\022\023\n\013follow" +
-      "ed_by\030\001 \001(\010\022\021\n\tfollowing\030\002 \001(\010\022\020\n\010blocki" +
-      "ng\030\003 \001(\010\022\035\n\025notifications_enabled\030\004 \001(\010\022" +
-      "\023\n\013screen_name\030\005 \001(\t\022\n\n\002id\030\006 \001(\003\"\027\n\006gluo",
-      "ns\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidation\022\014\n\004isOk\030" +
-      "\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016authentication" +
-      "\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"l\n\027" +
-      "authentication_response\022\033\n\006result\030\001 \002(\0162" +
-      "\013.AuthResult\022\017\n\007user_id\030\002 \001(\003\022\017\n\007user_ip" +
-      "\030\003 \001(\t\022\022\n\nsession_id\030\004 \001(\t\"<\n\007session\022\017\n" +
-      "\007user_id\030\001 \001(\003\022\024\n\014user_address\030\002 \001(\t\022\n\n\002" +
-      "id\030\003 \001(\t*1\n\nAuthResult\022\t\n\005VALID\020\000\022\r\n\tNOT" +
-      "_VALID\020\001\022\t\n\005ERROR\020\002B\"\n im.dario.qantiqa." +
-      "common.protocol"
+      "_to_screen_name\030\t \001(\t\022\023\n\004user\030\n \001(\0132\005.us" +
+      "er\"Z\n\014relationship\022$\n\006target\030\001 \002(\0132\024.rel" +
+      "ationship_member\022$\n\006source\030\002 \002(\0132\024.relat" +
+      "ionship_member\"\217\001\n\023relationship_member\022\023" +
+      "\n\013followed_by\030\001 \001(\010\022\021\n\tfollowing\030\002 \001(\010\022\020" +
+      "\n\010blocking\030\003 \001(\010\022\035\n\025notifications_enable" +
+      "d\030\004 \001(\010\022\023\n\013screen_name\030\005 \001(\t\022\n\n\002id\030\006 \001(\003",
+      "\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidation\022" +
+      "\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016authen" +
+      "tication\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002" +
+      " \001(\t\"l\n\027authentication_response\022\033\n\006resul" +
+      "t\030\001 \002(\0162\013.AuthResult\022\017\n\007user_id\030\002 \001(\003\022\017\n" +
+      "\007user_ip\030\003 \001(\t\022\022\n\nsession_id\030\004 \001(\t\"<\n\007se" +
+      "ssion\022\017\n\007user_id\030\001 \001(\003\022\024\n\014user_address\030\002" +
+      " \001(\t\022\n\n\002id\030\003 \001(\t*1\n\nAuthResult\022\t\n\005VALID\020" +
+      "\000\022\r\n\tNOT_VALID\020\001\022\t\n\005ERROR\020\002B\"\n im.dario." +
+      "qantiqa.common.protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5512,7 +5534,7 @@ public final class Protocol {
           internal_static_status_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_status_descriptor,
-              new java.lang.String[] { "CreatedAt", "Id", "Text", "Source", "Truncated", "InReplyToStatusId", "InReplyToUserId", "Favorited", "InReplyToScreenName", "Geo", },
+              new java.lang.String[] { "CreatedAt", "Id", "Text", "Source", "Truncated", "InReplyToStatusId", "InReplyToUserId", "Favorited", "InReplyToScreenName", "User", },
               im.dario.qantiqa.common.protocol.Protocol.status.class,
               im.dario.qantiqa.common.protocol.Protocol.status.Builder.class);
           internal_static_relationship_descriptor =

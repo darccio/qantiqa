@@ -17,7 +17,7 @@ public class Storage<E> {
     private static abstract class StorageCallback {
         private HashSet<String> stems = new HashSet<String>();
 
-        public abstract HashSet<String> stem(Object o);
+        protected abstract void stem(Object o);
 
         protected void add(String value) {
             stems.add(value);
@@ -30,7 +30,8 @@ public class Storage<E> {
             }
         }
 
-        public HashSet<String> get() {
+        public HashSet<String> yield(Object o) {
+            stem(o);
             return stems;
         }
     }
@@ -38,25 +39,36 @@ public class Storage<E> {
     public static final Storage<Protocol.user> users = new Storage("users",
             Protocol.user.newBuilder());
     public static final Storage<Protocol.user> usersById = new Storage(
-            "usersById", Protocol.user.newBuilder()).indexed(Integer.class,
+            "usersById", Protocol.user.newBuilder()).indexed(Long.class,
             new StorageCallback() {
 
                 @Override
-                public HashSet<String> stem(Object o) {
+                protected void stem(Object o) {
                     Protocol.user user = (Protocol.user) o;
 
                     add(user.getScreenName());
                     add(user.getName());
                     add(user.getLocation());
                     add(user.getDescription());
-
-                    return get();
                 }
             });
     public static final Storage<Vector<Long>> followers = new Storage(
             "followers");
     public static final Storage<Vector<Long>> following = new Storage(
             "following");
+    public static final Storage<Protocol.status> quarks = new Storage("quarks",
+            Protocol.status.newBuilder()).indexed(Long.class,
+            new StorageCallback() {
+
+                @Override
+                protected void stem(Object o) {
+                    Protocol.status quark = (Protocol.status) o;
+
+                    add(quark.getText());
+                    add(quark.getSource());
+                    add(quark.getInReplyToScreenName());
+                }
+            });
 
     private final String id;
     private final String hash;
@@ -131,7 +143,7 @@ public class Storage<E> {
             return new HashSet<String>();
         }
 
-        return this.callback.stem(o);
+        return this.callback.yield(o);
     }
 
     public String getHash() {

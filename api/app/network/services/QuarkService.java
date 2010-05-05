@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import easypastry.dht.DHTException;
+
 import network.Overlay;
 import network.Storage;
 
@@ -34,37 +36,55 @@ import network.Storage;
  * 
  * @author Dario
  */
-public class SearchService extends Service {
+public class QuarkService extends Service {
 
-    public SearchService(Overlay overlay) {
+    public QuarkService(Overlay overlay) {
         super(overlay);
     }
 
-    public Protocol.users searchUsers(String q) throws QantiqaException {
-        Storage<HashSet<Long>> ix = (Storage<HashSet<Long>>) Storage.usersById
-                .getIndex();
+    public Protocol.status update(Protocol.user user, String status,
+            Long in_reply_to_status_id, String source) throws QantiqaException,
+            DHTException {
+        Protocol.status.Builder builder = Protocol.status.newBuilder();
 
-        Set<Long> results = overlay.retrieve(ix, q);
-
-        StringTokenizer tk = new StringTokenizer(q, " _.,;");
-        while (tk.hasMoreElements()) {
-            String next = tk.nextToken().trim();
-            if (!next.equals("")) {
-                results.addAll(overlay.retrieve(ix, next));
-            }
+        builder.setText(status);
+        if (in_reply_to_status_id != null) {
+            builder.setInReplyToStatusId(in_reply_to_status_id);
         }
+
+        if (source != null) {
+            builder.setSource(source);
+        }
+
+        Long id = getNextId(user);
+        builder.setId(id);
+
+        Protocol.status quark = builder.build();
+        overlay.store(Storage.quarks, id, quark);
 
         UserService usv = new UserService(overlay);
-        Protocol.users.Builder builder = Protocol.users.newBuilder();
-        for (Long id : results) {
-            builder.addUser(usv.get(id));
-        }
+        Protocol.user.Builder ub = user.toBuilder();
+        ub.setStatusesCount(ub.getStatusesCount() + 1);
+        user = ub.build();
+        usv.set(user);
+
+        builder = quark.toBuilder();
+        builder.setUser(user);
 
         return builder.build();
     }
 
-    // TODO Implement
-    public Protocol.users searchQuarks(String q) throws QantiqaException {
-        return null;
+    /**
+     * 9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 7 (Long.MAX_VALUE)
+     * 
+     * 9 2 2 3 3 7 2 0 3 5|9 9 9 9 9 9 9 9 9
+     * 
+     * First ID: 1 0 0 0 0 0 0 0 0 1
+     * 
+     * @param user
+     * @return
+     */
+    private static Long getNextId(Protocol.user user) {
+        return (user.getId() * 1000000000L) + user.getStatusesCount() + 1L;
     }
 }

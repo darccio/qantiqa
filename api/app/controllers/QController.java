@@ -397,6 +397,10 @@ public abstract class QController extends Controller {
         return user;
     }
 
+    protected static Protocol.user getRequestUser() {
+        return getUser(null, request.user, "source");
+    }
+
     protected static void startSession(Protocol.authentication_response auth,
             Protocol.user user) {
         sessions.put(user.getScreenName(), SessionService.buildSession(user,

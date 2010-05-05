@@ -43,6 +43,7 @@ public class SessionService extends Service {
         super(overlay);
     }
 
+    // TODO Refactor to HiggsWS?
     public boolean verify(Protocol.session expected) {
         Long userId = expected.getUserId();
         String userAddress = expected.getUserAddress();
