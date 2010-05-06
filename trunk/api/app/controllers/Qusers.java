@@ -64,7 +64,7 @@ public class Qusers extends QController {
 
         try {
             renderProtobuf(ssv.searchUsers(q));
-        } catch (QantiqaException e) {
+        } catch (Exception e) {
             renderError(e);
         }
     }

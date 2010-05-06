@@ -138,8 +138,13 @@ public abstract class QController extends Controller {
     }
 
     protected static void renderError(Exception e) {
+        int status = 500;
+        if (e instanceof QantiqaException) {
+            status = ((QantiqaException) e).getStatus();
+        }
+
         e.printStackTrace();
-        renderError(500, e.getMessage());
+        renderError(status, e.getMessage());
     }
 
     /**

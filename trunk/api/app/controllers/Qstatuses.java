@@ -27,12 +27,13 @@ import static constants.HttpMethod.DELETE;
 import static constants.HttpMethod.GET;
 import static constants.HttpMethod.POST;
 import static constants.HttpMethod.PUT;
-import network.services.QuarkService;
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.utils.QantiqaException;
+import network.services.QuarkService;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
+
+import com.google.protobuf.Message;
 
 /**
  * REST API methods for statuses/tweets/quarks.
@@ -71,7 +72,13 @@ public class Qstatuses extends QController {
     @Methods( { GET })
     @Formats( { XML, JSON })
     public static void show(Long id) {
-        proxyToTwitter();
+        QuarkService qsv = new QuarkService(getOverlay());
+
+        try {
+            renderProtobuf(appendUser(qsv.show(id), id));
+        } catch (Exception e) {
+            renderError(e);
+        }
     }
 
     @Methods( { POST })
@@ -79,12 +86,11 @@ public class Qstatuses extends QController {
     @RequiresAuthentication
     public static void update(String status, Long in_reply_to_status_id,
             String source) {
-        Protocol.user user = getRequestUser();
         QuarkService qsv = new QuarkService(getOverlay());
 
         try {
-            renderProtobuf(qsv.update(user, status, in_reply_to_status_id,
-                    source));
+            renderProtobuf(qsv.update(getRequestUser(), status,
+                    in_reply_to_status_id, source));
         } catch (Exception e) {
             renderError(e);
         }
@@ -94,13 +100,44 @@ public class Qstatuses extends QController {
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void destroy(Long id) {
-        proxyToTwitter();
+        QuarkService qsv = new QuarkService(getOverlay());
+
+        try {
+            renderProtobuf(appendUser(qsv.destroy(id), id));
+        } catch (Exception e) {
+            renderError(e);
+        }
     }
 
     @Methods( { POST, PUT })
     @Formats( { XML, JSON })
     @RequiresAuthentication
     public static void retweet(Long id, String source) {
-        proxyToTwitter();
+        QuarkService qsv = new QuarkService(getOverlay());
+
+        try {
+            Protocol.status requarked = qsv.show(id);
+            Protocol.user requarkee = getUser(QuarkService
+                    .getUserIdFromQuarkId(id), null, "target");
+
+            Protocol.status.Builder requark = qsv.requark(getRequestUser(),
+                    requarked, source).toBuilder();
+            Protocol.status.Builder builder = requark.getRetweetedStatus()
+                    .toBuilder();
+            builder.setUser(requarkee);
+            requark.setRetweetedStatus(builder);
+
+            renderProtobuf(requark);
+        } catch (Exception e) {
+            renderError(e);
+        }
+    }
+
+    private static Protocol.status appendUser(Protocol.status msg, Long quarkId) {
+        Protocol.status.Builder builder = msg.toBuilder();
+        builder.setUser(getUser(QuarkService.getUserIdFromQuarkId(quarkId),
+                null, "source"));
+
+        return builder.build();
     }
 }

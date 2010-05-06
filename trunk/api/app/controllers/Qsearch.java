@@ -41,7 +41,7 @@ public class Qsearch extends QController {
 
         try {
             renderProtobuf(ssv.searchQuarks(q));
-        } catch (QantiqaException e) {
+        } catch (Exception e) {
             renderError(e);
         }
     }
