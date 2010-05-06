@@ -425,4 +425,22 @@ public abstract class QController extends Controller {
 
         return auth;
     }
+
+    protected static void renderRetweetError(Exception e) {
+        int status = 500;
+        if (e instanceof QantiqaException) {
+            status = ((QantiqaException) e).getStatus();
+        }
+
+        e.printStackTrace();
+        renderRetweetError(status, e.getMessage());
+    }
+
+    private static void renderRetweetError(int status, String message) {
+        Protocol.errors.Builder bh = Protocol.errors.newBuilder();
+        bh.addError(message);
+
+        response.current().status = status;
+        renderProtobuf(bh);
+    }
 }

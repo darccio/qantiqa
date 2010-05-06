@@ -25,6 +25,10 @@ message hash {
 	optional string request = 2; 
 }
 
+message errors {
+	repeated string error = 1; 
+}
+
 message user {
 	optional int64 id = 1;
 	optional string name = 2;
