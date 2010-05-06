@@ -22,6 +22,7 @@ package network.services;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.status;
 import im.dario.qantiqa.common.utils.QantiqaException;
+import im.dario.qantiqa.common.utils.TwitterDate;
 import network.Overlay;
 import network.Storage;
 import easypastry.dht.DHTException;
@@ -45,7 +46,6 @@ public class QuarkService extends Service {
                     .status(403);
         }
 
-        // TODO Add creation date
         Long id = getNextId(user);
         if (user.getStatusesCount() > 0) {
             Protocol.status current = get(id - 1);
@@ -66,6 +66,8 @@ public class QuarkService extends Service {
         if (source != null) {
             builder.setSource(source);
         }
+
+        builder.setCreatedAt(new TwitterDate().toString());
 
         Protocol.status quark = builder.build();
         overlay.store(Storage.quarks, id, quark);
@@ -100,7 +102,14 @@ public class QuarkService extends Service {
         return id / 1000000000L;
     }
 
-    public Protocol.status destroy(Long id) throws QantiqaException {
+    public Protocol.status destroy(Long id) throws QantiqaException,
+            DHTException {
+        UserService usv = new UserService(overlay);
+        Protocol.user.Builder ub = usv.get(getUserIdFromQuarkId(id))
+                .toBuilder();
+        ub.setStatusesCount(ub.getStatusesCount() - 1);
+        usv.set(ub.build());
+
         return overlay.remove(Storage.quarks, id);
     }
 
@@ -118,10 +127,37 @@ public class QuarkService extends Service {
         return status;
     }
 
-    public Protocol.status requark(Protocol.user requarker,
-            Protocol.status requarked, String source) throws QantiqaException,
-            DHTException {
+    public Protocol.status requark(Protocol.user requarker, Long requarkedId,
+            String source) throws QantiqaException, DHTException {
+        UserService usv = new UserService(overlay);
 
-        return update(requarker, requarked.getText(), null, source);
+        Protocol.user requarkee = usv.get(getUserIdFromQuarkId(requarkedId));
+        if (requarker.getId() == requarkee.getId()) {
+            throw new QantiqaException(
+                    "Share sharing is not permissable for this status (Share validations failed)")
+                    .status(403);
+        }
+
+        Protocol.status requarked = get(requarkedId);
+
+        Long id = getNextId(requarker);
+        if (requarker.getStatusesCount() > 0) {
+            Protocol.status current = get(id - 1);
+            if (current.getText().equals(requarked.getText())) {
+                throw new QantiqaException(
+                        "Share sharing is not permissable for this status (Share validations failed)")
+                        .status(403);
+            }
+        }
+
+        Protocol.status.Builder requark = update(requarker,
+                requarked.getText(), null, source).toBuilder();
+
+        Protocol.status.Builder builder = requark.getRetweetedStatus()
+                .toBuilder();
+        builder.setUser(requarkee);
+        requark.setRetweetedStatus(builder);
+
+        return requark.build();
     }
 }

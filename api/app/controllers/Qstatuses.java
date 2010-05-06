@@ -116,20 +116,11 @@ public class Qstatuses extends QController {
         QuarkService qsv = new QuarkService(getOverlay());
 
         try {
-            Protocol.status requarked = qsv.show(id);
-            Protocol.user requarkee = getUser(QuarkService
-                    .getUserIdFromQuarkId(id), null, "target");
-
-            Protocol.status.Builder requark = qsv.requark(getRequestUser(),
-                    requarked, source).toBuilder();
-            Protocol.status.Builder builder = requark.getRetweetedStatus()
-                    .toBuilder();
-            builder.setUser(requarkee);
-            requark.setRetweetedStatus(builder);
+            Protocol.status requark = qsv.requark(getRequestUser(), id, source);
 
             renderProtobuf(requark);
         } catch (Exception e) {
-            renderError(e);
+            renderRetweetError(e);
         }
     }
 
