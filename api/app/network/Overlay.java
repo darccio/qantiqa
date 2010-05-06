@@ -22,6 +22,7 @@ package network;
 import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
+import im.dario.qantiqa.common.protocol.Protocol.status;
 import im.dario.qantiqa.common.utils.AsyncResult;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
@@ -418,6 +419,20 @@ public class Overlay {
         try {
             DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
             value = storage.unmarshal(dht.get(key.toString()));
+        } catch (DHTException e) {
+            e.printStackTrace();
+            value = null;
+        }
+
+        return value;
+    }
+
+    public <E> E remove(Storage<E> storage, Object key) {
+        E value = retrieve(storage, key);
+
+        try {
+            DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+            dht.remove(key.toString());
         } catch (DHTException e) {
             e.printStackTrace();
             value = null;

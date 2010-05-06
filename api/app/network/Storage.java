@@ -25,7 +25,7 @@ public class Storage<E> {
             while (tk.hasMoreElements()) {
                 String next = tk.nextToken().trim();
                 if (!next.equals("")) {
-                    stems.add(tk.nextToken());
+                    stems.add(next);
                 }
             }
         }

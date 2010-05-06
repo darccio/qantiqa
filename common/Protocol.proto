@@ -70,6 +70,7 @@ message status {
 	optional bool favorited = 8;
 	optional string in_reply_to_screen_name = 9;
 	optional user user = 10;
+	optional status retweeted_status = 11;
 }
 
 message relationship {

@@ -20,16 +20,11 @@
 package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.status;
 import im.dario.qantiqa.common.utils.QantiqaException;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import easypastry.dht.DHTException;
-
 import network.Overlay;
 import network.Storage;
+import easypastry.dht.DHTException;
 
 /**
  * Search service.
@@ -45,8 +40,24 @@ public class QuarkService extends Service {
     public Protocol.status update(Protocol.user user, String status,
             Long in_reply_to_status_id, String source) throws QantiqaException,
             DHTException {
+        if (status.length() > 140) {
+            throw new QantiqaException("Status is over 140 characters.")
+                    .status(403);
+        }
+
+        // TODO Add creation date
+        Long id = getNextId(user);
+        if (user.getStatusesCount() > 0) {
+            Protocol.status current = get(id - 1);
+            if (current.getText().equals(status)) {
+                throw new QantiqaException("Status is a duplicate.")
+                        .status(403);
+            }
+        }
+
         Protocol.status.Builder builder = Protocol.status.newBuilder();
 
+        builder.setId(id);
         builder.setText(status);
         if (in_reply_to_status_id != null) {
             builder.setInReplyToStatusId(in_reply_to_status_id);
@@ -55,9 +66,6 @@ public class QuarkService extends Service {
         if (source != null) {
             builder.setSource(source);
         }
-
-        Long id = getNextId(user);
-        builder.setId(id);
 
         Protocol.status quark = builder.build();
         overlay.store(Storage.quarks, id, quark);
@@ -84,7 +92,36 @@ public class QuarkService extends Service {
      * @param user
      * @return
      */
-    private static Long getNextId(Protocol.user user) {
+    private Long getNextId(Protocol.user user) {
         return (user.getId() * 1000000000L) + user.getStatusesCount() + 1L;
+    }
+
+    public static Long getUserIdFromQuarkId(Long id) {
+        return id / 1000000000L;
+    }
+
+    public Protocol.status destroy(Long id) throws QantiqaException {
+        return overlay.remove(Storage.quarks, id);
+    }
+
+    public Protocol.status show(Long id) throws QantiqaException {
+        return get(id);
+    }
+
+    private Protocol.status get(Long id) throws QantiqaException {
+        Protocol.status status = overlay.retrieve(Storage.quarks, id);
+        if (status == null) {
+            throw new QantiqaException("No status found with that ID.")
+                    .status(404);
+        }
+
+        return status;
+    }
+
+    public Protocol.status requark(Protocol.user requarker,
+            Protocol.status requarked, String source) throws QantiqaException,
+            DHTException {
+
+        return update(requarker, requarked.getText(), null, source);
     }
 }
