@@ -6,7 +6,6 @@ import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
@@ -52,9 +51,9 @@ public class Storage<E> {
                     add(user.getDescription());
                 }
             });
-    public static final Storage<Vector<Long>> followers = new Storage(
+    public static final Storage<HashSet<Long>> followers = new Storage(
             "followers");
-    public static final Storage<Vector<Long>> following = new Storage(
+    public static final Storage<HashSet<Long>> following = new Storage(
             "following");
     public static final Storage<Protocol.status> quarks = new Storage("quarks",
             Protocol.status.newBuilder()).indexed(Long.class,
@@ -69,6 +68,12 @@ public class Storage<E> {
                     add(quark.getInReplyToScreenName());
                 }
             });
+    public static final Storage<HashSet<Long>> requarks = new Storage(
+            "requarks");
+    public static final Storage<HashSet<Long>> favorites = new Storage(
+            "favorites");
+    public static final Storage<HashSet<Long>> requarksByUser = new Storage(
+            "requarksByUser");
 
     private final String id;
     private final String hash;

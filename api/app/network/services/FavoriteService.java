@@ -17,40 +17,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ******************************************************************************/
 
-package controllers;
+package network.services;
 
-import static constants.Format.JSON;
-import static constants.Format.XML;
-import static constants.HttpMethod.POST;
 import im.dario.qantiqa.common.protocol.Protocol;
-import network.services.FavoriteService;
-import network.services.QuarkService;
-import annotations.Formats;
-import annotations.Methods;
-import annotations.RequiresAuthentication;
+import im.dario.qantiqa.common.protocol.Protocol.user;
+import im.dario.qantiqa.common.utils.QantiqaException;
+import im.dario.qantiqa.common.utils.TwitterDate;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import network.Overlay;
+import network.Storage;
+import easypastry.dht.DHTException;
 
 /**
- * REST API methods for favorites.
+ * Search service.
  * 
  * @author Dario
  */
-public class Qfavorites extends QController {
+public class FavoriteService extends Service {
 
-    @Methods( { POST })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void create(Long id) {
-        FavoriteService fsv = new FavoriteService(getOverlay());
+    public FavoriteService(Overlay overlay) {
+        super(overlay);
+    }
 
-        try {
-            Protocol.status.Builder builder = fsv.create(getRequestUser(), id)
-                    .toBuilder();
-            builder.setUser(getUser(QuarkService.getUserIdFromQuarkId(id),
-                    null, "source"));
-
-            renderProtobuf(builder);
-        } catch (Exception e) {
-            renderError(e);
+    public Protocol.status create(Protocol.user user, Long id)
+            throws DHTException, QantiqaException {
+        HashSet<Long> favorites = overlay.retrieve(Storage.favorites, user
+                .getId());
+        if (favorites == null) {
+            favorites = new HashSet<Long>();
         }
+
+        favorites.add(id);
+        overlay.store(Storage.favorites, user.getId(), favorites);
+
+        QuarkService qsv = new QuarkService(overlay);
+        Protocol.status quark = qsv.show(id);
+
+        return quark;
     }
 }

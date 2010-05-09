@@ -20,9 +20,12 @@
 package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.status;
 import im.dario.qantiqa.common.utils.QantiqaException;
 import im.dario.qantiqa.common.utils.TwitterDate;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import network.Overlay;
 import network.Storage;
 import easypastry.dht.DHTException;
@@ -153,11 +156,46 @@ public class QuarkService extends Service {
         Protocol.status.Builder requark = update(requarker,
                 requarked.getText(), null, source).toBuilder();
 
+        HashSet<Long> requarks = overlay.retrieve(Storage.requarks, requarked
+                .getId());
+        if (requarks == null) {
+            requarks = new HashSet<Long>();
+        }
+
+        requarks.add(requark.getId());
+        overlay.store(Storage.requarks, requarked.getId(), requarks);
+
+        HashSet<Long> requarksByUser = overlay.retrieve(Storage.requarksByUser,
+                requarker.getScreenName());
+        if (requarksByUser == null) {
+            requarksByUser = new HashSet<Long>();
+        }
+
+        requarks.add(requark.getId());
+        overlay.store(Storage.requarksByUser, requarker.getScreenName(),
+                requarksByUser);
+
         Protocol.status.Builder builder = requark.getRetweetedStatus()
                 .toBuilder();
         builder.setUser(requarkee);
         requark.setRetweetedStatus(builder);
 
         return requark.build();
+    }
+
+    public Protocol.statuses requarks(String user) throws QantiqaException {
+        Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
+
+        HashSet<Long> requarks = overlay.retrieve(Storage.requarksByUser, user);
+
+        UserService usv = new UserService(overlay);
+        for (Long id : requarks) {
+            Protocol.status.Builder quark = this.show(id).toBuilder();
+            quark.setUser(usv.get(QuarkService.getUserIdFromQuarkId(id)));
+
+            builder.addStatus(quark);
+        }
+
+        return builder.build();
     }
 }

@@ -77,6 +77,10 @@ message status {
 	optional status retweeted_status = 11;
 }
 
+message statuses {
+    repeated status status = 1;
+}
+
 message relationship {
 	required relationship_member target = 1;
 	required relationship_member source = 2;
@@ -89,6 +93,22 @@ message relationship_member {
 	optional bool notifications_enabled = 4;
 	optional string screen_name = 5;
 	optional int64 id = 6;
+}
+
+message direct_message {
+    optional int64 id = 1;
+    optional int64 sender_id = 2;
+    optional string text = 3;
+    optional int64 recipient_id = 4;
+    optional string created_at = 5;
+    optional string sender_screen_name = 6;
+    optional string recipient_screen_name = 7;
+    optional user sender = 8;
+    optional user recipient = 9;
+}
+
+message direct_messages {
+    repeated direct_message direct_message = 1;
 }
 
 // Higgs API protocol definitions (qa-higgs)

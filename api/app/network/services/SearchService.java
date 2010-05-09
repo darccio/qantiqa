@@ -22,6 +22,7 @@ package network.services;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -44,15 +45,7 @@ public class SearchService extends Service {
         Storage<HashSet<Long>> ix = (Storage<HashSet<Long>>) Storage.usersById
                 .getIndex();
 
-        Set<Long> results = overlay.retrieve(ix, q);
-
-        StringTokenizer tk = new StringTokenizer(q, " _.,;");
-        while (tk.hasMoreElements()) {
-            String next = tk.nextToken().trim();
-            if (!next.equals("")) {
-                results.addAll(overlay.retrieve(ix, next));
-            }
-        }
+        Set<Long> results = search(q, ix);
 
         UserService usv = new UserService(overlay);
         Protocol.users.Builder builder = Protocol.users.newBuilder();
@@ -63,8 +56,38 @@ public class SearchService extends Service {
         return builder.build();
     }
 
-    // TODO Implement
-    public Protocol.users searchQuarks(String q) throws QantiqaException {
-        return null;
+    public Protocol.statuses searchQuarks(String q) throws QantiqaException {
+        Storage<HashSet<Long>> ix = (Storage<HashSet<Long>>) Storage.quarks
+                .getIndex();
+
+        Set<Long> results = search(q, ix);
+
+        UserService usv = new UserService(overlay);
+        QuarkService qsv = new QuarkService(overlay);
+        Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
+        for (Long id : results) {
+            Protocol.status.Builder quark = qsv.show(id).toBuilder();
+            quark.setUser(usv.get(QuarkService.getUserIdFromQuarkId(id)));
+
+            builder.addStatus(quark);
+        }
+
+        return builder.build();
+    }
+
+    private <E extends Collection> E search(String q, Storage<E> ix) {
+        E results = overlay.retrieve(ix, q);
+
+        StringTokenizer tk = new StringTokenizer(q, " _.,;");
+        if (tk.countTokens() > 1) {
+            while (tk.hasMoreElements()) {
+                String next = tk.nextToken().trim();
+                if (!next.equals("")) {
+                    results.addAll(overlay.retrieve(ix, next));
+                }
+            }
+        }
+
+        return results;
     }
 }

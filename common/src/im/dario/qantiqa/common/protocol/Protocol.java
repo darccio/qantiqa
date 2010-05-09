@@ -3161,6 +3161,337 @@ public final class Protocol {
     // @@protoc_insertion_point(class_scope:status)
   }
   
+  public static final class statuses extends
+      com.google.protobuf.GeneratedMessage {
+    // Use statuses.newBuilder() to construct.
+    private statuses() {
+      initFields();
+    }
+    private statuses(boolean noInit) {}
+    
+    private static final statuses defaultInstance;
+    public static statuses getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public statuses getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_statuses_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_statuses_fieldAccessorTable;
+    }
+    
+    // repeated .status status = 1;
+    public static final int STATUS_FIELD_NUMBER = 1;
+    private java.util.List<im.dario.qantiqa.common.protocol.Protocol.status> status_ =
+      java.util.Collections.emptyList();
+    public java.util.List<im.dario.qantiqa.common.protocol.Protocol.status> getStatusList() {
+      return status_;
+    }
+    public int getStatusCount() { return status_.size(); }
+    public im.dario.qantiqa.common.protocol.Protocol.status getStatus(int index) {
+      return status_.get(index);
+    }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (im.dario.qantiqa.common.protocol.Protocol.status element : getStatusList()) {
+        output.writeMessage(1, element);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      for (im.dario.qantiqa.common.protocol.Protocol.status element : getStatusList()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, element);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.statuses parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(im.dario.qantiqa.common.protocol.Protocol.statuses prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private im.dario.qantiqa.common.protocol.Protocol.statuses result;
+      
+      // Construct using im.dario.qantiqa.common.protocol.Protocol.statuses.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new im.dario.qantiqa.common.protocol.Protocol.statuses();
+        return builder;
+      }
+      
+      protected im.dario.qantiqa.common.protocol.Protocol.statuses internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new im.dario.qantiqa.common.protocol.Protocol.statuses();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.statuses.getDescriptor();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.statuses getDefaultInstanceForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.statuses.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.statuses build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private im.dario.qantiqa.common.protocol.Protocol.statuses buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.statuses buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        if (result.status_ != java.util.Collections.EMPTY_LIST) {
+          result.status_ =
+            java.util.Collections.unmodifiableList(result.status_);
+        }
+        im.dario.qantiqa.common.protocol.Protocol.statuses returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof im.dario.qantiqa.common.protocol.Protocol.statuses) {
+          return mergeFrom((im.dario.qantiqa.common.protocol.Protocol.statuses)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(im.dario.qantiqa.common.protocol.Protocol.statuses other) {
+        if (other == im.dario.qantiqa.common.protocol.Protocol.statuses.getDefaultInstance()) return this;
+        if (!other.status_.isEmpty()) {
+          if (result.status_.isEmpty()) {
+            result.status_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.status>();
+          }
+          result.status_.addAll(other.status_);
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              im.dario.qantiqa.common.protocol.Protocol.status.Builder subBuilder = im.dario.qantiqa.common.protocol.Protocol.status.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addStatus(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // repeated .status status = 1;
+      public java.util.List<im.dario.qantiqa.common.protocol.Protocol.status> getStatusList() {
+        return java.util.Collections.unmodifiableList(result.status_);
+      }
+      public int getStatusCount() {
+        return result.getStatusCount();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.status getStatus(int index) {
+        return result.getStatus(index);
+      }
+      public Builder setStatus(int index, im.dario.qantiqa.common.protocol.Protocol.status value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.status_.set(index, value);
+        return this;
+      }
+      public Builder setStatus(int index, im.dario.qantiqa.common.protocol.Protocol.status.Builder builderForValue) {
+        result.status_.set(index, builderForValue.build());
+        return this;
+      }
+      public Builder addStatus(im.dario.qantiqa.common.protocol.Protocol.status value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        if (result.status_.isEmpty()) {
+          result.status_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.status>();
+        }
+        result.status_.add(value);
+        return this;
+      }
+      public Builder addStatus(im.dario.qantiqa.common.protocol.Protocol.status.Builder builderForValue) {
+        if (result.status_.isEmpty()) {
+          result.status_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.status>();
+        }
+        result.status_.add(builderForValue.build());
+        return this;
+      }
+      public Builder addAllStatus(
+          java.lang.Iterable<? extends im.dario.qantiqa.common.protocol.Protocol.status> values) {
+        if (result.status_.isEmpty()) {
+          result.status_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.status>();
+        }
+        super.addAll(values, result.status_);
+        return this;
+      }
+      public Builder clearStatus() {
+        result.status_ = java.util.Collections.emptyList();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:statuses)
+    }
+    
+    static {
+      defaultInstance = new statuses(true);
+      im.dario.qantiqa.common.protocol.Protocol.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:statuses)
+  }
+  
   public static final class relationship extends
       com.google.protobuf.GeneratedMessage {
     // Use relationship.newBuilder() to construct.
@@ -4016,6 +4347,995 @@ public final class Protocol {
     }
     
     // @@protoc_insertion_point(class_scope:relationship_member)
+  }
+  
+  public static final class direct_message extends
+      com.google.protobuf.GeneratedMessage {
+    // Use direct_message.newBuilder() to construct.
+    private direct_message() {
+      initFields();
+    }
+    private direct_message(boolean noInit) {}
+    
+    private static final direct_message defaultInstance;
+    public static direct_message getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public direct_message getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_direct_message_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_direct_message_fieldAccessorTable;
+    }
+    
+    // optional int64 id = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private boolean hasId;
+    private long id_ = 0L;
+    public boolean hasId() { return hasId; }
+    public long getId() { return id_; }
+    
+    // optional int64 sender_id = 2;
+    public static final int SENDER_ID_FIELD_NUMBER = 2;
+    private boolean hasSenderId;
+    private long senderId_ = 0L;
+    public boolean hasSenderId() { return hasSenderId; }
+    public long getSenderId() { return senderId_; }
+    
+    // optional string text = 3;
+    public static final int TEXT_FIELD_NUMBER = 3;
+    private boolean hasText;
+    private java.lang.String text_ = "";
+    public boolean hasText() { return hasText; }
+    public java.lang.String getText() { return text_; }
+    
+    // optional int64 recipient_id = 4;
+    public static final int RECIPIENT_ID_FIELD_NUMBER = 4;
+    private boolean hasRecipientId;
+    private long recipientId_ = 0L;
+    public boolean hasRecipientId() { return hasRecipientId; }
+    public long getRecipientId() { return recipientId_; }
+    
+    // optional string created_at = 5;
+    public static final int CREATED_AT_FIELD_NUMBER = 5;
+    private boolean hasCreatedAt;
+    private java.lang.String createdAt_ = "";
+    public boolean hasCreatedAt() { return hasCreatedAt; }
+    public java.lang.String getCreatedAt() { return createdAt_; }
+    
+    // optional string sender_screen_name = 6;
+    public static final int SENDER_SCREEN_NAME_FIELD_NUMBER = 6;
+    private boolean hasSenderScreenName;
+    private java.lang.String senderScreenName_ = "";
+    public boolean hasSenderScreenName() { return hasSenderScreenName; }
+    public java.lang.String getSenderScreenName() { return senderScreenName_; }
+    
+    // optional string recipient_screen_name = 7;
+    public static final int RECIPIENT_SCREEN_NAME_FIELD_NUMBER = 7;
+    private boolean hasRecipientScreenName;
+    private java.lang.String recipientScreenName_ = "";
+    public boolean hasRecipientScreenName() { return hasRecipientScreenName; }
+    public java.lang.String getRecipientScreenName() { return recipientScreenName_; }
+    
+    // optional .user sender = 8;
+    public static final int SENDER_FIELD_NUMBER = 8;
+    private boolean hasSender;
+    private im.dario.qantiqa.common.protocol.Protocol.user sender_;
+    public boolean hasSender() { return hasSender; }
+    public im.dario.qantiqa.common.protocol.Protocol.user getSender() { return sender_; }
+    
+    // optional .user recipient = 9;
+    public static final int RECIPIENT_FIELD_NUMBER = 9;
+    private boolean hasRecipient;
+    private im.dario.qantiqa.common.protocol.Protocol.user recipient_;
+    public boolean hasRecipient() { return hasRecipient; }
+    public im.dario.qantiqa.common.protocol.Protocol.user getRecipient() { return recipient_; }
+    
+    private void initFields() {
+      sender_ = im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance();
+      recipient_ = im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance();
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasId()) {
+        output.writeInt64(1, getId());
+      }
+      if (hasSenderId()) {
+        output.writeInt64(2, getSenderId());
+      }
+      if (hasText()) {
+        output.writeString(3, getText());
+      }
+      if (hasRecipientId()) {
+        output.writeInt64(4, getRecipientId());
+      }
+      if (hasCreatedAt()) {
+        output.writeString(5, getCreatedAt());
+      }
+      if (hasSenderScreenName()) {
+        output.writeString(6, getSenderScreenName());
+      }
+      if (hasRecipientScreenName()) {
+        output.writeString(7, getRecipientScreenName());
+      }
+      if (hasSender()) {
+        output.writeMessage(8, getSender());
+      }
+      if (hasRecipient()) {
+        output.writeMessage(9, getRecipient());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, getId());
+      }
+      if (hasSenderId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, getSenderId());
+      }
+      if (hasText()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(3, getText());
+      }
+      if (hasRecipientId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, getRecipientId());
+      }
+      if (hasCreatedAt()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(5, getCreatedAt());
+      }
+      if (hasSenderScreenName()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(6, getSenderScreenName());
+      }
+      if (hasRecipientScreenName()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(7, getRecipientScreenName());
+      }
+      if (hasSender()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(8, getSender());
+      }
+      if (hasRecipient()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(9, getRecipient());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_message parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(im.dario.qantiqa.common.protocol.Protocol.direct_message prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private im.dario.qantiqa.common.protocol.Protocol.direct_message result;
+      
+      // Construct using im.dario.qantiqa.common.protocol.Protocol.direct_message.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new im.dario.qantiqa.common.protocol.Protocol.direct_message();
+        return builder;
+      }
+      
+      protected im.dario.qantiqa.common.protocol.Protocol.direct_message internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new im.dario.qantiqa.common.protocol.Protocol.direct_message();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.direct_message.getDescriptor();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.direct_message getDefaultInstanceForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.direct_message.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.direct_message build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private im.dario.qantiqa.common.protocol.Protocol.direct_message buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.direct_message buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        im.dario.qantiqa.common.protocol.Protocol.direct_message returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof im.dario.qantiqa.common.protocol.Protocol.direct_message) {
+          return mergeFrom((im.dario.qantiqa.common.protocol.Protocol.direct_message)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(im.dario.qantiqa.common.protocol.Protocol.direct_message other) {
+        if (other == im.dario.qantiqa.common.protocol.Protocol.direct_message.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (other.hasSenderId()) {
+          setSenderId(other.getSenderId());
+        }
+        if (other.hasText()) {
+          setText(other.getText());
+        }
+        if (other.hasRecipientId()) {
+          setRecipientId(other.getRecipientId());
+        }
+        if (other.hasCreatedAt()) {
+          setCreatedAt(other.getCreatedAt());
+        }
+        if (other.hasSenderScreenName()) {
+          setSenderScreenName(other.getSenderScreenName());
+        }
+        if (other.hasRecipientScreenName()) {
+          setRecipientScreenName(other.getRecipientScreenName());
+        }
+        if (other.hasSender()) {
+          mergeSender(other.getSender());
+        }
+        if (other.hasRecipient()) {
+          mergeRecipient(other.getRecipient());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setId(input.readInt64());
+              break;
+            }
+            case 16: {
+              setSenderId(input.readInt64());
+              break;
+            }
+            case 26: {
+              setText(input.readString());
+              break;
+            }
+            case 32: {
+              setRecipientId(input.readInt64());
+              break;
+            }
+            case 42: {
+              setCreatedAt(input.readString());
+              break;
+            }
+            case 50: {
+              setSenderScreenName(input.readString());
+              break;
+            }
+            case 58: {
+              setRecipientScreenName(input.readString());
+              break;
+            }
+            case 66: {
+              im.dario.qantiqa.common.protocol.Protocol.user.Builder subBuilder = im.dario.qantiqa.common.protocol.Protocol.user.newBuilder();
+              if (hasSender()) {
+                subBuilder.mergeFrom(getSender());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setSender(subBuilder.buildPartial());
+              break;
+            }
+            case 74: {
+              im.dario.qantiqa.common.protocol.Protocol.user.Builder subBuilder = im.dario.qantiqa.common.protocol.Protocol.user.newBuilder();
+              if (hasRecipient()) {
+                subBuilder.mergeFrom(getRecipient());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setRecipient(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int64 id = 1;
+      public boolean hasId() {
+        return result.hasId();
+      }
+      public long getId() {
+        return result.getId();
+      }
+      public Builder setId(long value) {
+        result.hasId = true;
+        result.id_ = value;
+        return this;
+      }
+      public Builder clearId() {
+        result.hasId = false;
+        result.id_ = 0L;
+        return this;
+      }
+      
+      // optional int64 sender_id = 2;
+      public boolean hasSenderId() {
+        return result.hasSenderId();
+      }
+      public long getSenderId() {
+        return result.getSenderId();
+      }
+      public Builder setSenderId(long value) {
+        result.hasSenderId = true;
+        result.senderId_ = value;
+        return this;
+      }
+      public Builder clearSenderId() {
+        result.hasSenderId = false;
+        result.senderId_ = 0L;
+        return this;
+      }
+      
+      // optional string text = 3;
+      public boolean hasText() {
+        return result.hasText();
+      }
+      public java.lang.String getText() {
+        return result.getText();
+      }
+      public Builder setText(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasText = true;
+        result.text_ = value;
+        return this;
+      }
+      public Builder clearText() {
+        result.hasText = false;
+        result.text_ = getDefaultInstance().getText();
+        return this;
+      }
+      
+      // optional int64 recipient_id = 4;
+      public boolean hasRecipientId() {
+        return result.hasRecipientId();
+      }
+      public long getRecipientId() {
+        return result.getRecipientId();
+      }
+      public Builder setRecipientId(long value) {
+        result.hasRecipientId = true;
+        result.recipientId_ = value;
+        return this;
+      }
+      public Builder clearRecipientId() {
+        result.hasRecipientId = false;
+        result.recipientId_ = 0L;
+        return this;
+      }
+      
+      // optional string created_at = 5;
+      public boolean hasCreatedAt() {
+        return result.hasCreatedAt();
+      }
+      public java.lang.String getCreatedAt() {
+        return result.getCreatedAt();
+      }
+      public Builder setCreatedAt(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasCreatedAt = true;
+        result.createdAt_ = value;
+        return this;
+      }
+      public Builder clearCreatedAt() {
+        result.hasCreatedAt = false;
+        result.createdAt_ = getDefaultInstance().getCreatedAt();
+        return this;
+      }
+      
+      // optional string sender_screen_name = 6;
+      public boolean hasSenderScreenName() {
+        return result.hasSenderScreenName();
+      }
+      public java.lang.String getSenderScreenName() {
+        return result.getSenderScreenName();
+      }
+      public Builder setSenderScreenName(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasSenderScreenName = true;
+        result.senderScreenName_ = value;
+        return this;
+      }
+      public Builder clearSenderScreenName() {
+        result.hasSenderScreenName = false;
+        result.senderScreenName_ = getDefaultInstance().getSenderScreenName();
+        return this;
+      }
+      
+      // optional string recipient_screen_name = 7;
+      public boolean hasRecipientScreenName() {
+        return result.hasRecipientScreenName();
+      }
+      public java.lang.String getRecipientScreenName() {
+        return result.getRecipientScreenName();
+      }
+      public Builder setRecipientScreenName(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasRecipientScreenName = true;
+        result.recipientScreenName_ = value;
+        return this;
+      }
+      public Builder clearRecipientScreenName() {
+        result.hasRecipientScreenName = false;
+        result.recipientScreenName_ = getDefaultInstance().getRecipientScreenName();
+        return this;
+      }
+      
+      // optional .user sender = 8;
+      public boolean hasSender() {
+        return result.hasSender();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.user getSender() {
+        return result.getSender();
+      }
+      public Builder setSender(im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasSender = true;
+        result.sender_ = value;
+        return this;
+      }
+      public Builder setSender(im.dario.qantiqa.common.protocol.Protocol.user.Builder builderForValue) {
+        result.hasSender = true;
+        result.sender_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeSender(im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (result.hasSender() &&
+            result.sender_ != im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance()) {
+          result.sender_ =
+            im.dario.qantiqa.common.protocol.Protocol.user.newBuilder(result.sender_).mergeFrom(value).buildPartial();
+        } else {
+          result.sender_ = value;
+        }
+        result.hasSender = true;
+        return this;
+      }
+      public Builder clearSender() {
+        result.hasSender = false;
+        result.sender_ = im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance();
+        return this;
+      }
+      
+      // optional .user recipient = 9;
+      public boolean hasRecipient() {
+        return result.hasRecipient();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.user getRecipient() {
+        return result.getRecipient();
+      }
+      public Builder setRecipient(im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasRecipient = true;
+        result.recipient_ = value;
+        return this;
+      }
+      public Builder setRecipient(im.dario.qantiqa.common.protocol.Protocol.user.Builder builderForValue) {
+        result.hasRecipient = true;
+        result.recipient_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeRecipient(im.dario.qantiqa.common.protocol.Protocol.user value) {
+        if (result.hasRecipient() &&
+            result.recipient_ != im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance()) {
+          result.recipient_ =
+            im.dario.qantiqa.common.protocol.Protocol.user.newBuilder(result.recipient_).mergeFrom(value).buildPartial();
+        } else {
+          result.recipient_ = value;
+        }
+        result.hasRecipient = true;
+        return this;
+      }
+      public Builder clearRecipient() {
+        result.hasRecipient = false;
+        result.recipient_ = im.dario.qantiqa.common.protocol.Protocol.user.getDefaultInstance();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:direct_message)
+    }
+    
+    static {
+      defaultInstance = new direct_message(true);
+      im.dario.qantiqa.common.protocol.Protocol.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:direct_message)
+  }
+  
+  public static final class direct_messages extends
+      com.google.protobuf.GeneratedMessage {
+    // Use direct_messages.newBuilder() to construct.
+    private direct_messages() {
+      initFields();
+    }
+    private direct_messages(boolean noInit) {}
+    
+    private static final direct_messages defaultInstance;
+    public static direct_messages getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public direct_messages getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_direct_messages_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return im.dario.qantiqa.common.protocol.Protocol.internal_static_direct_messages_fieldAccessorTable;
+    }
+    
+    // repeated .direct_message direct_message = 1;
+    public static final int DIRECT_MESSAGE_FIELD_NUMBER = 1;
+    private java.util.List<im.dario.qantiqa.common.protocol.Protocol.direct_message> directMessage_ =
+      java.util.Collections.emptyList();
+    public java.util.List<im.dario.qantiqa.common.protocol.Protocol.direct_message> getDirectMessageList() {
+      return directMessage_;
+    }
+    public int getDirectMessageCount() { return directMessage_.size(); }
+    public im.dario.qantiqa.common.protocol.Protocol.direct_message getDirectMessage(int index) {
+      return directMessage_.get(index);
+    }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (im.dario.qantiqa.common.protocol.Protocol.direct_message element : getDirectMessageList()) {
+        output.writeMessage(1, element);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      for (im.dario.qantiqa.common.protocol.Protocol.direct_message element : getDirectMessageList()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, element);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static im.dario.qantiqa.common.protocol.Protocol.direct_messages parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(im.dario.qantiqa.common.protocol.Protocol.direct_messages prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private im.dario.qantiqa.common.protocol.Protocol.direct_messages result;
+      
+      // Construct using im.dario.qantiqa.common.protocol.Protocol.direct_messages.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new im.dario.qantiqa.common.protocol.Protocol.direct_messages();
+        return builder;
+      }
+      
+      protected im.dario.qantiqa.common.protocol.Protocol.direct_messages internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new im.dario.qantiqa.common.protocol.Protocol.direct_messages();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.direct_messages.getDescriptor();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.direct_messages getDefaultInstanceForType() {
+        return im.dario.qantiqa.common.protocol.Protocol.direct_messages.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.direct_messages build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private im.dario.qantiqa.common.protocol.Protocol.direct_messages buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public im.dario.qantiqa.common.protocol.Protocol.direct_messages buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        if (result.directMessage_ != java.util.Collections.EMPTY_LIST) {
+          result.directMessage_ =
+            java.util.Collections.unmodifiableList(result.directMessage_);
+        }
+        im.dario.qantiqa.common.protocol.Protocol.direct_messages returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof im.dario.qantiqa.common.protocol.Protocol.direct_messages) {
+          return mergeFrom((im.dario.qantiqa.common.protocol.Protocol.direct_messages)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(im.dario.qantiqa.common.protocol.Protocol.direct_messages other) {
+        if (other == im.dario.qantiqa.common.protocol.Protocol.direct_messages.getDefaultInstance()) return this;
+        if (!other.directMessage_.isEmpty()) {
+          if (result.directMessage_.isEmpty()) {
+            result.directMessage_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.direct_message>();
+          }
+          result.directMessage_.addAll(other.directMessage_);
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              im.dario.qantiqa.common.protocol.Protocol.direct_message.Builder subBuilder = im.dario.qantiqa.common.protocol.Protocol.direct_message.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addDirectMessage(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // repeated .direct_message direct_message = 1;
+      public java.util.List<im.dario.qantiqa.common.protocol.Protocol.direct_message> getDirectMessageList() {
+        return java.util.Collections.unmodifiableList(result.directMessage_);
+      }
+      public int getDirectMessageCount() {
+        return result.getDirectMessageCount();
+      }
+      public im.dario.qantiqa.common.protocol.Protocol.direct_message getDirectMessage(int index) {
+        return result.getDirectMessage(index);
+      }
+      public Builder setDirectMessage(int index, im.dario.qantiqa.common.protocol.Protocol.direct_message value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.directMessage_.set(index, value);
+        return this;
+      }
+      public Builder setDirectMessage(int index, im.dario.qantiqa.common.protocol.Protocol.direct_message.Builder builderForValue) {
+        result.directMessage_.set(index, builderForValue.build());
+        return this;
+      }
+      public Builder addDirectMessage(im.dario.qantiqa.common.protocol.Protocol.direct_message value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        if (result.directMessage_.isEmpty()) {
+          result.directMessage_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.direct_message>();
+        }
+        result.directMessage_.add(value);
+        return this;
+      }
+      public Builder addDirectMessage(im.dario.qantiqa.common.protocol.Protocol.direct_message.Builder builderForValue) {
+        if (result.directMessage_.isEmpty()) {
+          result.directMessage_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.direct_message>();
+        }
+        result.directMessage_.add(builderForValue.build());
+        return this;
+      }
+      public Builder addAllDirectMessage(
+          java.lang.Iterable<? extends im.dario.qantiqa.common.protocol.Protocol.direct_message> values) {
+        if (result.directMessage_.isEmpty()) {
+          result.directMessage_ = new java.util.ArrayList<im.dario.qantiqa.common.protocol.Protocol.direct_message>();
+        }
+        super.addAll(values, result.directMessage_);
+        return this;
+      }
+      public Builder clearDirectMessage() {
+        result.directMessage_ = java.util.Collections.emptyList();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:direct_messages)
+    }
+    
+    static {
+      defaultInstance = new direct_messages(true);
+      im.dario.qantiqa.common.protocol.Protocol.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:direct_messages)
   }
   
   public static final class gluons extends
@@ -5808,6 +7128,11 @@ public final class Protocol {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_status_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_statuses_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_statuses_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_relationship_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -5817,6 +7142,16 @@ public final class Protocol {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_relationship_member_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_direct_message_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_direct_message_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_direct_messages_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_direct_messages_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_gluons_descriptor;
   private static
@@ -5876,23 +7211,30 @@ public final class Protocol {
       "\006 \001(\003\022\033\n\023in_reply_to_user_id\030\007 \001(\003\022\021\n\tfa" +
       "vorited\030\010 \001(\010\022\037\n\027in_reply_to_screen_name" +
       "\030\t \001(\t\022\023\n\004user\030\n \001(\0132\005.user\022!\n\020retweeted" +
-      "_status\030\013 \001(\0132\007.status\"Z\n\014relationship\022$" +
-      "\n\006target\030\001 \002(\0132\024.relationship_member\022$\n\006" +
-      "source\030\002 \002(\0132\024.relationship_member\"\217\001\n\023r" +
-      "elationship_member\022\023\n\013followed_by\030\001 \001(\010\022" +
-      "\021\n\tfollowing\030\002 \001(\010\022\020\n\010blocking\030\003 \001(\010\022\035\n\025",
-      "notifications_enabled\030\004 \001(\010\022\023\n\013screen_na" +
-      "me\030\005 \001(\t\022\n\n\002id\030\006 \001(\003\"\027\n\006gluons\022\r\n\005gluon\030" +
-      "\001 \003(\t\"+\n\nvalidation\022\014\n\004isOk\030\001 \001(\010\022\017\n\007mes" +
-      "sage\030\002 \001(\t\"4\n\016authentication\022\020\n\010username" +
-      "\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"l\n\027authenticati" +
-      "on_response\022\033\n\006result\030\001 \002(\0162\013.AuthResult" +
-      "\022\017\n\007user_id\030\002 \001(\003\022\017\n\007user_ip\030\003 \001(\t\022\022\n\nse" +
-      "ssion_id\030\004 \001(\t\"<\n\007session\022\017\n\007user_id\030\001 \001" +
-      "(\003\022\024\n\014user_address\030\002 \001(\t\022\n\n\002id\030\003 \001(\t*1\n\n" +
-      "AuthResult\022\t\n\005VALID\020\000\022\r\n\tNOT_VALID\020\001\022\t\n\005",
-      "ERROR\020\002B\"\n im.dario.qantiqa.common.proto" +
-      "col"
+      "_status\030\013 \001(\0132\007.status\"#\n\010statuses\022\027\n\006st" +
+      "atus\030\001 \003(\0132\007.status\"Z\n\014relationship\022$\n\006t" +
+      "arget\030\001 \002(\0132\024.relationship_member\022$\n\006sou" +
+      "rce\030\002 \002(\0132\024.relationship_member\"\217\001\n\023rela" +
+      "tionship_member\022\023\n\013followed_by\030\001 \001(\010\022\021\n\t",
+      "following\030\002 \001(\010\022\020\n\010blocking\030\003 \001(\010\022\035\n\025not" +
+      "ifications_enabled\030\004 \001(\010\022\023\n\013screen_name\030" +
+      "\005 \001(\t\022\n\n\002id\030\006 \001(\003\"\323\001\n\016direct_message\022\n\n\002" +
+      "id\030\001 \001(\003\022\021\n\tsender_id\030\002 \001(\003\022\014\n\004text\030\003 \001(" +
+      "\t\022\024\n\014recipient_id\030\004 \001(\003\022\022\n\ncreated_at\030\005 " +
+      "\001(\t\022\032\n\022sender_screen_name\030\006 \001(\t\022\035\n\025recip" +
+      "ient_screen_name\030\007 \001(\t\022\025\n\006sender\030\010 \001(\0132\005" +
+      ".user\022\030\n\trecipient\030\t \001(\0132\005.user\":\n\017direc" +
+      "t_messages\022\'\n\016direct_message\030\001 \003(\0132\017.dir" +
+      "ect_message\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\n",
+      "validation\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(" +
+      "\t\"4\n\016authentication\022\020\n\010username\030\001 \001(\t\022\020\n" +
+      "\010password\030\002 \001(\t\"l\n\027authentication_respon" +
+      "se\022\033\n\006result\030\001 \002(\0162\013.AuthResult\022\017\n\007user_" +
+      "id\030\002 \001(\003\022\017\n\007user_ip\030\003 \001(\t\022\022\n\nsession_id\030" +
+      "\004 \001(\t\"<\n\007session\022\017\n\007user_id\030\001 \001(\003\022\024\n\014use" +
+      "r_address\030\002 \001(\t\022\n\n\002id\030\003 \001(\t*1\n\nAuthResul" +
+      "t\022\t\n\005VALID\020\000\022\r\n\tNOT_VALID\020\001\022\t\n\005ERROR\020\002B\"" +
+      "\n im.dario.qantiqa.common.protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5939,8 +7281,16 @@ public final class Protocol {
               new java.lang.String[] { "CreatedAt", "Id", "Text", "Source", "Truncated", "InReplyToStatusId", "InReplyToUserId", "Favorited", "InReplyToScreenName", "User", "RetweetedStatus", },
               im.dario.qantiqa.common.protocol.Protocol.status.class,
               im.dario.qantiqa.common.protocol.Protocol.status.Builder.class);
-          internal_static_relationship_descriptor =
+          internal_static_statuses_descriptor =
             getDescriptor().getMessageTypes().get(5);
+          internal_static_statuses_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_statuses_descriptor,
+              new java.lang.String[] { "Status", },
+              im.dario.qantiqa.common.protocol.Protocol.statuses.class,
+              im.dario.qantiqa.common.protocol.Protocol.statuses.Builder.class);
+          internal_static_relationship_descriptor =
+            getDescriptor().getMessageTypes().get(6);
           internal_static_relationship_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_relationship_descriptor,
@@ -5948,15 +7298,31 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.relationship.class,
               im.dario.qantiqa.common.protocol.Protocol.relationship.Builder.class);
           internal_static_relationship_member_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_relationship_member_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_relationship_member_descriptor,
               new java.lang.String[] { "FollowedBy", "Following", "Blocking", "NotificationsEnabled", "ScreenName", "Id", },
               im.dario.qantiqa.common.protocol.Protocol.relationship_member.class,
               im.dario.qantiqa.common.protocol.Protocol.relationship_member.Builder.class);
+          internal_static_direct_message_descriptor =
+            getDescriptor().getMessageTypes().get(8);
+          internal_static_direct_message_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_direct_message_descriptor,
+              new java.lang.String[] { "Id", "SenderId", "Text", "RecipientId", "CreatedAt", "SenderScreenName", "RecipientScreenName", "Sender", "Recipient", },
+              im.dario.qantiqa.common.protocol.Protocol.direct_message.class,
+              im.dario.qantiqa.common.protocol.Protocol.direct_message.Builder.class);
+          internal_static_direct_messages_descriptor =
+            getDescriptor().getMessageTypes().get(9);
+          internal_static_direct_messages_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_direct_messages_descriptor,
+              new java.lang.String[] { "DirectMessage", },
+              im.dario.qantiqa.common.protocol.Protocol.direct_messages.class,
+              im.dario.qantiqa.common.protocol.Protocol.direct_messages.Builder.class);
           internal_static_gluons_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_gluons_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_gluons_descriptor,
@@ -5964,7 +7330,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.gluons.class,
               im.dario.qantiqa.common.protocol.Protocol.gluons.Builder.class);
           internal_static_validation_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_validation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_validation_descriptor,
@@ -5972,7 +7338,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.validation.class,
               im.dario.qantiqa.common.protocol.Protocol.validation.Builder.class);
           internal_static_authentication_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(12);
           internal_static_authentication_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_authentication_descriptor,
@@ -5980,7 +7346,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.authentication.class,
               im.dario.qantiqa.common.protocol.Protocol.authentication.Builder.class);
           internal_static_authentication_response_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(13);
           internal_static_authentication_response_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_authentication_response_descriptor,
@@ -5988,7 +7354,7 @@ public final class Protocol {
               im.dario.qantiqa.common.protocol.Protocol.authentication_response.class,
               im.dario.qantiqa.common.protocol.Protocol.authentication_response.Builder.class);
           internal_static_session_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(14);
           internal_static_session_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_session_descriptor,

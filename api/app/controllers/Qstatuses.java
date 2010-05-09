@@ -29,6 +29,7 @@ import static constants.HttpMethod.POST;
 import static constants.HttpMethod.PUT;
 import im.dario.qantiqa.common.protocol.Protocol;
 import network.services.QuarkService;
+import network.services.SearchService;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -46,27 +47,39 @@ public class Qstatuses extends QController {
     @Formats( { XML, JSON, ATOM })
     @RequiresAuthentication
     public static void home_timeline(Integer count, Long since_id) {
-        proxyToTwitter();
+        // TODO
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     @RequiresAuthentication
     public static void mentions(Integer count) {
-        proxyToTwitter();
+        SearchService ssv = new SearchService(getOverlay());
+
+        try {
+            renderProtobuf(ssv.searchQuarks("@" + request.user));
+        } catch (Exception e) {
+            renderError(e);
+        }
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, RSS, ATOM })
     public static void user_timeline(String id, Integer count) {
-        proxyToTwitter();
+        // TODO
     }
 
     @Methods( { GET })
     @Formats( { XML, JSON, ATOM })
     @RequiresAuthentication
     public static void retweeted_by_me(Integer count) {
-        proxyToTwitter();
+        QuarkService qsv = new QuarkService(getOverlay());
+
+        try {
+            qsv.requarks(request.user);
+        } catch (Exception e) {
+            renderError(e);
+        }
     }
 
     @Methods( { GET })
@@ -122,13 +135,5 @@ public class Qstatuses extends QController {
         } catch (Exception e) {
             renderRetweetError(e);
         }
-    }
-
-    private static Protocol.status appendUser(Protocol.status msg, Long quarkId) {
-        Protocol.status.Builder builder = msg.toBuilder();
-        builder.setUser(getUser(QuarkService.getUserIdFromQuarkId(quarkId),
-                null, "source"));
-
-        return builder.build();
     }
 }
