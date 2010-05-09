@@ -27,6 +27,7 @@ import static constants.HttpMethod.POST;
 import im.dario.qantiqa.common.protocol.Protocol;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 import network.Storage;
@@ -54,8 +55,8 @@ public class Qfriendships extends QController {
 
         RelationshipService rsv = new RelationshipService(getOverlay());
         try {
-            HashMap<Storage, Vector<Long>> data = rsv.follow(source, target);
-            Vector<Long> followers = data.get(Storage.followers);
+            HashMap<Storage, HashSet<Long>> data = rsv.follow(source, target);
+            HashSet<Long> followers = data.get(Storage.followers);
 
             Protocol.user.Builder builder = target.toBuilder();
             builder.setFollowersCount(followers.size());
@@ -68,7 +69,7 @@ public class Qfriendships extends QController {
             definitive.setFollowing(true);
             target = definitive.build();
 
-            Vector<Long> following = data.get(Storage.following);
+            HashSet<Long> following = data.get(Storage.following);
             builder = source.toBuilder();
             builder.setFriendsCount(following.size());
 
@@ -91,8 +92,8 @@ public class Qfriendships extends QController {
 
         RelationshipService rsv = new RelationshipService(getOverlay());
         try {
-            HashMap<Storage, Vector<Long>> data = rsv.unfollow(source, target);
-            Vector<Long> followers = data.get(Storage.followers);
+            HashMap<Storage, HashSet<Long>> data = rsv.unfollow(source, target);
+            HashSet<Long> followers = data.get(Storage.followers);
 
             Protocol.user.Builder builder = target.toBuilder();
             builder.setFollowersCount(followers.size());
@@ -100,7 +101,7 @@ public class Qfriendships extends QController {
 
             usv.set(target);
 
-            Vector<Long> following = data.get(Storage.following);
+            HashSet<Long> following = data.get(Storage.following);
             builder = source.toBuilder();
             builder.setFriendsCount(following.size());
 
@@ -143,8 +144,8 @@ public class Qfriendships extends QController {
         builder.setId(member.getId());
 
         RelationshipService rsv = new RelationshipService(getOverlay());
-        Vector<Long> followersMember = rsv.followers(member);
-        Vector<Long> followersOther = rsv.followers(other);
+        HashSet<Long> followersMember = rsv.followers(member);
+        HashSet<Long> followersOther = rsv.followers(other);
 
         if (isSource) {
             builder.setNotificationsEnabled(false);

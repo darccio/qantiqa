@@ -23,7 +23,7 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.HashSet;
 
 import network.Overlay;
 import network.Storage;
@@ -42,18 +42,18 @@ public class RelationshipService extends Service {
         super(overlay);
     }
 
-    public HashMap<Storage, Vector<Long>> follow(Protocol.user source,
+    public HashMap<Storage, HashSet<Long>> follow(Protocol.user source,
             Protocol.user target) throws DHTException, QantiqaException {
-        HashMap<Storage, Vector<Long>> data = new HashMap<Storage, Vector<Long>>();
+        HashMap<Storage, HashSet<Long>> data = new HashMap<Storage, HashSet<Long>>();
         data.put(Storage.followers, addTo(Storage.followers, source, target));
         data.put(Storage.following, addTo(Storage.following, target, source));
 
         return data;
     }
 
-    public HashMap<Storage, Vector<Long>> unfollow(Protocol.user source,
+    public HashMap<Storage, HashSet<Long>> unfollow(Protocol.user source,
             Protocol.user target) throws DHTException, QantiqaException {
-        HashMap<Storage, Vector<Long>> data = new HashMap<Storage, Vector<Long>>();
+        HashMap<Storage, HashSet<Long>> data = new HashMap<Storage, HashSet<Long>>();
         data.put(Storage.followers, removeFrom(Storage.followers, source,
                 target));
         data.put(Storage.following, removeFrom(Storage.following, target,
@@ -62,9 +62,9 @@ public class RelationshipService extends Service {
         return data;
     }
 
-    private Vector<Long> addTo(Storage storage, Protocol.user source,
+    private HashSet<Long> addTo(Storage storage, Protocol.user source,
             Protocol.user target) throws DHTException, QantiqaException {
-        Vector<Long> data = getData(storage, target);
+        HashSet<Long> data = getData(storage, target);
         data.add(source.getId());
 
         overlay.store(storage, target.getId(), data);
@@ -72,9 +72,9 @@ public class RelationshipService extends Service {
         return data;
     }
 
-    private Vector<Long> removeFrom(Storage storage, Protocol.user source,
+    private HashSet<Long> removeFrom(Storage storage, Protocol.user source,
             Protocol.user target) throws QantiqaException, DHTException {
-        Vector<Long> data = getData(storage, target);
+        HashSet<Long> data = getData(storage, target);
         data.remove(source.getId());
 
         overlay.store(storage, target.getId(), data);
@@ -82,9 +82,9 @@ public class RelationshipService extends Service {
         return data;
     }
 
-    private Vector<Long> getData(Storage storage, Protocol.user target)
-            throws QantiqaException {
-        Vector<Long> data = null;
+    private HashSet<Long> getData(Storage<HashSet<Long>> storage,
+            Protocol.user target) throws QantiqaException {
+        HashSet<Long> data = null;
         if (storage == Storage.followers) {
             data = followers(target);
         }
@@ -100,30 +100,30 @@ public class RelationshipService extends Service {
         return data;
     }
 
-    public Vector<Long> followers(Protocol.user user) {
-        Vector<Long> followers = overlay.retrieve(Storage.followers, user
+    public HashSet<Long> followers(Protocol.user user) {
+        HashSet<Long> followers = overlay.retrieve(Storage.followers, user
                 .getId());
 
         if (followers == null) {
-            followers = new Vector();
+            followers = new HashSet<Long>();
         }
 
         return followers;
     }
 
-    public Vector<Long> following(Protocol.user user) {
-        Vector<Long> following = overlay.retrieve(Storage.following, user
+    public HashSet<Long> following(Protocol.user user) {
+        HashSet<Long> following = overlay.retrieve(Storage.following, user
                 .getId());
 
         if (following == null) {
-            following = new Vector();
+            following = new HashSet<Long>();
         }
 
         return following;
     }
 
     public boolean isFollower(Protocol.user source, Protocol.user target) {
-        Vector<Long> followers = this.followers(target);
+        HashSet<Long> followers = this.followers(target);
 
         return followers.contains(source.getId());
     }

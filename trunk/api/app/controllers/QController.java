@@ -20,7 +20,6 @@
 package controllers;
 
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.session;
 import im.dario.qantiqa.common.protocol.format.XmlFormat;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
@@ -29,10 +28,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import network.Overlay;
+import network.services.QuarkService;
 import network.services.SessionService;
 import network.services.UserService;
 
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang.StringUtils;
 
 import play.Play;
@@ -41,7 +40,6 @@ import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
 import utils.NotAcceptable;
-import utils.TwitterRequest;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -275,44 +273,6 @@ public abstract class QController extends Controller {
     }
 
     /**
-     * Proxies to Twitter. Just for building purposes.
-     */
-    @Deprecated
-    protected static void proxyToTwitter() {
-        Format format = Cache.get(getFormatKey(), Format.class);
-
-        TwitterRequest pr = new TwitterRequest();
-        pr.proxy(request);
-
-        response.current().status = pr.getStatus();
-        response.current().contentType = pr.getContentType();
-
-        Header[] headers = pr.getHeaders();
-        for (Header header : headers) {
-            String name = header.getName();
-
-            if (!name.equals("Content-Length") && !name.equals("Content-Type")) {
-                response.current().setHeader(header.getName(),
-                        header.getValue());
-            }
-        }
-
-        switch (format) {
-        case ATOM:
-        case RSS:
-        case XML:
-            renderXml(pr.getXml());
-            break;
-        case JSON:
-            renderText(pr.getJson());
-            break;
-        case RAW:
-            renderBinary(pr.getStream());
-            break;
-        }
-    }
-
-    /**
      * Helper method to render our Protobuf builders.
      * 
      * It is not the used in Higgs because the different treatment of output
@@ -442,5 +402,14 @@ public abstract class QController extends Controller {
 
         response.current().status = status;
         renderProtobuf(bh);
+    }
+
+    protected static Protocol.status appendUser(Protocol.status msg,
+            Long quarkId) {
+        Protocol.status.Builder builder = msg.toBuilder();
+        builder.setUser(getUser(QuarkService.getUserIdFromQuarkId(quarkId),
+                null, "source"));
+
+        return builder.build();
     }
 }

@@ -24,6 +24,8 @@ import static constants.Format.JSON;
 import static constants.Format.RSS;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
+import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.session.Builder;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -39,6 +41,6 @@ public class Qdirect_messages extends QController {
     @Formats( { XML, JSON, RSS, ATOM })
     @RequiresAuthentication
     public static void index(Integer count) {
-        proxyToTwitter();
+        renderProtobuf(Protocol.direct_messages.newBuilder().build());
     }
 }
