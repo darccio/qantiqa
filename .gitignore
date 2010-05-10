@@ -1,4 +1,6 @@
 bin
+*/bin
+*/target
 *.war
 */public/playmanual
 */war/WEB-INF/appengine-generated

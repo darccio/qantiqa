@@ -2,23 +2,29 @@
 <classpath>
 	<classpathentry excluding="views/**" kind="src" path="app"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="gae"/><classpathentry kind="src" path="siena"/>
+	
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/play.jar" sourcepath="/home/dario/software/play-1.0.1/framework" />
-	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forge/qantiqa/higgs/lib/qa-common.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/appengine-api-1.0-sdk-1.2.6.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/asm-3.1.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/datanucleus-appengine-1.0.3.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/datanucleus-core-1.1.5.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/datanucleus-enhancer-1.1.4.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/datanucleus-jpa-1.1.5.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/jdo2-api-2.3-eb.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/play-gae.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/provided-appengine-api-stubs.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/provided-appengine-api.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/gae/lib/provided-appengine-local-runtime.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/siena/lib/play-siena.jar" />
-	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/modules/siena/lib/siena-r142.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/bunshin.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/dom4j.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/easypastry.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/jdom.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/junit.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/pastry.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/xstream.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/qa-common.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/protobuf-java-2.3.0.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/joda-time-1.6.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/junit-4.5.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/protobuf-format-java-1.1.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/bunshin-0.2.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/dom4j-0.2.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/easypastry-0.2.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/jdom-0.2.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/pastry-0.2.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/play-1.0.1.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/xstream-0.2.jar" />
+	<classpathentry kind="lib" path="/home/dario/uoc/8e/tfc/forja/qantiqa/qantiqa-api/lib/qantiqa-common-1.1-SNAPSHOT.jar" />
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/lib/SnakeYAML-1.2.jar" />
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/lib/WikiText.jar" />
 	<classpathentry kind="lib" path="/home/dario/software/play-1.0.1/framework/lib/ZDB.jar" />
