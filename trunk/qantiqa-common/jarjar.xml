@@ -5,7 +5,7 @@ different projects.
 
 Only for development. This depends on http://code.google.com/p/jarjar/ 
 -->
-<project name="KitUtils" default="jar" basedir=".">
+<project name="qantiqa-common" default="jar" basedir=".">
 	<target name="jar">
 		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="../../deps/jarjar-1.0.jar" />
 		<jarjar jarfile="../api/lib/qa-common.jar">
