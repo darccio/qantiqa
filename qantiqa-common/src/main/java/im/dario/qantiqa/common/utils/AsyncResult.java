@@ -19,6 +19,8 @@
 
 package im.dario.qantiqa.common.utils;
 
+import java.util.logging.Logger;
+
 /**
  * Reference to the result of an asynchronous operation.
  * 
@@ -29,30 +31,33 @@ package im.dario.qantiqa.common.utils;
  */
 public class AsyncResult<V> {
 
-    private V value;
+	private static final Logger log = Logger.getLogger(AsyncResult.class
+			.getSimpleName());
 
-    @SuppressWarnings("unchecked")
-    public void set(Object o) {
-        if (value == null) {
-            value = (V) o;
-        }
-    }
+	private V value;
 
-    /**
-     * Get the set value with {@link AsyncResult#set(Object)}. If not it is set,
-     * it waits in a no busy-wait way.
-     * 
-     * @return Result value
-     */
-    public synchronized V get() {
-        while (value == null) {
-            try {
-                this.wait(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+	@SuppressWarnings("unchecked")
+	public synchronized void set(Object o) {
+		if (value == null) {
+			value = (V) o;
+		}
+	}
 
-        return value;
-    }
+	/**
+	 * Get the set value with {@link AsyncResult#set(Object)}. If not it is set,
+	 * it waits in a no busy-wait way.
+	 * 
+	 * @return Result value
+	 */
+	public synchronized V get() {
+		while (value == null) {
+			try {
+				this.wait(500);
+			} catch (InterruptedException e) {
+				log.finest(e.getMessage());
+			}
+		}
+
+		return value;
+	}
 }

@@ -34,22 +34,25 @@ import com.google.protobuf.Message.Builder;
  */
 public class QantiqaFormat {
 
-    public static void merge(InputStream input, Builder builder) {
-        XmlFormat.merge(input, builder);
-    }
+	private QantiqaFormat() {
+	}
 
-    public static void merge(String data, Builder builder) {
-        ByteArrayInputStream bais;
-        try {
-            bais = new ByteArrayInputStream(data.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+	public static void merge(InputStream input, Builder builder) {
+		XmlFormat.merge(input, builder);
+	}
 
-        QantiqaFormat.merge(bais, builder);
-    }
+	public static void merge(String data, Builder builder) {
+		ByteArrayInputStream bais;
+		try {
+			bais = new ByteArrayInputStream(data.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 
-    public static String printToString(Message message) {
-        return XmlFormat.printToString(message);
-    }
+		QantiqaFormat.merge(bais, builder);
+	}
+
+	public static String printToString(Message message) {
+		return XmlFormat.printToString(message);
+	}
 }

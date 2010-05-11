@@ -20,15 +20,16 @@
 package controllers;
 
 import static constants.Format.JSON;
-import static constants.Format.RAW;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.io.File;
 
 import network.services.UserService;
+
+import org.apache.log4j.Logger;
+
 import play.Play;
 import annotations.Formats;
 import annotations.Methods;
@@ -42,48 +43,50 @@ import easypastry.dht.DHTException;
  */
 public class Qaccount extends QController {
 
-    @Methods( { GET })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void verify_credentials() {
-        UserService usv = new UserService(getOverlay());
+	private static final Logger log = Logger.getLogger(Qaccount.class);
 
-        boolean notValid = false;
-        Protocol.authentication_response auth = authenticate();
-        switch (auth.getResult()) {
-        case VALID:
-            Protocol.user user;
-            try {
-                user = usv.getAndInit(request.user, auth.getUserId());
-                startSession(auth, user);
+	@Methods( { GET })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void verify_credentials() {
+		UserService usv = new UserService(getOverlay());
 
-                renderProtobuf(user);
-            } catch (DHTException e) {
-                e.printStackTrace();
-                notValid = true;
-            }
-            break;
-        case NOT_VALID:
-            notValid = true;
-            break;
-        case ERROR:
-            renderError(500, "Could not authenticate you.");
-        }
+		boolean notValid = false;
+		Protocol.authentication_response auth = authenticate();
+		switch (auth.getResult()) {
+		case VALID:
+			Protocol.user user;
+			try {
+				user = usv.getAndInit(request.user, auth.getUserId());
+				startSession(auth, user);
 
-        if (notValid) {
-            unauthorized();
-        }
-    }
+				renderProtobuf(user);
+			} catch (DHTException e) {
+				log.error("ERR", e);
+				notValid = true;
+			}
+			break;
+		case NOT_VALID:
+			notValid = true;
+			break;
+		case ERROR:
+			renderError(500, "Could not authenticate you.");
+		}
 
-    @Methods( { GET })
-    public static void profile_image(String screen_name) {
-        // TODO Pending of updating profile (screen_name -> dht)
-        File avatar = new File(Play.applicationPath
-                + "/public/images/avatar.png");
+		if (notValid) {
+			unauthorized();
+		}
+	}
 
-        response.setHeader("Content-Length", String.valueOf(avatar.length()));
-        response.contentType = "image/png";
+	@Methods( { GET })
+	public static void profile_image(String screen_name) {
+		// TODO Pending of updating profile (screen_name -> dht)
+		File avatar = new File(Play.applicationPath
+				+ "/public/images/avatar.png");
 
-        renderBinary(avatar);
-    }
+		response.setHeader("Content-Length", String.valueOf(avatar.length()));
+		response.contentType = "image/png";
+
+		renderBinary(avatar);
+	}
 }

@@ -5,6 +5,7 @@
 mavenizing() {
     jar_id=$1
     version=$2
+    jar=$3
 
     echo mvn install:install-file -DgroupId=play.${jar_id//-/.} -DartifactId=play-$jar_id -Dversion=$version -Dfile=$jar -Dpackaging=jar -DgeneratePom=true 
     echo '<dependency><groupId>play.'${jar_id//-/.}'</groupId><artifactId>'play-$jar_id'</artifactId><version>'$version'</version></dependency>' 1>&2
@@ -56,7 +57,7 @@ for module in gae siena; do
             version=1.0.1
         fi
 
-        mavenizing $jar_id $version
+        mavenizing $jar_id $version $jar
     done
 done
 
@@ -134,6 +135,6 @@ for jar in *.jar; do
         version=1.0.1
     fi
 
-    mavenizing $jar_id $version
+    mavenizing $jar_id $version $jar
 done
 

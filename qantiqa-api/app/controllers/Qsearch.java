@@ -22,7 +22,6 @@ package controllers;
 import static constants.Format.ATOM;
 import static constants.Format.JSON;
 import static constants.HttpMethod.GET;
-import im.dario.qantiqa.common.utils.QantiqaException;
 import network.services.SearchService;
 import annotations.Formats;
 import annotations.Methods;
@@ -34,15 +33,15 @@ import annotations.Methods;
  */
 public class Qsearch extends QController {
 
-    @Methods( { GET })
-    @Formats( { ATOM, JSON })
-    public static void index(String q) {
-        SearchService ssv = new SearchService(getOverlay());
+	@Methods( { GET })
+	@Formats( { ATOM, JSON })
+	public static void index(String q) {
+		SearchService ssv = new SearchService(getOverlay());
 
-        try {
-            renderProtobuf(ssv.searchQuarks(q));
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			renderProtobuf(ssv.searchQuarks(q));
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 }

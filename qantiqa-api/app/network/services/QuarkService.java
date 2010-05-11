@@ -37,165 +37,165 @@ import easypastry.dht.DHTException;
  */
 public class QuarkService extends Service {
 
-    public QuarkService(Overlay overlay) {
-        super(overlay);
-    }
+	public QuarkService(Overlay overlay) {
+		super(overlay);
+	}
 
-    public Protocol.status update(Protocol.user user, String status,
-            Long in_reply_to_status_id, String source) throws QantiqaException,
-            DHTException {
-        if (status.length() > 140) {
-            throw new QantiqaException("Status is over 140 characters.")
-                    .status(403);
-        }
+	public Protocol.status update(Protocol.user user, String status,
+			Long in_reply_to_status_id, String source) throws QantiqaException,
+			DHTException {
+		if (status.length() > 140) {
+			throw new QantiqaException("Status is over 140 characters.")
+					.status(403);
+		}
 
-        Long id = getNextId(user);
-        if (user.getStatusesCount() > 0) {
-            Protocol.status current = get(id - 1);
-            if (current.getText().equals(status)) {
-                throw new QantiqaException("Status is a duplicate.")
-                        .status(403);
-            }
-        }
+		Long id = getNextId(user);
+		if (user.getStatusesCount() > 0) {
+			Protocol.status current = get(id - 1);
+			if (current.getText().equals(status)) {
+				throw new QantiqaException("Status is a duplicate.")
+						.status(403);
+			}
+		}
 
-        Protocol.status.Builder builder = Protocol.status.newBuilder();
+		Protocol.status.Builder builder = Protocol.status.newBuilder();
 
-        builder.setId(id);
-        builder.setText(status);
-        if (in_reply_to_status_id != null) {
-            builder.setInReplyToStatusId(in_reply_to_status_id);
-        }
+		builder.setId(id);
+		builder.setText(status);
+		if (in_reply_to_status_id != null) {
+			builder.setInReplyToStatusId(in_reply_to_status_id);
+		}
 
-        if (source != null) {
-            builder.setSource(source);
-        }
+		if (source != null) {
+			builder.setSource(source);
+		}
 
-        builder.setCreatedAt(new TwitterDate().toString());
+		builder.setCreatedAt(new TwitterDate().toString());
 
-        Protocol.status quark = builder.build();
-        overlay.store(Storage.quarks, id, quark);
+		Protocol.status quark = builder.build();
+		overlay.store(Storage.quarks, id, quark);
 
-        UserService usv = new UserService(overlay);
-        Protocol.user.Builder ub = user.toBuilder();
-        ub.setStatusesCount(ub.getStatusesCount() + 1);
-        user = ub.build();
-        usv.set(user);
+		UserService usv = new UserService(overlay);
+		Protocol.user.Builder ub = user.toBuilder();
+		ub.setStatusesCount(ub.getStatusesCount() + 1);
+		user = ub.build();
+		usv.set(user);
 
-        builder = quark.toBuilder();
-        builder.setUser(user);
+		builder = quark.toBuilder();
+		builder.setUser(user);
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 
-    /**
-     * 9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 7 (Long.MAX_VALUE)
-     * 
-     * 9 2 2 3 3 7 2 0 3 5|9 9 9 9 9 9 9 9 9
-     * 
-     * First ID: 1 0 0 0 0 0 0 0 0 1
-     * 
-     * @param user
-     * @return
-     */
-    private Long getNextId(Protocol.user user) {
-        return (user.getId() * 1000000000L) + user.getStatusesCount() + 1L;
-    }
+	/**
+	 * 9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 7 (Long.MAX_VALUE)
+	 * 
+	 * 9 2 2 3 3 7 2 0 3 5|9 9 9 9 9 9 9 9 9
+	 * 
+	 * First ID: 1 0 0 0 0 0 0 0 0 1
+	 * 
+	 * @param user
+	 * @return
+	 */
+	private Long getNextId(Protocol.user user) {
+		return (user.getId() * 1000000000L) + user.getStatusesCount() + 1L;
+	}
 
-    public static Long getUserIdFromQuarkId(Long id) {
-        return id / 1000000000L;
-    }
+	public static Long getUserIdFromQuarkId(Long id) {
+		return id / 1000000000L;
+	}
 
-    public Protocol.status destroy(Long id) throws QantiqaException,
-            DHTException {
-        UserService usv = new UserService(overlay);
-        Protocol.user.Builder ub = usv.get(getUserIdFromQuarkId(id))
-                .toBuilder();
-        ub.setStatusesCount(ub.getStatusesCount() - 1);
-        usv.set(ub.build());
+	public Protocol.status destroy(Long id) throws QantiqaException,
+			DHTException {
+		UserService usv = new UserService(overlay);
+		Protocol.user.Builder ub = usv.get(getUserIdFromQuarkId(id))
+				.toBuilder();
+		ub.setStatusesCount(ub.getStatusesCount() - 1);
+		usv.set(ub.build());
 
-        return overlay.remove(Storage.quarks, id);
-    }
+		return overlay.remove(Storage.quarks, id);
+	}
 
-    public Protocol.status show(Long id) throws QantiqaException {
-        return get(id);
-    }
+	public Protocol.status show(Long id) throws QantiqaException {
+		return get(id);
+	}
 
-    private Protocol.status get(Long id) throws QantiqaException {
-        Protocol.status status = overlay.retrieve(Storage.quarks, id);
-        if (status == null) {
-            throw new QantiqaException("No status found with that ID.")
-                    .status(404);
-        }
+	private Protocol.status get(Long id) throws QantiqaException {
+		Protocol.status status = overlay.retrieve(Storage.quarks, id);
+		if (status == null) {
+			throw new QantiqaException("No status found with that ID.")
+					.status(404);
+		}
 
-        return status;
-    }
+		return status;
+	}
 
-    public Protocol.status requark(Protocol.user requarker, Long requarkedId,
-            String source) throws QantiqaException, DHTException {
-        UserService usv = new UserService(overlay);
+	public Protocol.status requark(Protocol.user requarker, Long requarkedId,
+			String source) throws QantiqaException, DHTException {
+		UserService usv = new UserService(overlay);
 
-        Protocol.user requarkee = usv.get(getUserIdFromQuarkId(requarkedId));
-        if (requarker.getId() == requarkee.getId()) {
-            throw new QantiqaException(
-                    "Share sharing is not permissable for this status (Share validations failed)")
-                    .status(403);
-        }
+		Protocol.user requarkee = usv.get(getUserIdFromQuarkId(requarkedId));
+		if (requarker.getId() == requarkee.getId()) {
+			throw new QantiqaException(
+					"Share sharing is not permissable for this status (Share validations failed)")
+					.status(403);
+		}
 
-        Protocol.status requarked = get(requarkedId);
+		Protocol.status requarked = get(requarkedId);
 
-        Long id = getNextId(requarker);
-        if (requarker.getStatusesCount() > 0) {
-            Protocol.status current = get(id - 1);
-            if (current.getText().equals(requarked.getText())) {
-                throw new QantiqaException(
-                        "Share sharing is not permissable for this status (Share validations failed)")
-                        .status(403);
-            }
-        }
+		Long id = getNextId(requarker);
+		if (requarker.getStatusesCount() > 0) {
+			Protocol.status current = get(id - 1);
+			if (current.getText().equals(requarked.getText())) {
+				throw new QantiqaException(
+						"Share sharing is not permissable for this status (Share validations failed)")
+						.status(403);
+			}
+		}
 
-        Protocol.status.Builder requark = update(requarker,
-                requarked.getText(), null, source).toBuilder();
+		Protocol.status.Builder requark = update(requarker,
+				requarked.getText(), null, source).toBuilder();
 
-        HashSet<Long> requarks = overlay.retrieve(Storage.requarks, requarked
-                .getId());
-        if (requarks == null) {
-            requarks = new HashSet<Long>();
-        }
+		Set<Long> requarks = overlay.retrieve(Storage.requarks, requarked
+				.getId());
+		if (requarks == null) {
+			requarks = new HashSet<Long>();
+		}
 
-        requarks.add(requark.getId());
-        overlay.store(Storage.requarks, requarked.getId(), requarks);
+		requarks.add(requark.getId());
+		overlay.store(Storage.requarks, requarked.getId(), requarks);
 
-        HashSet<Long> requarksByUser = overlay.retrieve(Storage.requarksByUser,
-                requarker.getScreenName());
-        if (requarksByUser == null) {
-            requarksByUser = new HashSet<Long>();
-        }
+		Set<Long> requarksByUser = overlay.retrieve(Storage.requarksByUser,
+				requarker.getScreenName());
+		if (requarksByUser == null) {
+			requarksByUser = new HashSet<Long>();
+		}
 
-        requarks.add(requark.getId());
-        overlay.store(Storage.requarksByUser, requarker.getScreenName(),
-                requarksByUser);
+		requarks.add(requark.getId());
+		overlay.store(Storage.requarksByUser, requarker.getScreenName(),
+				requarksByUser);
 
-        Protocol.status.Builder builder = requark.getRetweetedStatus()
-                .toBuilder();
-        builder.setUser(requarkee);
-        requark.setRetweetedStatus(builder);
+		Protocol.status.Builder builder = requark.getRetweetedStatus()
+				.toBuilder();
+		builder.setUser(requarkee);
+		requark.setRetweetedStatus(builder);
 
-        return requark.build();
-    }
+		return requark.build();
+	}
 
-    public Protocol.statuses requarks(String user) throws QantiqaException {
-        Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
+	public Protocol.statuses requarks(String user) throws QantiqaException {
+		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
 
-        HashSet<Long> requarks = overlay.retrieve(Storage.requarksByUser, user);
+		Set<Long> requarks = overlay.retrieve(Storage.requarksByUser, user);
 
-        UserService usv = new UserService(overlay);
-        for (Long id : requarks) {
-            Protocol.status.Builder quark = this.show(id).toBuilder();
-            quark.setUser(usv.get(QuarkService.getUserIdFromQuarkId(id)));
+		UserService usv = new UserService(overlay);
+		for (Long id : requarks) {
+			Protocol.status.Builder quark = this.show(id).toBuilder();
+			quark.setUser(usv.get(QuarkService.getUserIdFromQuarkId(id)));
 
-            builder.addStatus(quark);
-        }
+			builder.addStatus(quark);
+		}
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 }

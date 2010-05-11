@@ -42,125 +42,128 @@ import com.google.protobuf.Message.Builder;
  */
 public class HiggsWS {
 
-    private static HashMap<String, Protocol.authentication> cachedAuths = new HashMap<String, Protocol.authentication>();
-    private static HashMap<String, Protocol.authentication_response> cachedAuthResponses = new HashMap<String, Protocol.authentication_response>();
+	private static Map<String, Protocol.authentication> cachedAuths = new HashMap<String, Protocol.authentication>();
+	private static Map<String, Protocol.authentication_response> cachedAuthResponses = new HashMap<String, Protocol.authentication_response>();
 
-    /**
-     * Validates a gluon against our official list.
-     * 
-     * @see {@link HiggsWS#gluons()}
-     * 
-     * @param port
-     *            Port published by the gluon.
-     * @param secret
-     *            Secret used to validate the gluon against the list.
-     * @return Validation result message
-     * @throws QantiqaException
-     */
-    public static Protocol.validation validate(Integer port, String secret)
-            throws QantiqaException {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("secret", play.libs.Codec.hexMD5(secret));
-        params.put("port", port);
+	private HiggsWS() {
+	}
 
-        return get("validate", params, Protocol.validation.newBuilder())
-                .build();
-    }
+	/**
+	 * Validates a gluon against our official list.
+	 * 
+	 * @see {@link HiggsWS#gluons()}
+	 * 
+	 * @param port
+	 *            Port published by the gluon.
+	 * @param secret
+	 *            Secret used to validate the gluon against the list.
+	 * @return Validation result message
+	 * @throws QantiqaException
+	 */
+	public static Protocol.validation validate(Integer port, String secret)
+			throws QantiqaException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("secret", play.libs.Codec.hexMD5(secret));
+		params.put("port", port);
 
-    /**
-     * Get the official gluon (supernode) list from Higgs.
-     * 
-     * @return Gluon list message
-     * @throws QantiqaException
-     */
-    public static Protocol.gluons gluons() throws QantiqaException {
-        return get("gluons", null, Protocol.gluons.newBuilder()).build();
-    }
+		return get("validate", params, Protocol.validation.newBuilder())
+				.build();
+	}
 
-    /**
-     * Authenticate given user credentials auth.
-     * 
-     * @param auth
-     * @return Authentication response (AuthResult)
-     * @throws QantiqaException
-     */
-    public static Protocol.authentication_response authenticate(
-            Protocol.authentication auth) {
-        Protocol.authentication_response response;
-        Protocol.authentication cached = cachedAuths.get(auth.getUsername());
+	/**
+	 * Get the official gluon (supernode) list from Higgs.
+	 * 
+	 * @return Gluon list message
+	 * @throws QantiqaException
+	 */
+	public static Protocol.gluons gluons() throws QantiqaException {
+		return get("gluons", null, Protocol.gluons.newBuilder()).build();
+	}
 
-        if (auth.equals(cached)) {
-            response = cachedAuthResponses.get(auth.getUsername());
-        } else {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("password", auth.getPassword());
-            params.put("username", auth.getUsername());
+	/**
+	 * Authenticate given user credentials auth.
+	 * 
+	 * @param auth
+	 * @return Authentication response (AuthResult)
+	 * @throws QantiqaException
+	 */
+	public static Protocol.authentication_response authenticate(
+			Protocol.authentication auth) {
+		Protocol.authentication_response response;
+		Protocol.authentication cached = cachedAuths.get(auth.getUsername());
 
-            try {
-                response = get("authenticate", params,
-                        Protocol.authentication_response.newBuilder()).build();
-            } catch (QantiqaException e) {
-                e.printStackTrace();
-                response = Protocol.authentication_response.newBuilder()
-                        .setResult(AuthResult.ERROR).build();
-            }
+		if (auth.equals(cached)) {
+			response = cachedAuthResponses.get(auth.getUsername());
+		} else {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("password", auth.getPassword());
+			params.put("username", auth.getUsername());
 
-            if (response.getResult().equals(AuthResult.VALID)) {
-                cachedAuths.put(auth.getUsername(), auth);
-                cachedAuthResponses.put(auth.getUsername(), response);
-            }
-        }
+			try {
+				response = get("authenticate", params,
+						Protocol.authentication_response.newBuilder()).build();
+			} catch (QantiqaException e) {
+				e.printStackTrace();
+				response = Protocol.authentication_response.newBuilder()
+						.setResult(AuthResult.ERROR).build();
+			}
 
-        return response;
-    }
+			if (response.getResult().equals(AuthResult.VALID)) {
+				cachedAuths.put(auth.getUsername(), auth);
+				cachedAuthResponses.put(auth.getUsername(), response);
+			}
+		}
 
-    /**
-     * 
-     * @param userId
-     * @param userAddress
-     * @param sessionId
-     * @return
-     * @throws QantiqaException
-     */
-    public static Protocol.validation verify_session(Long userId,
-            String userAddress, String sessionId) throws QantiqaException {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("user_id", userId);
-        params.put("user_address", userAddress);
-        params.put("session_id", sessionId);
+		return response;
+	}
 
-        return get("verify_session", params, Protocol.validation.newBuilder())
-                .build();
-    }
+	/**
+	 * 
+	 * @param userId
+	 * @param userAddress
+	 * @param sessionId
+	 * @return
+	 * @throws QantiqaException
+	 */
+	public static Protocol.validation verify_session(Long userId,
+			String userAddress, String sessionId) throws QantiqaException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("user_id", userId);
+		params.put("user_address", userAddress);
+		params.put("session_id", sessionId);
 
-    /**
-     * Auxiliary method to retrieve data in Protobuf format from Higgs.
-     * 
-     * @param action
-     * @param params
-     * @param builder
-     * @return
-     * @throws QantiqaException
-     */
-    private static <V extends Builder> V get(String action,
-            Map<String, Object> params, V builder) throws QantiqaException {
-        try {
-            HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/" + action)
-                    .params(params).get();
-            QantiqaFormat.merge(rs.getStream(), builder);
+		return get("verify_session", params, Protocol.validation.newBuilder())
+				.build();
+	}
 
-            return builder;
-        } catch (Exception e) {
-            throw new QantiqaException(e);
-        }
-    }
+	/**
+	 * Auxiliary method to retrieve data in Protobuf format from Higgs.
+	 * 
+	 * @param action
+	 * @param params
+	 * @param builder
+	 * @return
+	 * @throws QantiqaException
+	 */
+	private static <V extends Builder> V get(String action,
+			Map<String, Object> params, V builder) throws QantiqaException {
+		try {
+			HttpResponse rs = play.libs.WS.url(getHiggsURL() + "/" + action)
+					.params(params).get();
+			QantiqaFormat.merge(rs.getStream(), builder);
 
-    /**
-     * Auxiliary method to get the Higgs URL from Play configuration.
-     * 
-     * @return Higgs webservice URL
-     */
-    private static String getHiggsURL() {
-        return Play.configuration.getProperty("qantiqa.higgs.url");
-    }
+			return builder;
+		} catch (Exception e) {
+			throw new QantiqaException(e);
+		}
+	}
+
+	/**
+	 * Auxiliary method to get the Higgs URL from Play configuration.
+	 * 
+	 * @return Higgs webservice URL
+	 */
+	private static String getHiggsURL() {
+		return Play.configuration.getProperty("qantiqa.higgs.url");
+	}
 }

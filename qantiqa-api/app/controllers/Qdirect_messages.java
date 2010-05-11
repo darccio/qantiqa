@@ -25,7 +25,6 @@ import static constants.Format.RSS;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.session.Builder;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;

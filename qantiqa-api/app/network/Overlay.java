@@ -22,22 +22,22 @@ package network;
 import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.AuthResult;
-import im.dario.qantiqa.common.protocol.Protocol.status;
 import im.dario.qantiqa.common.utils.AsyncResult;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
-import java.util.InvalidPropertiesFormatException;
-import java.util.Vector;
+import java.util.Set;
 
 import network.utils.QastContent;
 import network.utils.QastListener;
+
+import org.apache.log4j.Logger;
+
 import play.Play;
 import play.utils.Properties;
 import rice.p2p.commonapi.NodeHandle;
@@ -64,380 +64,379 @@ import easypastry.sample.AppCastContent;
  */
 public class Overlay {
 
-    private final PastryConnection conn;
+	private static final Logger log = Logger.getLogger(Overlay.class);
 
-    private final CastHandler cast;
+	private final PastryConnection conn;
 
-    /**
-     * Reference to our bootstrap gluon.
-     */
-    private final AsyncResult<NodeHandle> gluon;
+	private final CastHandler cast;
 
-    public static Overlay init(String configPath) throws QantiqaException {
-        if (configPath == null) {
-            throw new QantiqaException("Invalid config path");
-        } else {
-            File configFile = new File(configPath);
-            if (!configFile.exists()) {
-                throw new QantiqaException("Invalid config path");
-            }
-        }
+	/**
+	 * Reference to our bootstrap gluon.
+	 */
+	private final AsyncResult<NodeHandle> gluon;
 
-        Overlay ov = null;
-        String easyPastryConfigPath = configPath + "/easypastry-config.xml";
+	public static Overlay init(String configPath) throws QantiqaException {
+		if (configPath == null) {
+			throw new QantiqaException("Invalid config path");
+		} else {
+			File configFile = new File(configPath);
+			if (!configFile.exists()) {
+				throw new QantiqaException("Invalid config path");
+			}
+		}
 
-        boolean isGluon = checkIfGluon();
-        if (isGluon) {
-            try {
-                ov = new Overlay(easyPastryConfigPath, isGluon);
-            } catch (Exception e) {
-                throw new QantiqaException(e);
-            }
-        } else {
-            // Get the current gluon list and try to connect.
-            for (String gluon : HiggsWS.gluons().getGluonList()) {
-                String[] data = gluon.split(":");
-                try {
-                    modifyConfig(easyPastryConfigPath, data[0], data[1]);
-                } catch (Exception e) {
-                    throw new QantiqaException(e);
-                }
+		Overlay ov = null;
+		String easyPastryConfigPath = configPath + "/easypastry-config.xml";
 
-                try {
-                    ov = new Overlay(easyPastryConfigPath, data[0], data[1],
-                            isGluon);
-                } catch (IOException e) {
-                    ov = null;
-                } catch (Exception e) {
-                    throw new QantiqaException(e);
-                }
+		boolean isGluon = checkIfGluon();
+		if (isGluon) {
+			try {
+				ov = new Overlay(easyPastryConfigPath, isGluon);
+			} catch (Exception e) {
+				throw new QantiqaException(e);
+			}
+		} else {
+			// Get the current gluon list and try to connect.
+			for (String gluon : HiggsWS.gluons().getGluonList()) {
+				String[] data = gluon.split(":");
+				try {
+					modifyConfig(easyPastryConfigPath, data[0], data[1]);
+				} catch (Exception e) {
+					throw new QantiqaException(e);
+				}
 
-                if (ov != null) {
-                    break;
-                }
-            }
+				try {
+					ov = new Overlay(easyPastryConfigPath, data[0], data[1],
+							isGluon);
+				} catch (IOException e) {
+					ov = null;
+				} catch (Exception e) {
+					throw new QantiqaException(e);
+				}
 
-            if (ov == null) {
-                throw new QantiqaException("Unable to join Qantiqa overlay");
-            }
-        }
+				if (ov != null) {
+					break;
+				}
+			}
 
-        return ov;
-    }
+			if (ov == null) {
+				throw new QantiqaException("Unable to join Qantiqa overlay");
+			}
+		}
 
-    private static boolean checkIfGluon() throws QantiqaException {
-        boolean isGluon = Boolean.valueOf(Play.configuration
-                .getProperty("qantiqa.isGluon"));
+		return ov;
+	}
 
-        if (isGluon) {
-            String secret = Play.configuration
-            // Secret generated with "play secret"
-                    .getProperty("application.secret");
+	private static boolean checkIfGluon() throws QantiqaException {
+		boolean isGluon = Boolean.valueOf(Play.configuration
+				.getProperty("qantiqa.isGluon"));
 
-            Properties p = new Properties();
-            try {
-                p.load(new FileInputStream(Play
-                        .getFile("conf/bunshin.properties")));
+		if (isGluon) {
+			String secret = Play.configuration
+			// Secret generated with "play secret"
+					.getProperty("application.secret");
 
-                // Contacting with Higgs...
-                Protocol.validation rs = HiggsWS.validate(Integer.valueOf(p
-                        .get("BUNSHIN_PORT")), secret);
+			Properties p = new Properties();
+			try {
+				p.load(new FileInputStream(Play
+						.getFile("conf/bunshin.properties")));
 
-                if (!rs.getIsOk()) {
-                    play.Logger.error(rs.getMessage());
+				// Contacting with Higgs...
+				Protocol.validation rs = HiggsWS.validate(Integer.valueOf(p
+						.get("BUNSHIN_PORT")), secret);
 
-                    Play.configuration.put("qantiqa.isGluon", "false");
-                    isGluon = false;
-                }
-            } catch (IOException e) {
-                // We are not a gluon...
-                e.printStackTrace();
-            }
-        }
-        return isGluon;
-    }
+				if (!rs.getIsOk()) {
+					play.Logger.error(rs.getMessage());
 
-    /**
-     * Initializes the Gluon functionality.
-     */
-    private void initGluon() {
-        // Register authentication subject/topic.
-        subscribe(Cast.auth, new QastListener() {
+					Play.configuration.put("qantiqa.isGluon", "false");
+					isGluon = false;
+				}
+			} catch (IOException e) {
+				log.error("We are not a gluon", e);
+			}
+		}
+		return isGluon;
+	}
 
-            @Override
-            public void contentDelivery(QastContent qc) {
-                NodeHandle nh = qc.getSource();
+	/**
+	 * Initializes the Gluon functionality.
+	 */
+	private void initGluon() {
+		// Register authentication subject/topic.
+		subscribe(Cast.auth, new QastListener() {
 
-                Protocol.authentication auth = qc
-                        .getMessage(Protocol.authentication.class);
-                Protocol.authentication_response.Builder rs;
-                if (auth == null) {
-                    rs = Protocol.authentication_response.newBuilder();
-                    rs.setResult(AuthResult.NOT_VALID);
-                } else {
-                    rs = HiggsWS.authenticate(auth).toBuilder();
-                }
+			@Override
+			public void contentDelivery(QastContent qc) {
+				NodeHandle nh = qc.getSource();
 
-                sendToPeer(nh, rs);
-            }
-        });
-    }
+				Protocol.authentication auth = qc
+						.getMessage(Protocol.authentication.class);
+				Protocol.authentication_response.Builder rs;
+				if (auth == null) {
+					rs = Protocol.authentication_response.newBuilder();
+					rs.setResult(AuthResult.NOT_VALID);
+				} else {
+					rs = HiggsWS.authenticate(auth).toBuilder();
+				}
 
-    /**
-     * Private constructor.
-     * 
-     * @param configPath
-     *            easypastry-config.xml path
-     * @param host
-     *            Bootstrap gluon IP
-     * @param sPort
-     *            Bootstrap gluon port
-     * @param isGluon
-     * @throws IOException
-     * @throws Exception
-     */
-    private Overlay(String configPath, final String host, String sPort,
-            boolean isGluon) throws IOException, Exception {
-        this(configPath, isGluon);
+				sendToPeer(nh, rs);
+			}
+		});
+	}
 
-        /*
-         * This is a dumb listener just used to get the NodeHandler of our
-         * bootstrap gluon.
-         */
-        if (!isGluon) {
-            final Integer port = Integer.valueOf(sPort);
-            subscribe(Cast.gluon, new QastListener() {
-                @Override
-                public void hostUpdate(NodeHandle nh, boolean joined) {
-                    if (joined) {
-                        if (nh instanceof SocketNodeHandle) {
-                            SocketNodeHandle snh = (SocketNodeHandle) nh;
-                            InetSocketAddress address = snh
-                                    .getInetSocketAddress();
-                            if (address.getAddress().getHostAddress().equals(
-                                    host)) {
-                                if (address.getPort() == port) {
-                                    // This is our gluon.
-                                    gluon.set(nh);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
+	/**
+	 * Private constructor.
+	 * 
+	 * @param configPath
+	 *            easypastry-config.xml path
+	 * @param host
+	 *            Bootstrap gluon IP
+	 * @param sPort
+	 *            Bootstrap gluon port
+	 * @param isGluon
+	 * @throws IOException
+	 */
+	private Overlay(String configPath, final String host, String sPort,
+			boolean isGluon) throws IOException {
+		this(configPath, isGluon);
 
-    /**
-     * 
-     * @param configPath
-     *            easypastry-config.xml path
-     * @param isGluon
-     * @return
-     */
-    private Overlay(String configPath, boolean isGluon) {
-        try {
-            if (isGluon) {
-                PastryKernel.init("192.168.0.12", configPath);
-            } else {
-                PastryKernel.init(configPath);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+		/*
+		 * This is a dumb listener just used to get the NodeHandler of our
+		 * bootstrap gluon.
+		 */
+		if (!isGluon) {
+			final Integer port = Integer.valueOf(sPort);
+			subscribe(Cast.gluon, new QastListener() {
+				@Override
+				public void hostUpdate(NodeHandle nh, boolean joined) {
+					if (joined && nh instanceof SocketNodeHandle) {
+						SocketNodeHandle snh = (SocketNodeHandle) nh;
+						InetSocketAddress address = snh.getInetSocketAddress();
+						if (address.getAddress().getHostAddress().equals(host)
+								&& address.getPort() == port) {
+							// This is our gluon.
+							gluon.set(nh);
+						}
+					}
+				}
+			});
+		}
+	}
 
-        this.conn = PastryKernel.getPastryConnection();
-        this.cast = PastryKernel.getCastHandler();
+	/**
+	 * 
+	 * @param configPath
+	 *            easypastry-config.xml path
+	 * @param isGluon
+	 * @return
+	 */
+	private Overlay(String configPath, boolean isGluon) {
+		try {
+			if (isGluon) {
+				PastryKernel.init("192.168.0.12", configPath);
+			} else {
+				PastryKernel.init(configPath);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
-        this.gluon = new AsyncResult<NodeHandle>();
-        if (isGluon) {
-            this.gluon.set(conn.getNode().getLocalNodeHandle());
-            initGluon();
-        }
-    }
+		this.conn = PastryKernel.getPastryConnection();
+		this.cast = PastryKernel.getCastHandler();
 
-    /**
-     * Starts the node.
-     * 
-     * @throws QantiqaException
-     */
-    public void boot() throws QantiqaException {
-        try {
-            this.conn.bootNode();
-        } catch (Exception e) {
-            throw new QantiqaException(e);
-        }
-    }
+		this.gluon = new AsyncResult<NodeHandle>();
+		if (isGluon) {
+			this.gluon.set(conn.getNode().getLocalNodeHandle());
+			initGluon();
+		}
+	}
 
-    /**
-     * Auxiliary method used to modify the easypastry-config.xml because there
-     * is no way to do this programmatically, so this is a workaround.
-     * 
-     * @param easyPastryConfigPath
-     * @param host
-     *            Bootstrap gluon IP
-     * @param port
-     *            Bootstrap gluon port
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws InvalidPropertiesFormatException
-     */
-    private static void modifyConfig(String easyPastryConfigPath, String host,
-            String port) throws FileNotFoundException, IOException,
-            InvalidPropertiesFormatException {
-        FileInputStream fis = new FileInputStream(easyPastryConfigPath);
-        java.util.Properties prop = new java.util.Properties();
-        prop.loadFromXML(fis);
-        fis.close();
+	/**
+	 * Starts the node.
+	 * 
+	 * @throws QantiqaException
+	 */
+	public void boot() throws QantiqaException {
+		try {
+			this.conn.bootNode();
+		} catch (Exception e) {
+			throw new QantiqaException(e);
+		}
+	}
 
-        prop.setProperty("host", host);
-        prop.setProperty("port", port);
+	/**
+	 * Auxiliary method used to modify the easypastry-config.xml because there
+	 * is no way to do this programmatically, so this is a workaround.
+	 * 
+	 * @param easyPastryConfigPath
+	 * @param host
+	 *            Bootstrap gluon IP
+	 * @param port
+	 *            Bootstrap gluon port
+	 * @throws InvalidPropertiesFormatException
+	 */
+	private static void modifyConfig(String easyPastryConfigPath, String host,
+			String port) throws IOException {
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
 
-        FileOutputStream fos = new FileOutputStream(easyPastryConfigPath);
-        prop.storeToXML(fos, null);
-        fos.close();
-    }
+		try {
+			fis = new FileInputStream(easyPastryConfigPath);
 
-    /**
-     * Subscribes to a Cast (anycast, multicast, direct and hopped message).
-     * 
-     * @param cast
-     * @param listener
-     */
-    public void subscribe(Cast cast, CastListener listener) {
-        String castId = cast.toString();
-        if (cast.isAnycast()) {
-            this.cast.subscribe(castId);
-        }
+			java.util.Properties prop = new java.util.Properties();
+			prop.loadFromXML(fis);
+			fis.close();
 
-        subscribe(castId, listener);
-    }
+			prop.setProperty("host", host);
+			prop.setProperty("port", port);
 
-    private void subscribe(String castId, CastListener listener) {
-        this.cast.addDeliverListener(castId, listener);
-    }
+			fos = new FileOutputStream(easyPastryConfigPath);
+			prop.storeToXML(fos, null);
+		} finally {
+			fis.close();
+			fos.close();
+		}
+	}
 
-    /**
-     * Auxiliary method to send a direct protobuf message to our bootstrap
-     * gluon.
-     * 
-     * This registers a handle for the corresponding answer from gluon (kind of
-     * client/server interaction over Pastry).
-     * 
-     * 
-     * @param builder
-     * @param result
-     *            Async result handler
-     * @param messageClass
-     *            Class of the message built by the builder
-     */
-    public void sendToGluon(Builder builder, final AsyncResult<?> result,
-            final Class<? extends Message> messageClass) {
-        String subject = builder.getDescriptorForType().getName();
-        sendToPeer(this.gluon.get(), builder);
+	/**
+	 * Subscribes to a Cast (anycast, multicast, direct and hopped message).
+	 * 
+	 * @param cast
+	 * @param listener
+	 */
+	public void subscribe(Cast cast, CastListener listener) {
+		String castId = cast.toString();
+		if (cast.isAnycast()) {
+			this.cast.subscribe(castId);
+		}
 
-        subscribe(subject + "_response", new QastListener() {
-            @Override
-            public void contentDelivery(QastContent qc) {
-                Message msg = qc.getMessage(messageClass);
-                result.set(msg);
-            }
-        });
-    }
+		subscribe(castId, listener);
+	}
 
-    /**
-     * Sends a direct protobuf message to a peer/gluon.
-     * 
-     * @param nh
-     * @param builder
-     */
-    public void sendToPeer(NodeHandle nh, Builder builder) {
-        CastContent cc = buildCastContent(builder);
+	private void subscribe(String castId, CastListener listener) {
+		this.cast.addDeliverListener(castId, listener);
+	}
 
-        cast.sendDirect(nh, cc);
-    }
+	/**
+	 * Auxiliary method to send a direct protobuf message to our bootstrap
+	 * gluon.
+	 * 
+	 * This registers a handle for the corresponding answer from gluon (kind of
+	 * client/server interaction over Pastry).
+	 * 
+	 * 
+	 * @param builder
+	 * @param result
+	 *            Async result handler
+	 * @param messageClass
+	 *            Class of the message built by the builder
+	 */
+	public void sendToGluon(Builder builder, final AsyncResult<?> result,
+			final Class<? extends Message> messageClass) {
+		String subject = builder.getDescriptorForType().getName();
+		sendToPeer(this.gluon.get(), builder);
 
-    /**
-     * Anycasts a protobuf message.
-     * 
-     * @param builder
-     */
-    public void sendToEverybody(Builder builder) {
-        CastContent cc = buildCastContent(builder);
+		subscribe(subject + "_response", new QastListener() {
+			@Override
+			public void contentDelivery(QastContent qc) {
+				Message msg = qc.getMessage(messageClass);
+				result.set(msg);
+			}
+		});
+	}
 
-        cast.sendMulticast(cc.getSubject(), cc);
-    }
+	/**
+	 * Sends a direct protobuf message to a peer/gluon.
+	 * 
+	 * @param nh
+	 * @param builder
+	 */
+	public void sendToPeer(NodeHandle nh, Builder builder) {
+		CastContent cc = buildCastContent(builder);
 
-    private AppCastContent buildCastContent(Builder builder) {
-        Message msg = builder.build();
-        String subject = msg.getDescriptorForType().getName();
+		cast.sendDirect(nh, cc);
+	}
 
-        return new AppCastContent(subject, new String(msg.toByteArray()));
-    }
+	/**
+	 * Anycasts a protobuf message.
+	 * 
+	 * @param builder
+	 */
+	public void sendToEverybody(Builder builder) {
+		CastContent cc = buildCastContent(builder);
 
-    /**
-     * 
-     * @param storage
-     *            DHT where to store the object
-     * @param key
-     *            Identifier of the object in the DHT
-     * @param value
-     * @throws DHTException
-     */
-    public <E> void store(Storage<E> storage, Object key, E value)
-            throws DHTException {
-        DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
-        dht.put(key.toString(), storage.marshal(value));
+		cast.sendMulticast(cc.getSubject(), cc);
+	}
 
-        Storage<HashSet<Object>> ix = (Storage<HashSet<Object>>) storage
-                .getIndex();
-        if (ix != null) {
-            for (String stem : ix.stem(value)) {
-                HashSet<Object> set = retrieve(ix, stem);
-                if (set == null) {
-                    set = new HashSet<Object>();
-                }
+	private AppCastContent buildCastContent(Builder builder) {
+		Message msg = builder.build();
+		String subject = msg.getDescriptorForType().getName();
 
-                set.add(key);
-                store(ix, stem, set);
-            }
-        }
-    }
+		return new AppCastContent(subject, new String(msg.toByteArray()));
+	}
 
-    /**
-     * 
-     * @param storage
-     *            DHT where to retrieve the object
-     * @param key
-     *            Identifier of the object in the DHT
-     * @return
-     * @throws DHTException
-     */
-    public <E> E retrieve(Storage<E> storage, Object key) {
-        E value = null;
+	/**
+	 * 
+	 * @param storage
+	 *            DHT where to store the object
+	 * @param key
+	 *            Identifier of the object in the DHT
+	 * @param value
+	 * @throws DHTException
+	 */
+	public <E> void store(Storage<E> storage, Object key, E value)
+			throws DHTException {
+		DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+		dht.put(key.toString(), storage.marshal(value));
 
-        try {
-            DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
-            value = storage.unmarshal(dht.get(key.toString()));
-        } catch (DHTException e) {
-            e.printStackTrace();
-            value = null;
-        }
+		Storage<Set<Object>> ix = (Storage<Set<Object>>) storage.getIndex();
+		if (ix != null) {
+			for (String stem : ix.stem(value)) {
+				Set<Object> set = retrieve(ix, stem);
+				if (set == null) {
+					set = new HashSet<Object>();
+				}
 
-        return value;
-    }
+				set.add(key);
+				store(ix, stem, set);
+			}
+		}
+	}
 
-    public <E> E remove(Storage<E> storage, Object key) {
-        E value = retrieve(storage, key);
+	/**
+	 * 
+	 * @param storage
+	 *            DHT where to retrieve the object
+	 * @param key
+	 *            Identifier of the object in the DHT
+	 * @return
+	 * @throws DHTException
+	 */
+	public <E> E retrieve(Storage<E> storage, Object key) {
+		E value = null;
 
-        try {
-            DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
-            dht.remove(key.toString());
-        } catch (DHTException e) {
-            e.printStackTrace();
-            value = null;
-        }
+		try {
+			DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+			value = storage.unmarshal(dht.get(key.toString()));
+		} catch (DHTException e) {
+			log.error("ERR", e);
+			value = null;
+		}
 
-        return value;
-    }
+		return value;
+	}
+
+	public <E> E remove(Storage<E> storage, Object key) {
+		E value = retrieve(storage, key);
+
+		try {
+			DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+			dht.remove(key.toString());
+		} catch (DHTException e) {
+			log.error("ERR", e);
+			value = null;
+		}
+
+		return value;
+	}
 }

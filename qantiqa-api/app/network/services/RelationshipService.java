@@ -24,6 +24,8 @@ import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import network.Overlay;
 import network.Storage;
@@ -38,93 +40,92 @@ import easypastry.dht.DHTException;
  */
 public class RelationshipService extends Service {
 
-    public RelationshipService(Overlay overlay) {
-        super(overlay);
-    }
+	public RelationshipService(Overlay overlay) {
+		super(overlay);
+	}
 
-    public HashMap<Storage, HashSet<Long>> follow(Protocol.user source,
-            Protocol.user target) throws DHTException, QantiqaException {
-        HashMap<Storage, HashSet<Long>> data = new HashMap<Storage, HashSet<Long>>();
-        data.put(Storage.followers, addTo(Storage.followers, source, target));
-        data.put(Storage.following, addTo(Storage.following, target, source));
+	public Map<Storage<Set<Long>>, Set<Long>> follow(Protocol.user source,
+			Protocol.user target) throws DHTException, QantiqaException {
+		Map<Storage<Set<Long>>, Set<Long>> data = new HashMap<Storage<Set<Long>>, Set<Long>>();
+		data.put(Storage.followers, addTo(Storage.followers, source, target));
+		data.put(Storage.following, addTo(Storage.following, target, source));
 
-        return data;
-    }
+		return data;
+	}
 
-    public HashMap<Storage, HashSet<Long>> unfollow(Protocol.user source,
-            Protocol.user target) throws DHTException, QantiqaException {
-        HashMap<Storage, HashSet<Long>> data = new HashMap<Storage, HashSet<Long>>();
-        data.put(Storage.followers, removeFrom(Storage.followers, source,
-                target));
-        data.put(Storage.following, removeFrom(Storage.following, target,
-                source));
+	public Map<Storage<Set<Long>>, Set<Long>> unfollow(Protocol.user source,
+			Protocol.user target) throws DHTException, QantiqaException {
+		Map<Storage<Set<Long>>, Set<Long>> data = new HashMap<Storage<Set<Long>>, Set<Long>>();
+		data.put(Storage.followers, removeFrom(Storage.followers, source,
+				target));
+		data.put(Storage.following, removeFrom(Storage.following, target,
+				source));
 
-        return data;
-    }
+		return data;
+	}
 
-    private HashSet<Long> addTo(Storage storage, Protocol.user source,
-            Protocol.user target) throws DHTException, QantiqaException {
-        HashSet<Long> data = getData(storage, target);
-        data.add(source.getId());
+	private Set<Long> addTo(Storage<Set<Long>> followers, Protocol.user source,
+			Protocol.user target) throws DHTException, QantiqaException {
+		Set<Long> data = getData(followers, target);
+		data.add(source.getId());
 
-        overlay.store(storage, target.getId(), data);
+		overlay.store(followers, target.getId(), data);
 
-        return data;
-    }
+		return data;
+	}
 
-    private HashSet<Long> removeFrom(Storage storage, Protocol.user source,
-            Protocol.user target) throws QantiqaException, DHTException {
-        HashSet<Long> data = getData(storage, target);
-        data.remove(source.getId());
+	private Set<Long> removeFrom(Storage<Set<Long>> followers,
+			Protocol.user source, Protocol.user target)
+			throws QantiqaException, DHTException {
+		Set<Long> data = getData(followers, target);
+		data.remove(source.getId());
 
-        overlay.store(storage, target.getId(), data);
+		overlay.store(followers, target.getId(), data);
 
-        return data;
-    }
+		return data;
+	}
 
-    private HashSet<Long> getData(Storage<HashSet<Long>> storage,
-            Protocol.user target) throws QantiqaException {
-        HashSet<Long> data = null;
-        if (storage == Storage.followers) {
-            data = followers(target);
-        }
+	private Set<Long> getData(Storage<Set<Long>> storage, Protocol.user target)
+			throws QantiqaException {
+		Set<Long> data = null;
+		if (storage == Storage.followers) {
+			data = followers(target);
+		}
 
-        if (storage == Storage.following) {
-            data = following(target);
-        }
+		if (storage == Storage.following) {
+			data = following(target);
+		}
 
-        if (data == null) {
-            throw new QantiqaException("Invalid storage");
-        }
+		if (data == null) {
+			throw new QantiqaException("Invalid storage");
+		}
 
-        return data;
-    }
+		return data;
+	}
 
-    public HashSet<Long> followers(Protocol.user user) {
-        HashSet<Long> followers = overlay.retrieve(Storage.followers, user
-                .getId());
+	public Set<Long> followers(Protocol.user user) {
+		Set<Long> followers = overlay.retrieve(Storage.followers, user.getId());
 
-        if (followers == null) {
-            followers = new HashSet<Long>();
-        }
+		if (followers == null) {
+			followers = new HashSet<Long>();
+		}
 
-        return followers;
-    }
+		return followers;
+	}
 
-    public HashSet<Long> following(Protocol.user user) {
-        HashSet<Long> following = overlay.retrieve(Storage.following, user
-                .getId());
+	public Set<Long> following(Protocol.user user) {
+		Set<Long> following = overlay.retrieve(Storage.following, user.getId());
 
-        if (following == null) {
-            following = new HashSet<Long>();
-        }
+		if (following == null) {
+			following = new HashSet<Long>();
+		}
 
-        return following;
-    }
+		return following;
+	}
 
-    public boolean isFollower(Protocol.user source, Protocol.user target) {
-        HashSet<Long> followers = this.followers(target);
+	public boolean isFollower(Protocol.user source, Protocol.user target) {
+		Set<Long> followers = this.followers(target);
 
-        return followers.contains(source.getId());
-    }
+		return followers.contains(source.getId());
+	}
 }

@@ -26,9 +26,8 @@ import static constants.HttpMethod.GET;
 import static constants.HttpMethod.POST;
 import im.dario.qantiqa.common.protocol.Protocol;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Vector;
+import java.util.Map;
+import java.util.Set;
 
 import network.Storage;
 import network.services.RelationshipService;
@@ -44,127 +43,129 @@ import annotations.RequiresAuthentication;
  */
 public class Qfriendships extends QController {
 
-    @Methods( { POST })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void create(String id) {
-        UserService usv = new UserService(getOverlay());
+	@Methods( { POST })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void create(String id) {
+		UserService usv = new UserService(getOverlay());
 
-        Protocol.user target = getUser(id, "target");
-        Protocol.user source = getUser(null, request.user, "source");
+		Protocol.user target = getUser(id, "target");
+		Protocol.user source = getUser(null, request.user, "source");
 
-        RelationshipService rsv = new RelationshipService(getOverlay());
-        try {
-            HashMap<Storage, HashSet<Long>> data = rsv.follow(source, target);
-            HashSet<Long> followers = data.get(Storage.followers);
+		RelationshipService rsv = new RelationshipService(getOverlay());
+		try {
+			Map<Storage<Set<Long>>, Set<Long>> data = rsv
+					.follow(source, target);
+			Set<Long> followers = data.get(Storage.followers);
 
-            Protocol.user.Builder builder = target.toBuilder();
-            builder.setFollowersCount(followers.size());
+			Protocol.user.Builder builder = target.toBuilder();
+			builder.setFollowersCount(followers.size());
 
-            Protocol.user.Builder definitive = builder.clone();
-            target = builder.build();
+			Protocol.user.Builder definitive = builder.clone();
+			target = builder.build();
 
-            usv.set(target);
+			usv.set(target);
 
-            definitive.setFollowing(true);
-            target = definitive.build();
+			definitive.setFollowing(true);
+			target = definitive.build();
 
-            HashSet<Long> following = data.get(Storage.following);
-            builder = source.toBuilder();
-            builder.setFriendsCount(following.size());
+			Set<Long> following = data.get(Storage.following);
+			builder = source.toBuilder();
+			builder.setFriendsCount(following.size());
 
-            usv.set(builder.build());
-        } catch (Exception e) {
-            renderError(e);
-        }
+			usv.set(builder.build());
+		} catch (Exception e) {
+			renderError(e);
+		}
 
-        renderProtobuf(target);
-    }
+		renderProtobuf(target);
+	}
 
-    @Methods( { POST, DELETE })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void destroy(String id) {
-        UserService usv = new UserService(getOverlay());
+	@Methods( { POST, DELETE })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void destroy(String id) {
+		UserService usv = new UserService(getOverlay());
 
-        Protocol.user target = getUser(id, "target");
-        Protocol.user source = getUser(null, request.user, "source");
+		Protocol.user target = getUser(id, "target");
+		Protocol.user source = getUser(null, request.user, "source");
 
-        RelationshipService rsv = new RelationshipService(getOverlay());
-        try {
-            HashMap<Storage, HashSet<Long>> data = rsv.unfollow(source, target);
-            HashSet<Long> followers = data.get(Storage.followers);
+		RelationshipService rsv = new RelationshipService(getOverlay());
+		try {
+			Map<Storage<Set<Long>>, Set<Long>> data = rsv.unfollow(source,
+					target);
+			Set<Long> followers = data.get(Storage.followers);
 
-            Protocol.user.Builder builder = target.toBuilder();
-            builder.setFollowersCount(followers.size());
-            target = builder.build();
+			Protocol.user.Builder builder = target.toBuilder();
+			builder.setFollowersCount(followers.size());
+			target = builder.build();
 
-            usv.set(target);
+			usv.set(target);
 
-            HashSet<Long> following = data.get(Storage.following);
-            builder = source.toBuilder();
-            builder.setFriendsCount(following.size());
+			Set<Long> following = data.get(Storage.following);
+			builder = source.toBuilder();
+			builder.setFriendsCount(following.size());
 
-            usv.set(builder.build());
-        } catch (Exception e) {
-            renderError(e);
-        }
+			usv.set(builder.build());
+		} catch (Exception e) {
+			renderError(e);
+		}
 
-        renderProtobuf(target);
-    }
+		renderProtobuf(target);
+	}
 
-    @Methods( { GET })
-    @Formats( { XML, JSON })
-    public static void show(Long source_id, String source_screen_name,
-            Long target_id, String target_screen_name) {
-        if (request.user != null) {
-            source_screen_name = request.user;
-        }
+	@Methods( { GET })
+	@Formats( { XML, JSON })
+	public static void show(Long source_id, String source_screen_name,
+			Long target_id, String target_screen_name) {
+		if (request.user != null) {
+			source_screen_name = request.user;
+		}
 
-        Protocol.user source = getUser(source_id, source_screen_name, "source");
-        Protocol.user target = getUser(target_id, target_screen_name, "target");
+		Protocol.user source = getUser(source_id, source_screen_name, "source");
+		Protocol.user target = getUser(target_id, target_screen_name, "target");
 
-        Protocol.relationship.Builder builder = Protocol.relationship
-                .newBuilder();
-        builder
-                .setTarget(initRelationshipMember(builder, target, source,
-                        false));
-        builder
-                .setSource(initRelationshipMember(builder, source, target, true));
+		Protocol.relationship.Builder builder = Protocol.relationship
+				.newBuilder();
+		builder
+				.setTarget(initRelationshipMember(builder, target, source,
+						false));
+		builder
+				.setSource(initRelationshipMember(builder, source, target, true));
 
-        renderProtobuf(builder);
-    }
+		renderProtobuf(builder);
+	}
 
-    private static Protocol.relationship_member.Builder initRelationshipMember(
-            Protocol.relationship.Builder relationship, Protocol.user member,
-            Protocol.user other, boolean isSource) {
-        Protocol.relationship_member.Builder builder = Protocol.relationship_member
-                .newBuilder();
-        builder.setScreenName(member.getScreenName());
-        builder.setId(member.getId());
+	private static Protocol.relationship_member.Builder initRelationshipMember(
+			Protocol.relationship.Builder relationship, Protocol.user member,
+			Protocol.user other, boolean isSource) {
+		Protocol.relationship_member.Builder builder = Protocol.relationship_member
+				.newBuilder();
+		builder.setScreenName(member.getScreenName());
+		builder.setId(member.getId());
 
-        RelationshipService rsv = new RelationshipService(getOverlay());
-        HashSet<Long> followersMember = rsv.followers(member);
-        HashSet<Long> followersOther = rsv.followers(other);
+		RelationshipService rsv = new RelationshipService(getOverlay());
+		Set<Long> followersMember = rsv.followers(member);
+		Set<Long> followersOther = rsv.followers(other);
 
-        if (isSource) {
-            builder.setNotificationsEnabled(false);
-            // TODO Future spam service
-            builder.setBlocking(false);
-        }
+		if (isSource) {
+			builder.setNotificationsEnabled(false);
+			// TODO Future spam service
+			builder.setBlocking(false);
+		}
 
-        boolean followedBy = false;
-        if (followersMember.contains(other.getId())) {
-            followedBy = true;
-        }
-        builder.setFollowedBy(followedBy);
+		boolean followedBy = false;
+		if (followersMember.contains(other.getId())) {
+			followedBy = true;
+		}
+		builder.setFollowedBy(followedBy);
 
-        boolean following = false;
-        if (followersOther.contains(member.getId())) {
-            following = true;
-        }
-        builder.setFollowing(following);
+		boolean following = false;
+		if (followersOther.contains(member.getId())) {
+			following = true;
+		}
+		builder.setFollowing(following);
 
-        return builder;
-    }
+		return builder;
+	}
 }
