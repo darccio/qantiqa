@@ -22,6 +22,8 @@ package network.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
+
 import rice.p2p.commonapi.NodeHandle;
 
 import com.google.protobuf.Message;
@@ -39,45 +41,48 @@ import easypastry.sample.AppCastContent;
  */
 public class QastContent {
 
-    private final AppCastContent acc;
+	private static final Logger log = Logger.getLogger(QastContent.class);
 
-    public QastContent(CastContent acc) {
-        this.acc = (AppCastContent) acc;
-    }
+	private final CastContent acc;
 
-    /**
-     * Parses a message from a String for a given class.
-     * 
-     * @param sMsg
-     *            Message in serialized form
-     * @param klass
-     *            Message class
-     * @return Message deserialized or null if there is an exception.
-     */
-    public <V extends Message> V getMessage(Class<V> klass) {
-        V msg;
+	public QastContent(CastContent acc) {
+		this.acc = acc;
+	}
 
-        if (klass == null) {
-            msg = null;
-        } else {
-            Field field;
-            try {
-                field = acc.getClass().getDeclaredField("txt");
-                field.setAccessible(true);
+	/**
+	 * Parses a message from a String for a given class.
+	 * 
+	 * @param sMsg
+	 *            Message in serialized form
+	 * @param klass
+	 *            Message class
+	 * @return Message deserialized or null if there is an exception.
+	 */
+	@SuppressWarnings("unchecked")
+	public <V extends Message> V getMessage(Class<V> klass) {
+		V msg;
 
-                Method m = klass.getDeclaredMethod("parseFrom",
-                        new Class<?>[] { byte[].class });
-                msg = (V) m.invoke(null, ((String) field.get(acc)).getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-                msg = null;
-            }
-        }
+		if (klass == null) {
+			msg = null;
+		} else {
+			Field field;
+			try {
+				field = AppCastContent.class.getDeclaredField("txt");
+				field.setAccessible(true);
 
-        return msg;
-    }
+				Method m = klass.getDeclaredMethod("parseFrom",
+						new Class<?>[] { byte[].class });
+				msg = (V) m.invoke(null, ((String) field.get(acc)).getBytes());
+			} catch (Exception e) {
+				log.error("ERR", e);
+				msg = null;
+			}
+		}
 
-    public NodeHandle getSource() {
-        return acc.getSource();
-    }
+		return msg;
+	}
+
+	public NodeHandle getSource() {
+		return acc.getSource();
+	}
 }

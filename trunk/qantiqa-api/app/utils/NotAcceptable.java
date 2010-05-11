@@ -6,9 +6,11 @@ import play.mvc.results.Result;
 
 public class NotAcceptable extends Result {
 
-    @Override
-    public void apply(Request request, Response response) {
-        response.current().status = 406;
-    }
+	private static final long serialVersionUID = 574222625388495978L;
+
+	@Override
+	public void apply(Request request, Response response) {
+		Response.current().status = 406;
+	}
 
 }

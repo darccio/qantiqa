@@ -22,11 +22,9 @@ package controllers;
 import static constants.Format.JSON;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
+import im.dario.qantiqa.common.protocol.Protocol;
 import network.services.RelationshipService;
 import network.services.SearchService;
-import im.dario.qantiqa.common.higgs.HiggsWS;
-import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.utils.QantiqaException;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
@@ -38,34 +36,34 @@ import annotations.RequiresAuthentication;
  */
 public class Qusers extends QController {
 
-    @Methods( { GET })
-    @Formats( { XML, JSON })
-    public static void show(String id) {
-        Protocol.user target = getUser(id, "target");
-        Protocol.user source = getUser(request.user, "source");
+	@Methods( { GET })
+	@Formats( { XML, JSON })
+	public static void show(String id) {
+		Protocol.user target = getUser(id, "target");
+		Protocol.user source = getUser(request.user, "source");
 
-        RelationshipService rsv = new RelationshipService(getOverlay());
-        boolean isFollower = rsv.isFollower(source, target);
-        if (isFollower) {
-            Protocol.user.Builder builder = target.toBuilder();
+		RelationshipService rsv = new RelationshipService(getOverlay());
+		boolean isFollower = rsv.isFollower(source, target);
+		if (isFollower) {
+			Protocol.user.Builder builder = target.toBuilder();
 
-            builder.setFollowing(isFollower);
-            target = builder.build();
-        }
+			builder.setFollowing(isFollower);
+			target = builder.build();
+		}
 
-        renderProtobuf(target);
-    }
+		renderProtobuf(target);
+	}
 
-    @Methods( { GET })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void search(String q) {
-        SearchService ssv = new SearchService(getOverlay());
+	@Methods( { GET })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void search(String q) {
+		SearchService ssv = new SearchService(getOverlay());
 
-        try {
-            renderProtobuf(ssv.searchUsers(q));
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			renderProtobuf(ssv.searchUsers(q));
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 }

@@ -19,12 +19,8 @@
 
 package models;
 
-import java.util.List;
-
-import siena.Column;
 import siena.Id;
 import siena.Index;
-import siena.Max;
 import siena.Model;
 import siena.NotNull;
 import siena.Query;
@@ -40,43 +36,43 @@ import siena.Table;
 @Table("gluon")
 public class User extends Model {
 
-    @Id
-    public Long id;
+	@Id
+	public Long id;
 
-    @Index("ix_user")
-    @NotNull
-    public String username;
+	@Index("ix_user")
+	@NotNull
+	public String username;
 
-    @NotNull
-    public String password;
+	@NotNull
+	public String password;
 
-    @NotNull
-    public Boolean active;
+	@NotNull
+	public Boolean active;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 
-    /**
-     * 
-     * @return All users.
-     */
-    public static Query<User> all() {
-        return Model.all(User.class);
-    }
+	/**
+	 * 
+	 * @return All users.
+	 */
+	public static Query<User> all() {
+		return Model.all(User.class);
+	}
 
-    /**
-     * 
-     * @param username
-     *            User name.
-     * @return Matching user with provided name.
-     */
-    public static User findByName(String username) {
-        return all().filter("username", username).get();
-    }
+	/**
+	 * 
+	 * @param username
+	 *            User name.
+	 * @return Matching user with provided name.
+	 */
+	public static User findByName(String username) {
+		return all().filter("username", username).get();
+	}
 
-    public String toString() {
-        return username;
-    }
+	public String toString() {
+		return username;
+	}
 }

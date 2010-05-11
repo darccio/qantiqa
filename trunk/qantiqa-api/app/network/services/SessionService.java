@@ -19,13 +19,15 @@
 
 package network.services;
 
-import java.util.HashMap;
-
 import im.dario.qantiqa.common.higgs.HiggsWS;
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.authentication_response;
-import im.dario.qantiqa.common.protocol.Protocol.user;
 import im.dario.qantiqa.common.utils.QantiqaException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import network.Overlay;
 
 /**
@@ -37,51 +39,52 @@ import network.Overlay;
  */
 public class SessionService extends Service {
 
-    private final HashMap<Long, Protocol.session> sessions = new HashMap<Long, Protocol.session>();
+	private static final Logger log = Logger.getLogger(SessionService.class);
+	private final Map<Long, Protocol.session> sessions = new HashMap<Long, Protocol.session>();
 
-    public SessionService(Overlay overlay) {
-        super(overlay);
-    }
+	public SessionService(Overlay overlay) {
+		super(overlay);
+	}
 
-    public boolean verify(Protocol.session expected) {
-        Long userId = expected.getUserId();
-        String userAddress = expected.getUserAddress();
-        String sessionId = expected.getId();
+	public boolean verify(Protocol.session expected) {
+		Long userId = expected.getUserId();
+		String userAddress = expected.getUserAddress();
+		String sessionId = expected.getId();
 
-        Protocol.session session = sessions.get(userId);
-        boolean isValid = session.equals(expected);
+		Protocol.session session = sessions.get(userId);
+		boolean isValid = session.equals(expected);
 
-        if (!isValid) {
-            try {
-                // TODO validate on bootstrap gluon
-                isValid = HiggsWS
-                        .verify_session(userId, userAddress, sessionId)
-                        .getIsOk();
-            } catch (QantiqaException e) {
-                e.printStackTrace();
-                isValid = false;
-            }
-        }
+		if (!isValid) {
+			try {
+				// TODO validate on bootstrap gluon
+				isValid = HiggsWS
+						.verify_session(userId, userAddress, sessionId)
+						.getIsOk();
+			} catch (QantiqaException e) {
+				log.error("ERR", e);
+				isValid = false;
+			}
+		}
 
-        if (isValid) {
-            sessions.put(expected.getUserId(), expected);
-        }
+		if (isValid) {
+			sessions.put(expected.getUserId(), expected);
+		}
 
-        return isValid;
-    }
+		return isValid;
+	}
 
-    /**
-     * Helper method to reduce clutter from repeating code for building
-     * sessions.
-     * 
-     * @param user
-     * @param userAddress
-     * @param sessionId
-     * @return
-     */
-    public static Protocol.session buildSession(Protocol.user user,
-            String userAddress, String sessionId) {
-        return Protocol.session.newBuilder().setId(sessionId).setUserId(
-                user.getId()).setUserAddress(userAddress).build();
-    }
+	/**
+	 * Helper method to reduce clutter from repeating code for building
+	 * sessions.
+	 * 
+	 * @param user
+	 * @param userAddress
+	 * @param sessionId
+	 * @return
+	 */
+	public static Protocol.session buildSession(Protocol.user user,
+			String userAddress, String sessionId) {
+		return Protocol.session.newBuilder().setId(sessionId).setUserId(
+				user.getId()).setUserAddress(userAddress).build();
+	}
 }

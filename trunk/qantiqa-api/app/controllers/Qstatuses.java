@@ -34,8 +34,6 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
-import com.google.protobuf.Message;
-
 /**
  * REST API methods for statuses/tweets/quarks.
  * 
@@ -43,97 +41,97 @@ import com.google.protobuf.Message;
  */
 public class Qstatuses extends QController {
 
-    @Methods( { GET })
-    @Formats( { XML, JSON, ATOM })
-    @RequiresAuthentication
-    public static void home_timeline(Integer count, Long since_id) {
-        // TODO
-    }
+	@Methods( { GET })
+	@Formats( { XML, JSON, ATOM })
+	@RequiresAuthentication
+	public static void home_timeline(Integer count, Long since_id) {
+		// TODO
+	}
 
-    @Methods( { GET })
-    @Formats( { XML, JSON, RSS, ATOM })
-    @RequiresAuthentication
-    public static void mentions(Integer count) {
-        SearchService ssv = new SearchService(getOverlay());
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	@RequiresAuthentication
+	public static void mentions(Integer count) {
+		SearchService ssv = new SearchService(getOverlay());
 
-        try {
-            renderProtobuf(ssv.searchQuarks("@" + request.user));
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			renderProtobuf(ssv.searchQuarks("@" + request.user));
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 
-    @Methods( { GET })
-    @Formats( { XML, JSON, RSS, ATOM })
-    public static void user_timeline(String id, Integer count) {
-        // TODO
-    }
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	public static void user_timeline(String id, Integer count) {
+		// TODO
+	}
 
-    @Methods( { GET })
-    @Formats( { XML, JSON, ATOM })
-    @RequiresAuthentication
-    public static void retweeted_by_me(Integer count) {
-        QuarkService qsv = new QuarkService(getOverlay());
+	@Methods( { GET })
+	@Formats( { XML, JSON, ATOM })
+	@RequiresAuthentication
+	public static void retweeted_by_me(Integer count) {
+		QuarkService qsv = new QuarkService(getOverlay());
 
-        try {
-            qsv.requarks(request.user);
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			qsv.requarks(request.user);
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 
-    @Methods( { GET })
-    @Formats( { XML, JSON })
-    public static void show(Long id) {
-        QuarkService qsv = new QuarkService(getOverlay());
+	@Methods( { GET })
+	@Formats( { XML, JSON })
+	public static void show(Long id) {
+		QuarkService qsv = new QuarkService(getOverlay());
 
-        try {
-            renderProtobuf(appendUser(qsv.show(id), id));
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			renderProtobuf(appendUser(qsv.show(id), id));
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 
-    @Methods( { POST })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void update(String status, Long in_reply_to_status_id,
-            String source) {
-        QuarkService qsv = new QuarkService(getOverlay());
+	@Methods( { POST })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void update(String status, Long in_reply_to_status_id,
+			String source) {
+		QuarkService qsv = new QuarkService(getOverlay());
 
-        try {
-            renderProtobuf(qsv.update(getRequestUser(), status,
-                    in_reply_to_status_id, source));
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			renderProtobuf(qsv.update(getRequestUser(), status,
+					in_reply_to_status_id, source));
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 
-    @Methods( { POST, DELETE })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void destroy(Long id) {
-        QuarkService qsv = new QuarkService(getOverlay());
+	@Methods( { POST, DELETE })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void destroy(Long id) {
+		QuarkService qsv = new QuarkService(getOverlay());
 
-        try {
-            renderProtobuf(appendUser(qsv.destroy(id), id));
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+		try {
+			renderProtobuf(appendUser(qsv.destroy(id), id));
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 
-    @Methods( { POST, PUT })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void retweet(Long id, String source) {
-        QuarkService qsv = new QuarkService(getOverlay());
+	@Methods( { POST, PUT })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void retweet(Long id, String source) {
+		QuarkService qsv = new QuarkService(getOverlay());
 
-        try {
-            Protocol.status requark = qsv.requark(getRequestUser(), id, source);
+		try {
+			Protocol.status requark = qsv.requark(getRequestUser(), id, source);
 
-            renderProtobuf(requark);
-        } catch (Exception e) {
-            renderRetweetError(e);
-        }
-    }
+			renderProtobuf(requark);
+		} catch (Exception e) {
+			renderRetweetError(e);
+		}
+	}
 }

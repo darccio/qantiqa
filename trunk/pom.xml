@@ -13,6 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.profile>Sonar way with Findbugs</sonar.profile>
 	</properties>
 
 	<modules>

@@ -20,9 +20,7 @@
 package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
-import im.dario.qantiqa.common.protocol.Protocol.user;
 import im.dario.qantiqa.common.utils.QantiqaException;
-import im.dario.qantiqa.common.utils.TwitterDate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,24 +36,23 @@ import easypastry.dht.DHTException;
  */
 public class FavoriteService extends Service {
 
-    public FavoriteService(Overlay overlay) {
-        super(overlay);
-    }
+	public FavoriteService(Overlay overlay) {
+		super(overlay);
+	}
 
-    public Protocol.status create(Protocol.user user, Long id)
-            throws DHTException, QantiqaException {
-        HashSet<Long> favorites = overlay.retrieve(Storage.favorites, user
-                .getId());
-        if (favorites == null) {
-            favorites = new HashSet<Long>();
-        }
+	public Protocol.status create(Protocol.user user, Long id)
+			throws DHTException, QantiqaException {
+		Set<Long> favorites = overlay.retrieve(Storage.favorites, user.getId());
+		if (favorites == null) {
+			favorites = new HashSet<Long>();
+		}
 
-        favorites.add(id);
-        overlay.store(Storage.favorites, user.getId(), favorites);
+		favorites.add(id);
+		overlay.store(Storage.favorites, user.getId(), favorites);
 
-        QuarkService qsv = new QuarkService(overlay);
-        Protocol.status quark = qsv.show(id);
+		QuarkService qsv = new QuarkService(overlay);
+		Protocol.status quark = qsv.show(id);
 
-        return quark;
-    }
+		return quark;
+	}
 }
