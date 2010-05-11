@@ -6,8 +6,8 @@ mavenizing() {
     jar_id=$1
     version=$2
 
-    mvn install:install-file -DgroupId=play.${jar_id//-/.} -DartifactId=play-$jar_id -Dversion=$version -Dfile=$jar -Dpackaging=jar -DgeneratePom=true
-    echo '<dependency><groupId>play.'${jar_id//-/.}'</groupId><artifactId>'play-$jar_id'</artifactId><version>'$version'</version></dependency>' >> $OLDPWD/dependencies.txt
+    echo mvn install:install-file -DgroupId=play.${jar_id//-/.} -DartifactId=play-$jar_id -Dversion=$version -Dfile=$jar -Dpackaging=jar -DgeneratePom=true 
+    echo '<dependency><groupId>play.'${jar_id//-/.}'</groupId><artifactId>'play-$jar_id'</artifactId><version>'$version'</version></dependency>' 1>&2
 }
 
 if [ -z "$1" ]; then
@@ -15,14 +15,13 @@ if [ -z "$1" ]; then
     exit 0
 fi
 
-play_home=$1
-play_framework_dir=$play_home/framework
-play_lib_dir=$play_framework_dir/lib
+play_home="$1"
+play_framework_dir="$play_home/framework"
+play_lib_dir="$play_framework_dir/lib"
 
-play_modules_dir=$play_home/modules
+play_modules_dir="$play_home/modules"
 for module in gae siena; do
-    cd $play_modules_dir/$module/lib
-    echo $play_modules_dir/$module/lib
+    cd "$play_modules_dir/$module/lib"
 
     for jar in *.jar; do
         jar_name=${jar%.jar}
@@ -60,9 +59,8 @@ for module in gae siena; do
         mavenizing $jar_id $version
     done
 done
-exit 0
 
-cd $play_lib_dir
+cd "$play_lib_dir"
 for jar in *.jar; do
     jar_name=${jar%.jar}
     jar_data=(${jar_name//-/ })
