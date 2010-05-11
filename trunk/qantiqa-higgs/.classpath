@@ -1,13 +1,8 @@
 <classpath>
-  <classpathentry kind="src" path="test" output="target/test-classes" including="**/*.java"/>
   <classpathentry kind="src" path="app" including="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
-  <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/1.6/joda-time-1.6.jar" sourcepath="M2_REPO/joda-time/joda-time/1.6/joda-time-1.6-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/dario/.m2/repository/joda-time/joda-time/1.6/joda-time-1.6-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/4.5/junit-4.5.jar" sourcepath="M2_REPO/junit/junit/4.5/junit-4.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/1.6/joda-time-1.6.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.5/junit-4.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/play/1.0.1/play-1.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/activation/play-activation/1.0.1/play-activation-1.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/antlr/play-antlr/2.7.6/play-antlr-2.7.6.jar"/>
@@ -71,15 +66,11 @@
   <classpathentry kind="var" path="M2_REPO/play/slf4j/api/play-slf4j-api/1.5.0/play-slf4j-api-1.5.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/slf4j/log4j12/play-slf4j-log4j12/1.5.0/play-slf4j-log4j12-1.5.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/SnakeYAML/play-SnakeYAML/1.2/play-SnakeYAML-1.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/play/WikiText/play-WikiText/1.1.1/play-WikiText-1.1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/play/wikitext/play-WikiText/1.1.1/play-WikiText-1.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/wikitext/core/play-wikitext.core/1.1.1/play-wikitext.core-1.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/play/ZDB/play-ZDB/1.1.1/play-ZDB-1.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/protobuf/protobuf-format-java/1.1/protobuf-format-java-1.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/google/protobuf/protobuf-java/2.3.0/protobuf-java-2.3.0.jar">
-    <attributes>
-      <attribute value="jar:file:/home/dario/.m2/repository/com/google/protobuf/protobuf-java/2.3.0/protobuf-java-2.3.0-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/google/protobuf/protobuf-java/2.3.0/protobuf-java-2.3.0.jar"/>
   <classpathentry kind="src" path="/qantiqa-common"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </classpath>
