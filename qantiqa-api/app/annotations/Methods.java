@@ -29,11 +29,13 @@ import constants.HttpMethod;
 /**
  * Annotates the valid HTTP methods handled by a REST API method.
  * 
+ * Related with {@link HttpMethod} enum.
+ * 
  * @author Dario
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Methods {
 
-    HttpMethod[] value();
+	HttpMethod[] value();
 }

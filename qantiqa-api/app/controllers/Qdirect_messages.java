@@ -36,10 +36,22 @@ import annotations.RequiresAuthentication;
  */
 public class Qdirect_messages extends QController {
 
-    @Methods( { GET })
-    @Formats( { XML, JSON, RSS, ATOM })
-    @RequiresAuthentication
-    public static void index(Integer count) {
-        renderProtobuf(Protocol.direct_messages.newBuilder().build());
-    }
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/direct_messages}
+	 * 
+	 * Returns a list of the 20 most recent direct messages sent to the
+	 * authenticating user. The XML and JSON versions include detailed
+	 * information about the sending and recipient users.
+	 * 
+	 * @param count
+	 *            Specifies the number of records to retrieve. May not be
+	 *            greater than 200.
+	 */
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	@RequiresAuthentication
+	public static void index(Integer count) {
+		renderProtobuf(Protocol.direct_messages.newBuilder().build());
+	}
 }

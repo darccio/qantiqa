@@ -36,6 +36,19 @@ import annotations.RequiresAuthentication;
  */
 public class Qusers extends QController {
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/users/show}
+	 * 
+	 * Returns extended information of a given user, specified by ID or screen
+	 * name as per the required id parameter.
+	 * 
+	 * The author's most recent status will be returned inline.
+	 * 
+	 * @param id
+	 *            Specifies the ID or screen name of the user for whom to return
+	 *            results for.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON })
 	public static void show(String id) {
@@ -54,6 +67,17 @@ public class Qusers extends QController {
 		renderProtobuf(target);
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/users/search}
+	 * 
+	 * Run a search for users similar to the Find People button on Twitter.com;
+	 * the same results returned by people search on Twitter.com will be
+	 * returned by using this API.
+	 * 
+	 * @param q
+	 *            The search query term.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication

@@ -45,6 +45,21 @@ import annotations.RequiresAuthentication;
  */
 public class Qstatuses extends QController {
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/statuses/home_timeline}
+	 * 
+	 * Returns the 20 most recent statuses, including retweets, posted by the
+	 * authenticating user and that user's friends. This is the equivalent of
+	 * /timeline/home on the Web.
+	 * 
+	 * @param count
+	 *            Specifies the number of records to retrieve. May not be
+	 *            greater than 200.
+	 * @param since_id
+	 *            Returns results with an ID greater than (that is, more recent
+	 *            than) the specified ID.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON, ATOM })
 	@RequiresAuthentication
@@ -59,6 +74,17 @@ public class Qstatuses extends QController {
 		renderProtobuf(qsv.timelines(users, count, since_id));
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/statuses/mentions}
+	 * 
+	 * Returns the 20 most recent mentions (status containing @username) for the
+	 * authenticating user.
+	 * 
+	 * @param count
+	 *            Specifies the number of records to retrieve. May not be
+	 *            greater than 200.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON, RSS, ATOM })
 	@RequiresAuthentication
@@ -72,6 +98,24 @@ public class Qstatuses extends QController {
 		}
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/statuses/user_timeline}
+	 * 
+	 * Returns the 20 most recent statuses posted from the authenticating user.
+	 * It's also possible to request another user's timeline via the id
+	 * parameter.
+	 * 
+	 * This is the equivalent of the Web / page for your own user, or the
+	 * profile page for a third party.
+	 * 
+	 * @param id
+	 *            Specifies the ID or screen name of the user for whom to return
+	 *            results for.
+	 * @param count
+	 *            Specifies the number of records to retrieve. May not be
+	 *            greater than 200.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON, RSS, ATOM })
 	public static void user_timeline(String id, Integer count) {
@@ -85,6 +129,16 @@ public class Qstatuses extends QController {
 		renderProtobuf(qsv.timeline(user.getId(), count));
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/statuses/retweeted_by_me}
+	 * 
+	 * Returns the 20 most recent retweets posted by the authenticating user.
+	 * 
+	 * @param count
+	 *            Specifies the number of records to retrieve. May not be
+	 *            greater than 200.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON, ATOM })
 	@RequiresAuthentication
@@ -98,6 +152,16 @@ public class Qstatuses extends QController {
 		}
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/statuses/show}
+	 * 
+	 * Returns a single status, specified by the id parameter below. The
+	 * status's author will be returned inline.
+	 * 
+	 * @param id
+	 *            The numerical ID of the desired status.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON })
 	public static void show(Long id) {
@@ -110,6 +174,24 @@ public class Qstatuses extends QController {
 		}
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/post/statuses/update}
+	 * 
+	 * Updates the authenticating user's status.
+	 * 
+	 * A status update with text identical to the authenticating user's text
+	 * identical to the authenticating user's current status will be ignored to
+	 * prevent duplicates.
+	 * 
+	 * @param status
+	 *            The text of your status update, up to 140 characters. URL
+	 *            encode as necessary.
+	 * @param in_reply_to_status_id
+	 *            The ID of an existing status that the update is in reply to.
+	 * @param source
+	 *            App ID which status is created from.
+	 */
 	@Methods( { POST })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication
@@ -125,6 +207,18 @@ public class Qstatuses extends QController {
 		}
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/post/statuses/destroy}
+	 * 
+	 * Destroys the status specified by the required ID parameter.
+	 * 
+	 * Usage note: The authenticating user must be the author of the specified
+	 * status.
+	 * 
+	 * @param id
+	 *            The numerical ID of the desired status.
+	 */
 	@Methods( { POST, DELETE })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication
@@ -138,6 +232,18 @@ public class Qstatuses extends QController {
 		}
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/post/statuses/retweet/:id}
+	 * 
+	 * Retweets a tweet. Returns the original tweet with retweet details
+	 * embedded.
+	 * 
+	 * @param id
+	 *            The numerical ID of the desired status.
+	 * @param source
+	 *            App ID which status is created from.
+	 */
 	@Methods( { POST, PUT })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication

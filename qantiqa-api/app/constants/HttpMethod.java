@@ -22,11 +22,13 @@ package constants;
 /**
  * Valid HTTP methods available.
  * 
+ * Extracted from:
+ * 
  * http://tools.ietf.org/html/rfc2616#section-5.1.1
  * http://tools.ietf.org/html/rfc5789
  * 
  * @author Dario
  */
 public enum HttpMethod {
-    GET, POST, PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT, PATCH
+	GET, POST, PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT, PATCH
 }
