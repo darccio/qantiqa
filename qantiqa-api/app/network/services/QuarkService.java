@@ -23,11 +23,13 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.utils.QantiqaException;
 import im.dario.qantiqa.common.utils.TwitterDate;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import network.Overlay;
 import network.Storage;
+import utils.TimeCapsule;
 import easypastry.dht.DHTException;
 
 /**
@@ -70,10 +72,12 @@ public class QuarkService extends Service {
 			builder.setSource(source);
 		}
 
-		builder.setCreatedAt(new TwitterDate().toString());
+		TimeCapsule<Long> hoipoi = new TimeCapsule<Long>(builder.getId());
+		builder.setCreatedAt(hoipoi.getCreationTime().toString());
 
 		Protocol.status quark = builder.build();
 		overlay.store(Storage.quarks, id, quark);
+		overlay.add(Storage.recentQuarks, user.getId(), hoipoi);
 
 		UserService usv = new UserService(overlay);
 		Protocol.user.Builder ub = user.toBuilder();
@@ -156,24 +160,9 @@ public class QuarkService extends Service {
 		Protocol.status.Builder requark = update(requarker,
 				requarked.getText(), null, source).toBuilder();
 
-		Set<Long> requarks = overlay.retrieve(Storage.requarks, requarked
+		overlay.add(Storage.requarks, requarked.getId(), requark.getId());
+		overlay.add(Storage.requarksByUser, requarker.getScreenName(), requark
 				.getId());
-		if (requarks == null) {
-			requarks = new HashSet<Long>();
-		}
-
-		requarks.add(requark.getId());
-		overlay.store(Storage.requarks, requarked.getId(), requarks);
-
-		Set<Long> requarksByUser = overlay.retrieve(Storage.requarksByUser,
-				requarker.getScreenName());
-		if (requarksByUser == null) {
-			requarksByUser = new HashSet<Long>();
-		}
-
-		requarks.add(requark.getId());
-		overlay.store(Storage.requarksByUser, requarker.getScreenName(),
-				requarksByUser);
 
 		Protocol.status.Builder builder = requark.getRetweetedStatus()
 				.toBuilder();
@@ -194,6 +183,65 @@ public class QuarkService extends Service {
 			quark.setUser(usv.get(QuarkService.getUserIdFromQuarkId(id)));
 
 			builder.addStatus(quark);
+		}
+
+		return builder.build();
+	}
+
+	public Protocol.statuses timelines(Set<Long> users, Integer limit,
+			Long sinceId) {
+		TreeSet<TimeCapsule<Long>> full = new TreeSet<TimeCapsule<Long>>();
+
+		for (Long user : users) {
+			TreeSet<TimeCapsule<Long>> timeline = (TreeSet<TimeCapsule<Long>>) overlay
+					.retrieve(Storage.recentQuarks, user);
+			full.addAll(timeline);
+		}
+
+		return buildStream(full, limit, sinceId);
+	}
+
+	public Protocol.statuses timeline(Long user, Integer limit) {
+		TreeSet<TimeCapsule<Long>> timeline = (TreeSet<TimeCapsule<Long>>) overlay
+				.retrieve(Storage.recentQuarks, user);
+
+		return buildStream(timeline, limit, null);
+	}
+
+	private Protocol.statuses buildStream(TreeSet<TimeCapsule<Long>> quarks,
+			Integer limit, Long sinceId) {
+		TwitterDate since = null;
+		if (sinceId != null) {
+			try {
+				since = TwitterDate.parse(this.show(sinceId).getCreatedAt());
+			} catch (Exception e) {
+				since = null;
+			}
+		}
+
+		LinkedHashSet<Long> ids = new LinkedHashSet<Long>();
+		for (Integer total = 0; total < limit; total++) {
+			TimeCapsule<Long> tc = quarks.pollFirst();
+			if (tc == null) {
+				break;
+			}
+
+			if (since == null) {
+				ids.add(tc.getValue());
+			} else {
+				if (tc.getCreationTime().compareTo(since) > 0) {
+					ids.add(tc.getValue());
+				}
+			}
+		}
+
+		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
+		for (Long id : ids) {
+			try {
+				builder.addStatus(this.show(id));
+			} catch (QantiqaException e) {
+				// Nothing to do, really.
+			}
 		}
 
 		return builder.build();

@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import utils.TimeCapsule;
+
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 
@@ -75,12 +77,15 @@ public class Storage<E> {
 			"favorites");
 	public static final Storage<Set<Long>> requarksByUser = new Storage<Set<Long>>(
 			"requarksByUser");
+	public static final Storage<Set<TimeCapsule<Long>>> recentQuarks = new Storage<Set<TimeCapsule<Long>>>(
+			"recentQuarks").limit(200L);
 
 	private final String id;
 	private final String hash;
 	private Message.Builder protobufBuilder = null;
 	private Storage<Set<Object>> index;
 	private StorageCallback callback;
+	private Long limit = Long.MIN_VALUE;
 
 	private Storage(String id) {
 		this.id = id;
@@ -130,18 +135,18 @@ public class Storage<E> {
 
 	private <P> Storage<E> indexed(Class<P> klass, StorageCallback callback) {
 		Storage<Set<Object>> ix = new Storage<Set<Object>>(id + "_ix");
-		ix.setCallback(callback);
+		ix.callback(callback);
 
 		this.index = ix;
 
 		return this;
 	}
 
-	public Storage<Set<Object>> getIndex() {
+	public Storage<Set<Object>> index() {
 		return this.index;
 	}
 
-	public void setCallback(StorageCallback callback) {
+	public void callback(StorageCallback callback) {
 		this.callback = callback;
 	}
 
@@ -153,7 +158,21 @@ public class Storage<E> {
 		return this.callback.yield(o);
 	}
 
-	public String getHash() {
+	private Storage<E> limit(Long value) {
+		this.limit = value;
+
+		return this;
+	}
+
+	public boolean hasLimit() {
+		return (this.limit > 0);
+	}
+
+	public Long limit() {
+		return this.limit;
+	}
+
+	public String hash() {
 		return this.hash;
 	}
 

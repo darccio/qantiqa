@@ -1,5 +1,7 @@
 package im.dario.qantiqa.common.utils;
 
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
@@ -12,22 +14,38 @@ import org.joda.time.format.DateTimeFormatterBuilder;
  * @author Dario
  * 
  */
-public class TwitterDate {
-    private final static DateTimeFormatter twitter = new DateTimeFormatterBuilder()
-            .appendDayOfWeekShortText().appendLiteral(' ')
-            .appendMonthOfYearShortText().appendLiteral(' ')
-            .appendDayOfMonth(2).appendLiteral(' ').appendHourOfDay(2)
-            .appendLiteral(':').appendMinuteOfHour(2).appendLiteral(':')
-            .appendSecondOfMinute(2).appendLiteral(" +0000 ").appendYear(4, 4)
-            .toFormatter();
+public class TwitterDate implements Serializable, Comparable<TwitterDate> {
 
-    private DateTime dt;
+	private static final long serialVersionUID = 1360664926408873786L;
 
-    public TwitterDate() {
-        dt = new DateTime(DateTimeZone.UTC);
-    }
+	private final static DateTimeFormatter twitter = new DateTimeFormatterBuilder()
+			.appendDayOfWeekShortText().appendLiteral(' ')
+			.appendMonthOfYearShortText().appendLiteral(' ')
+			.appendDayOfMonth(2).appendLiteral(' ').appendHourOfDay(2)
+			.appendLiteral(':').appendMinuteOfHour(2).appendLiteral(':')
+			.appendSecondOfMinute(2).appendLiteral(" +0000 ").appendYear(4, 4)
+			.toFormatter();
 
-    public String toString() {
-        return twitter.print(dt);
-    }
+	private DateTime dt;
+
+	public TwitterDate() {
+		dt = new DateTime(DateTimeZone.UTC);
+	}
+
+	private TwitterDate(DateTime dt) {
+		this.dt = dt;
+	}
+
+	@Override
+	public int compareTo(TwitterDate o) {
+		return dt.compareTo(o.dt);
+	}
+
+	public String toString() {
+		return twitter.print(dt);
+	}
+
+	public static TwitterDate parse(String data) {
+		return new TwitterDate(twitter.parseDateTime(data));
+	}
 }
