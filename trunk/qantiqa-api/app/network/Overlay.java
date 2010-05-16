@@ -31,7 +31,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Set;
+import java.util.TreeSet;
 
 import network.utils.QastContent;
 import network.utils.QastListener;
@@ -386,19 +388,13 @@ public class Overlay {
 	 */
 	public <E> void store(Storage<E> storage, Object key, E value)
 			throws DHTException {
-		DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+		DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
 		dht.put(key.toString(), storage.marshal(value));
 
-		Storage<Set<Object>> ix = (Storage<Set<Object>>) storage.getIndex();
+		Storage<Set<Object>> ix = (Storage<Set<Object>>) storage.index();
 		if (ix != null) {
 			for (String stem : ix.stem(value)) {
-				Set<Object> set = retrieve(ix, stem);
-				if (set == null) {
-					set = new HashSet<Object>();
-				}
-
-				set.add(key);
-				store(ix, stem, set);
+				this.add(ix, stem, key);
 			}
 		}
 	}
@@ -416,7 +412,7 @@ public class Overlay {
 		E value = null;
 
 		try {
-			DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+			DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
 			value = storage.unmarshal(dht.get(key.toString()));
 		} catch (DHTException e) {
 			log.error("ERR", e);
@@ -430,7 +426,7 @@ public class Overlay {
 		E value = retrieve(storage, key);
 
 		try {
-			DHTHandler dht = PastryKernel.getDHTHandler(storage.getHash());
+			DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
 			dht.remove(key.toString());
 		} catch (DHTException e) {
 			log.error("ERR", e);
@@ -438,5 +434,27 @@ public class Overlay {
 		}
 
 		return value;
+	}
+
+	public <E> void add(Storage<Set<E>> storage, Object key, E value)
+			throws DHTException {
+		Set<E> data = this.retrieve(storage, key);
+		if (data == null) {
+			if (storage.hasLimit()) {
+				data = new TreeSet<E>();
+			} else {
+				data = new HashSet<E>();
+			}
+		}
+
+		data.add(value);
+		if (storage.hasLimit()) {
+			TreeSet<E> set = (TreeSet<E>) data;
+			while (set.size() >= storage.limit()) {
+				set.pollFirst();
+			}
+		}
+
+		this.store(storage, key, data);
 	}
 }

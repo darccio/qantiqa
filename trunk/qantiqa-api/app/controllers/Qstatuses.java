@@ -28,7 +28,11 @@ import static constants.HttpMethod.GET;
 import static constants.HttpMethod.POST;
 import static constants.HttpMethod.PUT;
 import im.dario.qantiqa.common.protocol.Protocol;
+
+import java.util.Set;
+
 import network.services.QuarkService;
+import network.services.RelationshipService;
 import network.services.SearchService;
 import annotations.Formats;
 import annotations.Methods;
@@ -45,7 +49,14 @@ public class Qstatuses extends QController {
 	@Formats( { XML, JSON, ATOM })
 	@RequiresAuthentication
 	public static void home_timeline(Integer count, Long since_id) {
-		// TODO
+		RelationshipService rsv = new RelationshipService(getOverlay());
+		Protocol.user request = getRequestUser();
+
+		Set<Long> users = rsv.following(request);
+		users.add(request.getId());
+
+		QuarkService qsv = new QuarkService(getOverlay());
+		renderProtobuf(qsv.timelines(users, count, since_id));
 	}
 
 	@Methods( { GET })
@@ -64,7 +75,14 @@ public class Qstatuses extends QController {
 	@Methods( { GET })
 	@Formats( { XML, JSON, RSS, ATOM })
 	public static void user_timeline(String id, Integer count) {
-		// TODO
+		if (id == null) {
+			id = request.user;
+		}
+
+		Protocol.user user = getUser(id, "source");
+
+		QuarkService qsv = new QuarkService(getOverlay());
+		renderProtobuf(qsv.timeline(user.getId(), count));
 	}
 
 	@Methods( { GET })

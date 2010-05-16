@@ -41,7 +41,7 @@ public class SearchService extends Service {
 	}
 
 	public Protocol.users searchUsers(String q) throws QantiqaException {
-		Storage<Set<Object>> ix = Storage.usersById.getIndex();
+		Storage<Set<Object>> ix = Storage.usersById.index();
 
 		Set<Object> results = search(q, ix);
 
@@ -56,7 +56,7 @@ public class SearchService extends Service {
 
 	public Protocol.statuses searchQuarks(String q) throws QantiqaException {
 		Storage<Set<Object>> ix = (Storage<Set<Object>>) Storage.quarks
-				.getIndex();
+				.index();
 
 		Set<Object> results = search(q, ix);
 
