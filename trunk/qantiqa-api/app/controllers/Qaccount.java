@@ -45,6 +45,15 @@ public class Qaccount extends QController {
 
 	private static final Logger log = Logger.getLogger(Qaccount.class);
 
+	/**
+	 * From Twitter official doc {@linkplain http 
+	 * ://apiwiki.twitter.com/Twitter-
+	 * REST-API-Method:-account%C2%A0verify_credentials}
+	 * 
+	 * Returns an HTTP 200 OK response code and a representation of the
+	 * requesting user if authentication was successful; returns a 401 status
+	 * code and an error message if not.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication
@@ -78,6 +87,11 @@ public class Qaccount extends QController {
 		}
 	}
 
+	/**
+	 * Out of official Twitter REST API.
+	 * 
+	 * Get avatar for given user name.
+	 */
 	@Methods( { GET })
 	public static void profile_image(String screen_name) {
 		// TODO Pending of updating profile (screen_name -> dht)

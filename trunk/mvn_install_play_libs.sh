@@ -1,7 +1,33 @@
 #!/bin/bash
 
-# For Play 1.0.1
+#
+# Qantiqa : Decentralized microblogging platform
+# Copyright (C) 2010 Dario (i@dario.im) 
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
 
+# Auxiliary script to generate install scripts for Linux/Windows,
+# Maven and Play 1.0.1.
+# Generated scripts aim to install all Play! Framework jars in our local maven
+# repository.
+# It also outputs XML code to add to subprojects POMs.
+
+# * $1: Jar ID
+# * $2: Jar version
+# * $3: Jar filename
 mavenizing() {
     jar_id=$1
     version=$2
@@ -9,6 +35,12 @@ mavenizing() {
 
     echo mvn install:install-file -DgroupId=play.${jar_id//-/.} -DartifactId=play-$jar_id -Dversion=$version -Dfile=$jar -Dpackaging=jar -DgeneratePom=true 
     echo '<dependency><groupId>play.'${jar_id//-/.}'</groupId><artifactId>'play-$jar_id'</artifactId><version>'$version'</version></dependency>' 1>&2
+}
+
+enter() {
+    path="$1"
+    echo cd \"$path\"
+    cd "$path"
 }
 
 if [ -z "$1" ]; then
@@ -20,9 +52,14 @@ play_home="$1"
 play_framework_dir="$play_home/framework"
 play_lib_dir="$play_framework_dir/lib"
 
+enter "$play_framework_dir"
+mavenizing play 1.0.1 play.jar
+
+# We iterate over gae and siena modules directories because they are used in
+# Qantiqa.
 play_modules_dir="$play_home/modules"
 for module in gae siena; do
-    cd "$play_modules_dir/$module/lib"
+    enter "$play_modules_dir/$module/lib"
 
     for jar in *.jar; do
         jar_name=${jar%.jar}
@@ -61,7 +98,7 @@ for module in gae siena; do
     done
 done
 
-cd "$play_lib_dir"
+enter "$play_lib_dir"
 for jar in *.jar; do
     jar_name=${jar%.jar}
     jar_data=(${jar_name//-/ })

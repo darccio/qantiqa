@@ -29,11 +29,13 @@ import constants.Format;
 /**
  * Annotates the valid formats supported by a REST API method.
  * 
+ * Related with {@link Format} enum.
+ * 
  * @author Dario
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Formats {
 
-    Format[] value();
+	Format[] value();
 }

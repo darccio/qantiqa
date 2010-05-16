@@ -33,6 +33,15 @@ import annotations.Methods;
  */
 public class Qsearch extends QController {
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://apiwiki.twitter.com/Twitter-Search-API-Method:-search}
+	 * 
+	 * Returns tweets that match a specified query.
+	 * 
+	 * @param q
+	 *            The text to search for.
+	 */
 	@Methods( { GET })
 	@Formats( { ATOM, JSON })
 	public static void index(String q) {

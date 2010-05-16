@@ -36,21 +36,31 @@ import annotations.RequiresAuthentication;
  */
 public class Qfavorites extends QController {
 
-    @Methods( { POST })
-    @Formats( { XML, JSON })
-    @RequiresAuthentication
-    public static void create(Long id) {
-        FavoriteService fsv = new FavoriteService(getOverlay());
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/post/favorites/:id/create}
+	 * 
+	 * Favorites the status specified in the ID parameter as the authenticating
+	 * user. Returns the favorite status when successful.
+	 * 
+	 * @param id
+	 *            The numerical ID of the desired status.
+	 */
+	@Methods( { POST })
+	@Formats( { XML, JSON })
+	@RequiresAuthentication
+	public static void create(Long id) {
+		FavoriteService fsv = new FavoriteService(getOverlay());
 
-        try {
-            Protocol.status.Builder builder = fsv.create(getRequestUser(), id)
-                    .toBuilder();
-            builder.setUser(getUser(QuarkService.getUserIdFromQuarkId(id),
-                    null, "source"));
+		try {
+			Protocol.status.Builder builder = fsv.create(getRequestUser(), id)
+					.toBuilder();
+			builder.setUser(getUser(QuarkService.getUserIdFromQuarkId(id),
+					null, "source"));
 
-            renderProtobuf(builder);
-        } catch (Exception e) {
-            renderError(e);
-        }
-    }
+			renderProtobuf(builder);
+		} catch (Exception e) {
+			renderError(e);
+		}
+	}
 }

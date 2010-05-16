@@ -43,6 +43,21 @@ import annotations.RequiresAuthentication;
  */
 public class Qfriendships extends QController {
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/post/friendships/create/:id}
+	 * 
+	 * Allows the authenticating users to follow the user specified in the ID
+	 * parameter.
+	 * 
+	 * Returns the befriended user in the requested format when successful.
+	 * Returns a string describing the failure condition when unsuccessful. If
+	 * you are already friends with the user an HTTP 403 will be returned.
+	 * 
+	 * @param id
+	 *            Specifies the ID or screen name of the user for whom to return
+	 *            results for.
+	 */
 	@Methods( { POST })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication
@@ -81,6 +96,20 @@ public class Qfriendships extends QController {
 		renderProtobuf(target);
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/post/friendships/destroy}
+	 * 
+	 * Allows the authenticating users to unfollow the user specified in the ID
+	 * parameter.
+	 * 
+	 * Returns the unfollowed user in the requested format when successful.
+	 * Returns a string describing the failure condition when unsuccessful.
+	 * 
+	 * @param id
+	 *            Specifies the ID or screen name of the user for whom to return
+	 *            results for.
+	 */
 	@Methods( { POST, DELETE })
 	@Formats( { XML, JSON })
 	@RequiresAuthentication
@@ -114,6 +143,21 @@ public class Qfriendships extends QController {
 		renderProtobuf(target);
 	}
 
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/friendships/show}
+	 * 
+	 * Returns detailed information about the relationship between two users.
+	 * 
+	 * @param source_id
+	 *            The user_id of the subject user.
+	 * @param source_screen_name
+	 *            The screen_name of the subject user.
+	 * @param target_id
+	 *            The user_id of the target user.
+	 * @param target_screen_name
+	 *            The screen_name of the target user.
+	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON })
 	public static void show(Long source_id, String source_screen_name,
