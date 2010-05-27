@@ -44,6 +44,17 @@ public class RelationshipService extends Service {
 		super(overlay);
 	}
 
+	/**
+	 * Creates a following relationship (source follows target).
+	 * 
+	 * @param source
+	 *            Follower
+	 * @param target
+	 *            User followed by source
+	 * @return
+	 * @throws DHTException
+	 * @throws QantiqaException
+	 */
 	public Map<Storage<Set<Long>>, Set<Long>> follow(Protocol.user source,
 			Protocol.user target) throws DHTException, QantiqaException {
 		Map<Storage<Set<Long>>, Set<Long>> data = new HashMap<Storage<Set<Long>>, Set<Long>>();
@@ -53,6 +64,17 @@ public class RelationshipService extends Service {
 		return data;
 	}
 
+	/**
+	 * Deletes a following relationship.
+	 * 
+	 * @param source
+	 *            Ex-follower (quitter)
+	 * @param target
+	 *            User unfollowed by source
+	 * @return
+	 * @throws DHTException
+	 * @throws QantiqaException
+	 */
 	public Map<Storage<Set<Long>>, Set<Long>> unfollow(Protocol.user source,
 			Protocol.user target) throws DHTException, QantiqaException {
 		Map<Storage<Set<Long>>, Set<Long>> data = new HashMap<Storage<Set<Long>>, Set<Long>>();
@@ -64,6 +86,20 @@ public class RelationshipService extends Service {
 		return data;
 	}
 
+	/**
+	 * Generic method to add somebody in one of both storage for followers
+	 * (followers and following storages).
+	 * 
+	 * @param followers
+	 *            Storage
+	 * @param source
+	 *            User that updates the relationship
+	 * @param target
+	 *            User aimed by relationship
+	 * @return
+	 * @throws DHTException
+	 * @throws QantiqaException
+	 */
 	private Set<Long> addTo(Storage<Set<Long>> followers, Protocol.user source,
 			Protocol.user target) throws DHTException, QantiqaException {
 		Set<Long> data = getData(followers, target);
@@ -74,6 +110,20 @@ public class RelationshipService extends Service {
 		return data;
 	}
 
+	/**
+	 * Generic method to remove somebody in one of both storage for followers
+	 * (followers and following storages).
+	 * 
+	 * @param followers
+	 *            Storage
+	 * @param source
+	 *            User that updates the relationship
+	 * @param target
+	 *            User aimed by relationship
+	 * @return
+	 * @throws QantiqaException
+	 * @throws DHTException
+	 */
 	private Set<Long> removeFrom(Storage<Set<Long>> followers,
 			Protocol.user source, Protocol.user target)
 			throws QantiqaException, DHTException {
@@ -85,6 +135,16 @@ public class RelationshipService extends Service {
 		return data;
 	}
 
+	/**
+	 * Retrieves data from one of two storages (followers and following) by
+	 * target user.
+	 * 
+	 * @param storage
+	 * @param target
+	 *            User used as storage key
+	 * @return
+	 * @throws QantiqaException
+	 */
 	private Set<Long> getData(Storage<Set<Long>> storage, Protocol.user target)
 			throws QantiqaException {
 		Set<Long> data = null;
@@ -103,6 +163,12 @@ public class RelationshipService extends Service {
 		return data;
 	}
 
+	/**
+	 * Returns followers of given user.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	public Set<Long> followers(Protocol.user user) {
 		Set<Long> followers = overlay.retrieve(Storage.followers, user.getId());
 
@@ -113,6 +179,12 @@ public class RelationshipService extends Service {
 		return followers;
 	}
 
+	/**
+	 * Returns users followed by user.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	public Set<Long> following(Protocol.user user) {
 		Set<Long> following = overlay.retrieve(Storage.following, user.getId());
 
@@ -123,6 +195,13 @@ public class RelationshipService extends Service {
 		return following;
 	}
 
+	/**
+	 * Check if a source user follows target user.
+	 * 
+	 * @param source
+	 * @param target
+	 * @return
+	 */
 	public boolean isFollower(Protocol.user source, Protocol.user target) {
 		Set<Long> followers = this.followers(target);
 

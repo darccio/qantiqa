@@ -26,7 +26,7 @@ import network.Storage;
 import easypastry.dht.DHTException;
 
 /**
- * Search service.
+ * Favorite service.
  * 
  * @author Dario
  */

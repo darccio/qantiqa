@@ -1,26 +1,32 @@
 package im.dario.qantiqa.common.utils;
 
+/**
+ * "Play! framework"-like exception.
+ * 
+ * @author Dario
+ * 
+ */
 public class QantiqaException extends Exception {
 
-    private static final long serialVersionUID = 5186024946937923090L;
+	private static final long serialVersionUID = 5186024946937923090L;
 
-    private int status = 500;
+	private int status = 500;
 
-    public QantiqaException(String message) {
-        super(message);
-    }
+	public QantiqaException(String message) {
+		super(message);
+	}
 
-    public QantiqaException(Exception e) {
-        super(e);
-    }
+	public QantiqaException(Exception e) {
+		super(e);
+	}
 
-    public QantiqaException status(int status) {
-        this.status = status;
+	public QantiqaException status(int status) {
+		this.status = status;
 
-        return this;
-    }
+		return this;
+	}
 
-    public int getStatus() {
-        return this.status;
-    }
+	public int getStatus() {
+		return this.status;
+	}
 }

@@ -23,7 +23,6 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.utils.QantiqaException;
 import im.dario.qantiqa.common.utils.TwitterDate;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -33,7 +32,7 @@ import utils.TimeCapsule;
 import easypastry.dht.DHTException;
 
 /**
- * Search service.
+ * Quark service.
  * 
  * @author Dario
  */
@@ -43,9 +42,23 @@ public class QuarkService extends Service {
 		super(overlay);
 	}
 
+	/**
+	 * Creates a new quark in user's timeline.
+	 * 
+	 * @param user
+	 * @param status
+	 *            Quark's text.
+	 * @param in_reply_to_status_id
+	 * @param source
+	 *            Name of the app which generates the quark.
+	 * @return
+	 * @throws QantiqaException
+	 * @throws DHTException
+	 */
 	public Protocol.status update(Protocol.user user, String status,
 			Long in_reply_to_status_id, String source) throws QantiqaException,
 			DHTException {
+		// Let's check some constraints...
 		if (status.length() > 140) {
 			throw new QantiqaException("Status is over 140 characters.")
 					.status(403);
@@ -72,6 +85,7 @@ public class QuarkService extends Service {
 			builder.setSource(source);
 		}
 
+		// Let's freeze it in carbonite...
 		TimeCapsule<Long> hoipoi = new TimeCapsule<Long>(builder.getId());
 		builder.setCreatedAt(hoipoi.getCreationTime().toString());
 
@@ -79,6 +93,7 @@ public class QuarkService extends Service {
 		overlay.store(Storage.quarks, id, quark);
 		overlay.add(Storage.recentQuarks, user.getId(), hoipoi);
 
+		// Updating user data...
 		UserService usv = new UserService(overlay);
 		Protocol.user.Builder ub = user.toBuilder();
 		ub.setStatusesCount(ub.getStatusesCount() + 1);
@@ -92,11 +107,30 @@ public class QuarkService extends Service {
 	}
 
 	/**
-	 * 9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 7 (Long.MAX_VALUE)
+	 * IDs in Qantiqa are handled in a different way than Twitter due how hard
+	 * is to get an unique ID inside the overlay. It can't be serial because
+	 * that would involve some kind of global lock in the overlay, which is not
+	 * possible.
 	 * 
-	 * 9 2 2 3 3 7 2 0 3 5|9 9 9 9 9 9 9 9 9
+	 * So, each use has an unique IDs space inside all possible values given
+	 * {@link Long#MAX_VALUE}. IDs are partitioned by user and quark ID, using
+	 * the first ten digits for user ID (enough to allow, in long term, every
+	 * human on Earth to have an account in Qantiqa - it allows to handle
+	 * 9.223.372.035 accounts) and the rest for quark (allowing by user to
+	 * update one billion (US) / thousand million (EU) times).
 	 * 
-	 * First ID: 1 0 0 0 0 0 0 0 0 1
+	 * Example: 9 2 2 3 3 7 2 0 3 5|9 9 9 9 9 9 9 9 9
+	 * 
+	 * This last statement is based in research about the most tweeting accounts
+	 * (even spam ones):
+	 * 
+	 * http://www.techxav.com/2010/03/17/twitter-spam/
+	 * http://www.sysomos.com/insidetwitter/mostactiveusers#most-followers
+	 * 
+	 * Based on the current use of Twitter, it should be enough with the
+	 * proposed values.
+	 * 
+	 * And the first ID ever will be 1.000.000.001.
 	 * 
 	 * @param user
 	 * @return
@@ -105,10 +139,24 @@ public class QuarkService extends Service {
 		return (user.getId() * 1000000000L) + user.getStatusesCount() + 1L;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 *            Quark ID
+	 * @return User ID
+	 */
 	public static Long getUserIdFromQuarkId(Long id) {
 		return id / 1000000000L;
 	}
 
+	/**
+	 * Deletes a quark.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws QantiqaException
+	 * @throws DHTException
+	 */
 	public Protocol.status destroy(Long id) throws QantiqaException,
 			DHTException {
 		UserService usv = new UserService(overlay);
@@ -120,10 +168,25 @@ public class QuarkService extends Service {
 		return overlay.remove(Storage.quarks, id);
 	}
 
+	/**
+	 * Returns a quark. This method is intended to map
+	 * {@link QuarkService#get(Long)} as expected in Twitter API.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws QantiqaException
+	 */
 	public Protocol.status show(Long id) throws QantiqaException {
 		return get(id);
 	}
 
+	/**
+	 * Returns a quark.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws QantiqaException
+	 */
 	private Protocol.status get(Long id) throws QantiqaException {
 		Protocol.status status = overlay.retrieve(Storage.quarks, id);
 		if (status == null) {
@@ -134,6 +197,19 @@ public class QuarkService extends Service {
 		return status;
 	}
 
+	/**
+	 * Requarks a quark.
+	 * 
+	 * @param requarker
+	 *            Who requarks
+	 * @param requarkedId
+	 *            Requarked quark ID
+	 * @param source
+	 *            Which app requarks
+	 * @return
+	 * @throws QantiqaException
+	 * @throws DHTException
+	 */
 	public Protocol.status requark(Protocol.user requarker, Long requarkedId,
 			String source) throws QantiqaException, DHTException {
 		UserService usv = new UserService(overlay);
@@ -172,6 +248,13 @@ public class QuarkService extends Service {
 		return requark.build();
 	}
 
+	/**
+	 * Returns all requarks done by user.
+	 * 
+	 * @param user
+	 * @return
+	 * @throws QantiqaException
+	 */
 	public Protocol.statuses requarks(String user) throws QantiqaException {
 		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
 
@@ -188,6 +271,15 @@ public class QuarkService extends Service {
 		return builder.build();
 	}
 
+	/**
+	 * Returns one timeline ordered from newest-to-oldest quark composed by user
+	 * set's timelines.
+	 * 
+	 * @param users
+	 * @param limit
+	 * @param sinceId
+	 * @return
+	 */
 	public Protocol.statuses timelines(Set<Long> users, Integer limit,
 			Long sinceId) {
 		TreeSet<TimeCapsule<Long>> full = new TreeSet<TimeCapsule<Long>>();
@@ -201,6 +293,14 @@ public class QuarkService extends Service {
 		return buildStream(full, limit, sinceId);
 	}
 
+	/**
+	 * Returns user's timeline ordered from newest-to-oldest.
+	 * 
+	 * @param user
+	 * @param limit
+	 *            Max number of quarks to return.
+	 * @return
+	 */
 	public Protocol.statuses timeline(Long user, Integer limit) {
 		TreeSet<TimeCapsule<Long>> timeline = (TreeSet<TimeCapsule<Long>>) overlay
 				.retrieve(Storage.recentQuarks, user);
@@ -208,39 +308,42 @@ public class QuarkService extends Service {
 		return buildStream(timeline, limit, null);
 	}
 
+	/**
+	 * Builds an stream of timelines.
+	 * 
+	 * @param quarks
+	 * @param limit
+	 * @param sinceId
+	 * @return
+	 */
 	private Protocol.statuses buildStream(TreeSet<TimeCapsule<Long>> quarks,
 			Integer limit, Long sinceId) {
+		// Looking if they asked all quarks since one...
 		TwitterDate since = null;
 		if (sinceId != null) {
 			try {
 				since = TwitterDate.parse(this.show(sinceId).getCreatedAt());
 			} catch (Exception e) {
-				since = null;
-			}
-		}
-
-		LinkedHashSet<Long> ids = new LinkedHashSet<Long>();
-		for (Integer total = 0; total < limit; total++) {
-			TimeCapsule<Long> tc = quarks.pollFirst();
-			if (tc == null) {
-				break;
-			}
-
-			if (since == null) {
-				ids.add(tc.getValue());
-			} else {
-				if (tc.getCreationTime().compareTo(since) > 0) {
-					ids.add(tc.getValue());
-				}
+				since = TwitterDate.MIN_VALUE;
 			}
 		}
 
 		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
-		for (Long id : ids) {
-			try {
-				builder.addStatus(this.show(id));
-			} catch (QantiqaException e) {
-				// Nothing to do, really.
+		for (Integer total = 0; total < limit; total++) {
+			TimeCapsule<Long> tc = quarks.pollFirst();
+			if (tc == null) {
+				break;
+
+			}
+
+			if (since == TwitterDate.MIN_VALUE // We are comparing pointers,
+												// yeah.
+					|| tc.getCreationTime().compareTo(since) > 0) {
+				try {
+					builder.addStatus(this.show(tc.getValue()));
+				} catch (QantiqaException e) {
+					// Nothing to do, really.
+				}
 			}
 		}
 

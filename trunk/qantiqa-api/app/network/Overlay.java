@@ -423,6 +423,15 @@ public class Overlay {
 		return value;
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param storage
+	 *            DHT where to retrieve the object
+	 * @param key
+	 *            Identifier of the object in the DHT
+	 * @return
+	 */
 	public <E> E remove(Storage<E> storage, Object key) {
 		E value = retrieve(storage, key);
 
@@ -437,6 +446,17 @@ public class Overlay {
 		return value;
 	}
 
+	/**
+	 * Adds given value to a set stored in storage.
+	 * 
+	 * @param <E>
+	 * @param storage
+	 *            DHT where to retrieve the object
+	 * @param key
+	 *            Identifier of the object in the DHT
+	 * @param value
+	 * @throws DHTException
+	 */
 	public <E> void add(Storage<Set<E>> storage, Object key, E value)
 			throws DHTException {
 		Set<E> data = this.retrieve(storage, key);

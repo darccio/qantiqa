@@ -155,6 +155,14 @@ public class Higgs extends Controller {
 		renderProtobuf(builder);
 	}
 
+	/**
+	 * Verifies session based on user ID, remote address and session ID. Not
+	 * used.
+	 * 
+	 * @param user_id
+	 * @param user_address
+	 * @param session_id
+	 */
 	public static void verify_session(@Required Long user_id,
 			@Required String user_address, @Required String session_id) {
 		Protocol.validation.Builder builder = Protocol.validation.newBuilder();

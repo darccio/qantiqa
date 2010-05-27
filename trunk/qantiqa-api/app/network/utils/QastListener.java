@@ -31,21 +31,21 @@ import easypastry.cast.CastListener;
  */
 public abstract class QastListener implements CastListener {
 
-    public final boolean contentAnycasting(CastContent cc) {
-        return contentAnycasting(new QastContent(cc));
-    }
+	public final boolean contentAnycasting(CastContent cc) {
+		return contentAnycasting(new QastContent(cc));
+	}
 
-    public boolean contentAnycasting(QastContent qc) {
-        return false;
-    }
+	public boolean contentAnycasting(QastContent qc) {
+		return false;
+	}
 
-    public final void contentDelivery(CastContent cc) {
-        contentDelivery(new QastContent(cc));
-    }
+	public final void contentDelivery(CastContent cc) {
+		contentDelivery(new QastContent(cc));
+	}
 
-    public void contentDelivery(QastContent qc) {
-    }
+	public void contentDelivery(QastContent qc) {
+	}
 
-    public void hostUpdate(NodeHandle nh, boolean joined) {
-    }
+	public void hostUpdate(NodeHandle nh, boolean joined) {
+	}
 }
