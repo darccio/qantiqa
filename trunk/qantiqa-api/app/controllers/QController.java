@@ -120,7 +120,6 @@ public abstract class QController extends Controller {
 			} catch (QantiqaException e) {
 				renderError(e);
 			}
-
 		}
 	}
 
@@ -133,6 +132,15 @@ public abstract class QController extends Controller {
 		return session.getId() + "-format";
 	}
 
+	/**
+	 * Send an error response in the format of the request (request-level
+	 * available).
+	 * 
+	 * @param status
+	 *            HTTP status code
+	 * @param error
+	 *            Message
+	 */
 	protected static void renderError(Integer status, String error) {
 		Protocol.hash.Builder bh = Protocol.hash.newBuilder();
 		bh.setRequest(request.path);
@@ -142,6 +150,15 @@ public abstract class QController extends Controller {
 		renderProtobuf(bh);
 	}
 
+	/**
+	 * Send an error response in the format requested, from an exception and
+	 * assuming HTTP status code 500.
+	 * 
+	 * If given exception is a {@link QantiqaException}, it takes the status
+	 * from it.
+	 * 
+	 * @param e
+	 */
 	protected static void renderError(Exception e) {
 		int status = 500;
 		if (e instanceof QantiqaException) {
@@ -203,10 +220,11 @@ public abstract class QController extends Controller {
 
 		Format format = null;
 		if (ann == null) {
-			// Assumes raw format if no one found.
+			// Assumes raw format if no one configured in class.
 			format = Format.RAW;
 		} else {
 			try {
+				// All URLs end in .format
 				String sFormat = request.path.substring(request.path
 						.lastIndexOf(".") + 1);
 				format = Format.valueOf(sFormat.toUpperCase(Locale.US));
@@ -317,6 +335,8 @@ public abstract class QController extends Controller {
 	/**
 	 * Common method to get users from unknown data.
 	 * 
+	 * Possible issue with users with numeric nicknames, e.g. 101010.
+	 * 
 	 * @param unknown
 	 * @param kind
 	 * @return
@@ -369,10 +389,21 @@ public abstract class QController extends Controller {
 		return user;
 	}
 
+	/**
+	 * Return the user associated to the authenticated request.
+	 * 
+	 * @return
+	 */
 	protected static Protocol.user getRequestUser() {
 		return getUser(null, request.user, "source");
 	}
 
+	/**
+	 * Basic session support. Not used currently.
+	 * 
+	 * @param auth
+	 * @param user
+	 */
 	protected static void startSession(Protocol.authentication_response auth,
 			Protocol.user user) {
 		sessions.put(user.getScreenName(), SessionService.buildSession(user,
@@ -383,6 +414,11 @@ public abstract class QController extends Controller {
 		return sessions.get(request.user);
 	}
 
+	/**
+	 * Authenticate HTTP credentials against Higgs.
+	 * 
+	 * @return
+	 */
 	protected static Protocol.authentication_response authenticate() {
 		UserService usv = new UserService(getOverlay());
 
@@ -393,6 +429,11 @@ public abstract class QController extends Controller {
 		return auth;
 	}
 
+	/**
+	 * Send an error response (only for retweets).
+	 * 
+	 * @param e
+	 */
 	protected static void renderRetweetError(Exception e) {
 		int status = 500;
 		if (e instanceof QantiqaException) {
@@ -403,6 +444,12 @@ public abstract class QController extends Controller {
 		renderRetweetError(status, e.getMessage());
 	}
 
+	/**
+	 * Send an error response (only for retweets).
+	 * 
+	 * @param status
+	 * @param message
+	 */
 	private static void renderRetweetError(int status, String message) {
 		Protocol.errors.Builder bh = Protocol.errors.newBuilder();
 		bh.addError(message);
@@ -411,6 +458,15 @@ public abstract class QController extends Controller {
 		renderProtobuf(bh);
 	}
 
+	/**
+	 * Add user data to an status.
+	 * 
+	 * It gets the user from quark id (see {@link QuarkService#getNextId}).
+	 * 
+	 * @param msg
+	 * @param quarkId
+	 * @return
+	 */
 	protected static Protocol.status appendUser(Protocol.status msg,
 			Long quarkId) {
 		Protocol.status.Builder builder = msg.toBuilder();
