@@ -37,10 +37,22 @@ public class QantiqaFormat {
 	private QantiqaFormat() {
 	}
 
+	/**
+	 * Merges an {@link InputStream} as Protobuf message.
+	 * 
+	 * @param input
+	 * @param builder
+	 */
 	public static void merge(InputStream input, Builder builder) {
 		XmlFormat.merge(input, builder);
 	}
 
+	/**
+	 * Merges an {@link String} as Protobuf message.
+	 * 
+	 * @param input
+	 * @param builder
+	 */
 	public static void merge(String data, Builder builder) {
 		ByteArrayInputStream bais;
 		try {
@@ -52,6 +64,12 @@ public class QantiqaFormat {
 		QantiqaFormat.merge(bais, builder);
 	}
 
+	/**
+	 * Serializes a message to XML string.
+	 * 
+	 * @param message
+	 * @return
+	 */
 	public static String printToString(Message message) {
 		return XmlFormat.printToString(message);
 	}

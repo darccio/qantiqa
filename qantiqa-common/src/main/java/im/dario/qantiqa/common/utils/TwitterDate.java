@@ -26,6 +26,12 @@ public class TwitterDate implements Serializable, Comparable<TwitterDate> {
 			.appendSecondOfMinute(2).appendLiteral(" +0000 ").appendYear(4, 4)
 			.toFormatter();
 
+	/**
+	 * Minimum value possible used internally. Based on UNIX epoch.
+	 */
+	public static final TwitterDate MIN_VALUE = new TwitterDate(new DateTime(
+			1970, 1, 1, 0, 0, 0, 0));
+
 	private DateTime dt;
 
 	public TwitterDate() {

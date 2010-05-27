@@ -40,6 +40,13 @@ public class SearchService extends Service {
 		super(overlay);
 	}
 
+	/**
+	 * 
+	 * @param q
+	 *            Query string.
+	 * @return
+	 * @throws QantiqaException
+	 */
 	public Protocol.users searchUsers(String q) throws QantiqaException {
 		Storage<Set<Object>> ix = Storage.usersById.index();
 
@@ -54,9 +61,15 @@ public class SearchService extends Service {
 		return builder.build();
 	}
 
+	/**
+	 * 
+	 * @param q
+	 *            Query string.
+	 * @return
+	 * @throws QantiqaException
+	 */
 	public Protocol.statuses searchQuarks(String q) throws QantiqaException {
-		Storage<Set<Object>> ix = (Storage<Set<Object>>) Storage.quarks
-				.index();
+		Storage<Set<Object>> ix = (Storage<Set<Object>>) Storage.quarks.index();
 
 		Set<Object> results = search(q, ix);
 
@@ -74,6 +87,16 @@ public class SearchService extends Service {
 		return builder.build();
 	}
 
+	/**
+	 * 
+	 * @param <F>
+	 * @param <E>
+	 * @param q
+	 *            Query string
+	 * @param ix
+	 *            Index to search
+	 * @return
+	 */
 	private <F, E extends Collection<F>> E search(String q, Storage<E> ix) {
 		E results = overlay.retrieve(ix, q);
 
