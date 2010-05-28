@@ -19,8 +19,11 @@
 
 package controllers;
 
+import static constants.Format.ATOM;
 import static constants.Format.JSON;
+import static constants.Format.RSS;
 import static constants.Format.XML;
+import static constants.HttpMethod.GET;
 import static constants.HttpMethod.POST;
 import im.dario.qantiqa.common.protocol.Protocol;
 import network.services.FavoriteService;
@@ -35,6 +38,22 @@ import annotations.RequiresAuthentication;
  * @author Dario
  */
 public class Qfavorites extends QController {
+
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/favorites}
+	 * 
+	 * Returns the 20 most recent favorite statuses for the authenticating user
+	 * or user specified by the ID parameter in the requested format.
+	 */
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	@RequiresAuthentication
+	public static void index() {
+		FavoriteService fsv = new FavoriteService(getOverlay());
+
+		renderProtobuf(fsv.get(getUser(request.user, "source")));
+	}
 
 	/**
 	 * From Twitter official doc {@linkplain http

@@ -25,6 +25,7 @@ import java.net.URL;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 
 import com.sun.akuma.Daemon;
@@ -57,12 +58,32 @@ public class Qantiqa {
 	}
 
 	private void initHttpServer() {
-		Connector connector = new SelectChannelConnector();
+		/**
+		 * http://communitymapbuilder.osgeo.org/display/JETTY/How+to+configure+
+		 * SSL
+		 * 
+		 * http://communitymapbuilder.osgeo.org/display/JETTY/port80 (Using
+		 * xinetd)
+		 */
+		Connector http = new SelectChannelConnector();
+		http.setPort(Integer.parseInt(System.getProperty("qantiqa.http.port",
+				"8080")));
+		http.setHost("127.0.0.1");
 
-		connector.setPort(Integer.parseInt(System.getProperty("qantiqa.port",
-				"9000")));
-		connector.setHost("127.0.0.1");
-		httpSrv.addConnector(connector);
+		SslSocketConnector ssl = new SslSocketConnector();
+		ssl.setPort(Integer.parseInt(System.getProperty("qantiqa.ssl.port",
+				"8443")));
+		ssl.setHost("127.0.0.1");
+		ssl.setPassword("qantiqa");
+		ssl.setKeyPassword("qantiqa");
+		ssl.setKeystore(this.getClass().getClassLoader()
+				.getResource("keystore").getFile());
+		ssl.setTrustPassword("qantiqa");
+		ssl.setTruststore(this.getClass().getClassLoader().getResource(
+				"keystore").getFile());
+
+		httpSrv.addConnector(http);
+		httpSrv.addConnector(ssl);
 
 		// Deploying qantiqa-api war...
 		final URL warUrl = this.getClass().getClassLoader().getResource("war");

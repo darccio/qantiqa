@@ -7,6 +7,8 @@ GET     /                                   	Main.index
 
 GET		/account/profile_image/{screen_name}	Qaccount.profile_image
 
+GET		/users/show/{id}\..*					Qusers.show
+
 *		/{section}/{operation}/{id}\..*			Q{section}.{operation}
 
 *		/{section}/{operation}\..*				Q{section}.{operation}

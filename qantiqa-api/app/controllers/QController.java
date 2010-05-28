@@ -79,6 +79,8 @@ public abstract class QController extends Controller {
 	static void checkRequest() {
 		Method m = request.invokedMethod;
 
+		log.warn(request.path);
+
 		checkRequestedFormat(m);
 		checkOverlay();
 		checkIfAuthenticationIsRequired(m);
@@ -128,7 +130,7 @@ public abstract class QController extends Controller {
 	 * 
 	 * @return
 	 */
-	private static String getFormatKey() {
+	protected static String getFormatKey() {
 		return session.getId() + "-format";
 	}
 
@@ -318,26 +320,31 @@ public abstract class QController extends Controller {
 	protected static void renderProtobuf(Message msg) {
 		Format format = Cache.get(getFormatKey(), Format.class);
 
-		System.out.println(format);
+		String out = null;
 		switch (format) {
 		case ATOM:
 		case RSS:
 		case XML:
 			// We currently don't support ATOM and RSS but they are XML formats,
 			// so we return XML.
-			renderXml(XmlFormat.printToString(msg));
+			out = XmlFormat.printToString(msg);
+			log.warn(out);
+			renderXml(out);
 			break;
 		case JSON:
 			if (msg instanceof Protocol.statuses
 					|| msg instanceof Protocol.direct_messages
 					|| msg instanceof Protocol.errors
 					|| msg instanceof Protocol.users) {
-				renderText(JsonFormat.printCollectionToString(msg));
+				out = JsonFormat.printCollectionToString(msg);
 			} else {
-				renderText(JsonFormat.printToString(msg));
+				out = JsonFormat.printToString(msg);
 			}
+			log.warn(out);
+			renderText(out);
 			break;
 		}
+
 	}
 
 	/**

@@ -4,6 +4,7 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.format.QantiqaFormat;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -63,7 +64,7 @@ public class Storage<E> {
 	 * User storage.
 	 */
 	public static final Storage<Protocol.user> users = new Storage<Protocol.user>(
-			"users", Protocol.user.newBuilder());
+			"users", Protocol.user.newBuilder()).caching(true);
 	/**
 	 * User storage, by ID and indexed by ID.
 	 */
@@ -80,17 +81,17 @@ public class Storage<E> {
 					add(user.getLocation());
 					add(user.getDescription());
 				}
-			});
+			}).caching(true);
 	/**
 	 * Followers storage. Identified by user ID.
 	 */
 	public static final Storage<Set<Long>> followers = new Storage<Set<Long>>(
-			"followers");
+			"followers").caching(true);
 	/**
 	 * "Users followed by each user" storage. Identified by user ID.
 	 */
 	public static final Storage<Set<Long>> following = new Storage<Set<Long>>(
-			"following");
+			"following").caching(true);
 	/**
 	 * Quark storage, indexed by ID.
 	 */
@@ -106,7 +107,7 @@ public class Storage<E> {
 					add(quark.getSource());
 					add(quark.getInReplyToScreenName());
 				}
-			});
+			}).caching(true);
 	/**
 	 * Requark/retweet storage. For each quark requarked the stored set contains
 	 * all the quark IDs that are requarks from the identifier.
@@ -137,6 +138,8 @@ public class Storage<E> {
 	private Storage<Set<Object>> index;
 	private StorageCallback callback;
 	private Long limit = Long.MIN_VALUE;
+	private final HashMap<Object, TimeCapsule<E>> cache = new HashMap<Object, TimeCapsule<E>>();
+	private boolean caching = false;
 
 	/**
 	 * 
@@ -285,6 +288,46 @@ public class Storage<E> {
 	 */
 	public String hash() {
 		return this.hash;
+	}
+
+	protected Storage<E> caching(boolean caching) {
+		this.caching = caching;
+
+		return this;
+	}
+
+	private boolean isCaching() {
+		return this.caching;
+	}
+
+	public void cacheSet(Object key, E value) {
+		if (isCaching()) {
+			this.cache.put(key, new TimeCapsule<E>(value));
+		}
+	}
+
+	public void cacheRemove(Object key) {
+		if (isCaching()) {
+			this.cache.remove(key);
+		}
+	}
+
+	public E cacheGet(Object key, int timeout) {
+		E value = null;
+
+		if (isCaching()) {
+			TimeCapsule<E> tc = this.cache.get(key);
+			if (tc != null) {
+				if (tc.getCreationTime().hasExpired(timeout)) {
+					cacheRemove(key);
+					tc = null;
+				} else {
+					value = tc.getValue();
+				}
+			}
+		}
+
+		return value;
 	}
 
 	public String toString() {

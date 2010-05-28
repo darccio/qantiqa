@@ -20,7 +20,11 @@
 package network.services;
 
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.protocol.Protocol.user;
 import im.dario.qantiqa.common.utils.QantiqaException;
+
+import java.util.Set;
+
 import network.Overlay;
 import network.Storage;
 import easypastry.dht.DHTException;
@@ -44,5 +48,23 @@ public class FavoriteService extends Service {
 		Protocol.status quark = qsv.show(id);
 
 		return quark;
+	}
+
+	public Protocol.statuses get(user user) {
+		QuarkService qsv = new QuarkService(overlay);
+
+		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
+		Set<Long> favorites = overlay.retrieve(Storage.favorites, user.getId());
+		if (favorites != null) {
+			for (Long id : favorites) {
+				try {
+					builder.addStatus(qsv.show(id));
+				} catch (QantiqaException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return builder.build();
 	}
 }

@@ -128,7 +128,11 @@ public class Higgs extends Controller {
 
 		User u = User.findByName(username);
 		if (u == null) {
-			(u = new User(username, password)).insert();
+			u = new User(username, password);
+			u.insert(); /*
+						 * I don't know why but Higgs only returns pair user IDs
+						 * (2, 4, 6, 8, 10...)
+						 */
 			isValid = true;
 		} else {
 			if (u.password.equals(password)) {

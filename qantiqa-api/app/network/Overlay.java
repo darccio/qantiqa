@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
@@ -387,17 +388,43 @@ public class Overlay {
 	 * @param value
 	 * @throws DHTException
 	 */
-	public <E> void store(Storage<E> storage, Object key, E value)
-			throws DHTException {
-		DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
-		dht.put(key.toString(), storage.marshal(value));
+	public <E> void store(final Storage<E> storage, final Object key,
+			final E value) throws DHTException {
+		final Overlay self = this;
+		storage.cacheSet(key, value);
 
-		Storage<Set<Object>> ix = (Storage<Set<Object>>) storage.index();
-		if (ix != null) {
-			for (String stem : ix.stem(value)) {
-				this.add(ix, stem, key);
+		new Thread(new Runnable() {
+
+			public void run() {
+				DHTHandler dht;
+				Serializable serialized = storage.marshal(value);
+
+				boolean insertedInOverlay = false;
+				while (!insertedInOverlay) {
+					try {
+						dht = PastryKernel.getDHTHandler(storage.hash());
+						dht.put(key.toString(), serialized);
+
+						insertedInOverlay = true;
+					} catch (Exception e) {
+						log.error("ERR", e);
+					}
+				}
+
+				Storage<Set<Object>> ix = (Storage<Set<Object>>) storage
+						.index();
+				if (ix != null) {
+					for (String stem : ix.stem(value)) {
+						try {
+							self.add(ix, stem, key);
+						} catch (DHTException e) {
+							// Nothing to do...
+							log.error("ERR", e);
+						}
+					}
+				}
 			}
-		}
+		}).start();
 	}
 
 	/**
@@ -410,14 +437,18 @@ public class Overlay {
 	 * @throws DHTException
 	 */
 	public <E> E retrieve(Storage<E> storage, Object key) {
-		E value = null;
+		E value = storage.cacheGet(key, 300);
 
-		try {
-			DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
-			value = storage.unmarshal(dht.get(key.toString()));
-		} catch (DHTException e) {
-			log.error("ERR", e);
-			value = null;
+		if (value == null) {
+			try {
+				DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
+				value = storage.unmarshal(dht.get(key.toString()));
+
+				storage.cacheSet(key, value);
+			} catch (DHTException e) {
+				log.error("ERR", e);
+				value = null;
+			}
 		}
 
 		return value;
@@ -434,6 +465,7 @@ public class Overlay {
 	 */
 	public <E> E remove(Storage<E> storage, Object key) {
 		E value = retrieve(storage, key);
+		storage.cacheRemove(key);
 
 		try {
 			DHTHandler dht = PastryKernel.getDHTHandler(storage.hash());
