@@ -31,6 +31,8 @@ public class TwitterDate implements Serializable, Comparable<TwitterDate> {
 	 */
 	public static final TwitterDate MIN_VALUE = new TwitterDate(new DateTime(
 			1970, 1, 1, 0, 0, 0, 0));
+	public static final TwitterDate MAX_VALUE = new TwitterDate(new DateTime(
+			2999, 12, 31, 23, 59, 59, 999));
 
 	private DateTime dt;
 
@@ -38,13 +40,27 @@ public class TwitterDate implements Serializable, Comparable<TwitterDate> {
 		dt = new DateTime(DateTimeZone.UTC);
 	}
 
-	private TwitterDate(DateTime dt) {
+	public TwitterDate(DateTime dt) {
 		this.dt = dt;
 	}
 
 	@Override
 	public int compareTo(TwitterDate o) {
 		return dt.compareTo(o.dt);
+	}
+
+	public String getTimezone() {
+		return DateTimeZone.getDefault().getName(dt.getMillis());
+	}
+
+	public int getUtcOffset() {
+		return DateTimeZone.getDefault().getOffset(dt.getMillis());
+	}
+
+	public boolean hasExpired(int timeout) {
+		DateTime expire = dt.plusSeconds(timeout);
+
+		return expire.isAfterNow();
 	}
 
 	public String toString() {

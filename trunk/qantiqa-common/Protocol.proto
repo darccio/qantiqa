@@ -56,7 +56,8 @@ message user {
 	optional bool following = 24;
 	optional bool geo_enabled = 25;
 	optional bool verified = 26;
-	optional status status = 27;	
+	optional status status = 27;
+	optional int64 qantiqa_statuses_count = 28;
 }
 
 message users {

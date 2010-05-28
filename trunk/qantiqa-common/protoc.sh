@@ -21,4 +21,4 @@
 
 # Auxiliary  script to build the protocol prototype.
 
-protoc --java_out src/ Protocol.proto
+protoc --java_out src/main/java/ Protocol.proto

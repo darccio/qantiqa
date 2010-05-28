@@ -119,6 +119,16 @@ public class Qstatuses extends QController {
 	@Methods( { GET })
 	@Formats( { XML, JSON, RSS, ATOM })
 	public static void user_timeline(String id, Integer count) {
+		timeline(id, count);
+	}
+
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	public static void friends_timeline(String id, Integer count) {
+		timeline(id, count);
+	}
+
+	private static void timeline(String id, Integer count) {
 		if (id == null) {
 			id = request.user;
 		}
@@ -127,6 +137,12 @@ public class Qstatuses extends QController {
 
 		QuarkService qsv = new QuarkService(getOverlay());
 		renderProtobuf(qsv.timeline(user.getId(), count));
+	}
+
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	public static void replies(String id, Integer count) {
+		renderProtobuf(Protocol.statuses.newBuilder().build());
 	}
 
 	/**

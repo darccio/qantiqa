@@ -23,6 +23,7 @@ import static constants.Format.JSON;
 import static constants.Format.XML;
 import static constants.HttpMethod.GET;
 import im.dario.qantiqa.common.protocol.Protocol;
+import im.dario.qantiqa.common.utils.TwitterDate;
 
 import java.io.File;
 
@@ -31,9 +32,11 @@ import network.services.UserService;
 import org.apache.log4j.Logger;
 
 import play.Play;
+import play.cache.Cache;
 import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
+import constants.Format;
 import easypastry.dht.DHTException;
 
 /**
@@ -46,7 +49,7 @@ public class Qaccount extends QController {
 	private static final Logger log = Logger.getLogger(Qaccount.class);
 
 	/**
-	 * From Twitter official doc {@linkplain http 
+	 * From Twitter official doc {@linkplain http
 	 * ://apiwiki.twitter.com/Twitter-
 	 * REST-API-Method:-account%C2%A0verify_credentials}
 	 * 
@@ -84,6 +87,25 @@ public class Qaccount extends QController {
 
 		if (notValid) {
 			unauthorized();
+		}
+	}
+
+	@Methods( { GET })
+	@Formats( { XML, JSON })
+	public static void rate_limit_status() {
+		Format format = Cache.get(getFormatKey(), Format.class);
+		switch (format) {
+		case ATOM:
+		case RSS:
+		case XML:
+			renderXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><hash><reset-time type=\"datetime\">"
+					+ TwitterDate.MAX_VALUE.toString()
+					+ "</reset-time><hourly-limit type=\"integer\">150</hourly-limit><reset-time-in-seconds type=\"integer\">1275041444</reset-time-in-seconds><remaining-hits type=\"integer\">150</remaining-hits></hash>");
+			break;
+		case JSON:
+			renderText("{ \"reset_time_in_seconds\": 1275041822, \"remaining_hits\": 150, \"hourly_limit\": 150, \"reset_time\": \""
+					+ TwitterDate.MAX_VALUE.toString() + "\"}");
+			break;
 		}
 	}
 

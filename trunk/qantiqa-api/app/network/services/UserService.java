@@ -116,6 +116,8 @@ public class UserService extends Service {
 	 * @throws DHTException
 	 */
 	private void initUser(Builder builder, String username, long id) {
+		TwitterDate td = new TwitterDate();
+
 		builder.setId(id);
 		builder.setScreenName(username);
 		// TODO Improve
@@ -125,13 +127,28 @@ public class UserService extends Service {
 		builder.setProtected(false);
 		builder.setFollowersCount(0);
 		builder.setFriendsCount(0);
-		builder.setCreatedAt(new TwitterDate().toString());
+		builder.setCreatedAt(td.toString());
 		builder.setFavouritesCount(0);
 		builder.setNotifications(false);
 		builder.setGeoEnabled(false);
 		builder.setVerified(false);
 		builder.setFollowing(false);
 		builder.setStatusesCount(0);
+		builder.setQantiqaStatusesCount(0);
+
+		builder.setDescription("Qantiqa user");
+		builder.setLocation("Earth");
+		builder.setName(username);
+		builder.setProfileBackgroundColor("ffffff");
+		builder.setProfileBackgroundImageUrl(builder.getProfileImageUrl());
+		builder.setProfileBackgroundTile(true);
+		builder.setProfileLinkColor("975401");
+		builder.setProfileSidebarBoderColor("eeeeee");
+		builder.setProfileSidebarFillColor("efefef");
+		builder.setProfileTextColor("333333");
+		builder.setTimeZone(td.getTimezone());
+		builder.setUrl("http://code.google.com/p/qantiqa");
+		builder.setUtcOffset(td.getUtcOffset());
 	}
 
 	/**

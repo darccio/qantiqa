@@ -86,22 +86,33 @@ public class QuarkService extends Service {
 		}
 
 		// Let's freeze it in carbonite...
-		TimeCapsule<Long> hoipoi = new TimeCapsule<Long>(builder.getId());
+		final TimeCapsule<Long> hoipoi = new TimeCapsule<Long>(builder.getId());
 		builder.setCreatedAt(hoipoi.getCreationTime().toString());
 
 		Protocol.status quark = builder.build();
 		overlay.store(Storage.quarks, id, quark);
-		overlay.add(Storage.recentQuarks, user.getId(), hoipoi);
 
 		// Updating user data...
-		UserService usv = new UserService(overlay);
+		final UserService usv = new UserService(overlay);
 		Protocol.user.Builder ub = user.toBuilder();
 		ub.setStatusesCount(ub.getStatusesCount() + 1);
-		user = ub.build();
-		usv.set(user);
+		ub.setQantiqaStatusesCount(ub.getQantiqaStatusesCount() + 1);
+		final Protocol.user updatedUser = ub.build();
+		new Thread(new Runnable() {
+
+			public void run() {
+				try {
+					overlay.add(Storage.recentQuarks, updatedUser.getId(),
+							hoipoi);
+					usv.set(updatedUser);
+				} catch (DHTException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 
 		builder = quark.toBuilder();
-		builder.setUser(user);
+		builder.setUser(updatedUser);
 
 		return builder.build();
 	}
@@ -136,7 +147,8 @@ public class QuarkService extends Service {
 	 * @return
 	 */
 	private Long getNextId(Protocol.user user) {
-		return (user.getId() * 1000000000L) + user.getStatusesCount() + 1L;
+		return (user.getId() * 1000000000L) + user.getQantiqaStatusesCount()
+				+ 1L;
 	}
 
 	/**
@@ -341,8 +353,8 @@ public class QuarkService extends Service {
 		}
 
 		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
-		quarks = new TreeSet<TimeCapsule<Long>>(quarks);
 		if (quarks != null) {
+			quarks = new TreeSet<TimeCapsule<Long>>(quarks);
 			for (Integer total = 0; total < limit; total++) {
 				TimeCapsule<Long> tc = quarks.pollFirst();
 				if (tc == null) {

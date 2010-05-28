@@ -500,9 +500,9 @@ public class JsonFormat {
 			case '\\':
 				builder.append("\\\\");
 				break;
-			case '\'':
-				builder.append("\\\'");
-				break;
+			// case '\'':
+			// builder.append("\\\'");
+			// break;
 			case '"':
 				builder.append("\\\"");
 				break;

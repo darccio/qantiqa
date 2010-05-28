@@ -54,4 +54,11 @@ public class Qdirect_messages extends QController {
 	public static void index(Integer count) {
 		renderProtobuf(Protocol.direct_messages.newBuilder().build());
 	}
+
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	@RequiresAuthentication
+	public static void sent(Integer count) {
+		renderProtobuf(Protocol.direct_messages.newBuilder().build());
+	}
 }

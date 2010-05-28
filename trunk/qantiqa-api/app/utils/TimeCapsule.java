@@ -12,8 +12,7 @@ import java.io.Serializable;
  * @param <E>
  *            Class stored in our capsule.
  */
-public class TimeCapsule<E extends Serializable> implements Serializable,
-		Comparable<TimeCapsule<E>> {
+public class TimeCapsule<E> implements Serializable, Comparable<TimeCapsule<E>> {
 
 	private static final long serialVersionUID = -4075519777552002384L;
 
@@ -35,5 +34,12 @@ public class TimeCapsule<E extends Serializable> implements Serializable,
 
 	public int compareTo(TimeCapsule<E> o) {
 		return (-1) * date.compareTo(o.date);
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object obj) {
+		TimeCapsule<E> o = (TimeCapsule<E>) obj;
+
+		return this.value.equals(o.value);
 	}
 }

@@ -945,6 +945,13 @@ public final class Protocol {
     public boolean hasStatus() { return hasStatus; }
     public im.dario.qantiqa.common.protocol.Protocol.status getStatus() { return status_; }
     
+    // optional int64 qantiqa_statuses_count = 28;
+    public static final int QANTIQA_STATUSES_COUNT_FIELD_NUMBER = 28;
+    private boolean hasQantiqaStatusesCount;
+    private long qantiqaStatusesCount_ = 0L;
+    public boolean hasQantiqaStatusesCount() { return hasQantiqaStatusesCount; }
+    public long getQantiqaStatusesCount() { return qantiqaStatusesCount_; }
+    
     private void initFields() {
       status_ = im.dario.qantiqa.common.protocol.Protocol.status.getDefaultInstance();
     }
@@ -1035,6 +1042,9 @@ public final class Protocol {
       }
       if (hasStatus()) {
         output.writeMessage(27, getStatus());
+      }
+      if (hasQantiqaStatusesCount()) {
+        output.writeInt64(28, getQantiqaStatusesCount());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1152,6 +1162,10 @@ public final class Protocol {
       if (hasStatus()) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(27, getStatus());
+      }
+      if (hasQantiqaStatusesCount()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(28, getQantiqaStatusesCount());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1392,6 +1406,9 @@ public final class Protocol {
         if (other.hasStatus()) {
           mergeStatus(other.getStatus());
         }
+        if (other.hasQantiqaStatusesCount()) {
+          setQantiqaStatusesCount(other.getQantiqaStatusesCount());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1528,6 +1545,10 @@ public final class Protocol {
               }
               input.readMessage(subBuilder, extensionRegistry);
               setStatus(subBuilder.buildPartial());
+              break;
+            }
+            case 224: {
+              setQantiqaStatusesCount(input.readInt64());
               break;
             }
           }
@@ -2079,6 +2100,24 @@ public final class Protocol {
       public Builder clearStatus() {
         result.hasStatus = false;
         result.status_ = im.dario.qantiqa.common.protocol.Protocol.status.getDefaultInstance();
+        return this;
+      }
+      
+      // optional int64 qantiqa_statuses_count = 28;
+      public boolean hasQantiqaStatusesCount() {
+        return result.hasQantiqaStatusesCount();
+      }
+      public long getQantiqaStatusesCount() {
+        return result.getQantiqaStatusesCount();
+      }
+      public Builder setQantiqaStatusesCount(long value) {
+        result.hasQantiqaStatusesCount = true;
+        result.qantiqaStatusesCount_ = value;
+        return this;
+      }
+      public Builder clearQantiqaStatusesCount() {
+        result.hasQantiqaStatusesCount = false;
+        result.qantiqaStatusesCount_ = 0L;
         return this;
       }
       
@@ -7188,7 +7227,7 @@ public final class Protocol {
     java.lang.String[] descriptorData = {
       "\n\016Protocol.proto\"&\n\004hash\022\r\n\005error\030\001 \001(\t\022" +
       "\017\n\007request\030\002 \001(\t\"\027\n\006errors\022\r\n\005error\030\001 \003(" +
-      "\t\"\210\005\n\004user\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\023\n\013" +
+      "\t\"\250\005\n\004user\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\023\n\013" +
       "screen_name\030\003 \001(\t\022\020\n\010location\030\004 \001(\t\022\023\n\013d" +
       "escription\030\005 \001(\t\022\031\n\021profile_image_url\030\006 " +
       "\001(\t\022\013\n\003url\030\007 \001(\t\022\021\n\tprotected\030\010 \001(\010\022\027\n\017f" +
@@ -7204,37 +7243,38 @@ public final class Protocol {
       "(\010\022\026\n\016statuses_count\030\026 \001(\003\022\025\n\rnotificati" +
       "ons\030\027 \001(\010\022\021\n\tfollowing\030\030 \001(\010\022\023\n\013geo_enab" +
       "led\030\031 \001(\010\022\020\n\010verified\030\032 \001(\010\022\027\n\006status\030\033 " +
-      "\001(\0132\007.status\"\034\n\005users\022\023\n\004user\030\001 \003(\0132\005.us" +
-      "er\"\201\002\n\006status\022\022\n\ncreated_at\030\001 \001(\t\022\n\n\002id\030",
-      "\002 \001(\003\022\014\n\004text\030\003 \001(\t\022\016\n\006source\030\004 \001(\t\022\021\n\tt" +
-      "runcated\030\005 \001(\010\022\035\n\025in_reply_to_status_id\030" +
-      "\006 \001(\003\022\033\n\023in_reply_to_user_id\030\007 \001(\003\022\021\n\tfa" +
-      "vorited\030\010 \001(\010\022\037\n\027in_reply_to_screen_name" +
-      "\030\t \001(\t\022\023\n\004user\030\n \001(\0132\005.user\022!\n\020retweeted" +
-      "_status\030\013 \001(\0132\007.status\"#\n\010statuses\022\027\n\006st" +
-      "atus\030\001 \003(\0132\007.status\"Z\n\014relationship\022$\n\006t" +
-      "arget\030\001 \002(\0132\024.relationship_member\022$\n\006sou" +
-      "rce\030\002 \002(\0132\024.relationship_member\"\217\001\n\023rela" +
-      "tionship_member\022\023\n\013followed_by\030\001 \001(\010\022\021\n\t",
-      "following\030\002 \001(\010\022\020\n\010blocking\030\003 \001(\010\022\035\n\025not" +
-      "ifications_enabled\030\004 \001(\010\022\023\n\013screen_name\030" +
-      "\005 \001(\t\022\n\n\002id\030\006 \001(\003\"\323\001\n\016direct_message\022\n\n\002" +
-      "id\030\001 \001(\003\022\021\n\tsender_id\030\002 \001(\003\022\014\n\004text\030\003 \001(" +
-      "\t\022\024\n\014recipient_id\030\004 \001(\003\022\022\n\ncreated_at\030\005 " +
-      "\001(\t\022\032\n\022sender_screen_name\030\006 \001(\t\022\035\n\025recip" +
-      "ient_screen_name\030\007 \001(\t\022\025\n\006sender\030\010 \001(\0132\005" +
-      ".user\022\030\n\trecipient\030\t \001(\0132\005.user\":\n\017direc" +
-      "t_messages\022\'\n\016direct_message\030\001 \003(\0132\017.dir" +
-      "ect_message\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\n",
-      "validation\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(" +
-      "\t\"4\n\016authentication\022\020\n\010username\030\001 \001(\t\022\020\n" +
-      "\010password\030\002 \001(\t\"l\n\027authentication_respon" +
-      "se\022\033\n\006result\030\001 \002(\0162\013.AuthResult\022\017\n\007user_" +
-      "id\030\002 \001(\003\022\017\n\007user_ip\030\003 \001(\t\022\022\n\nsession_id\030" +
-      "\004 \001(\t\"<\n\007session\022\017\n\007user_id\030\001 \001(\003\022\024\n\014use" +
-      "r_address\030\002 \001(\t\022\n\n\002id\030\003 \001(\t*1\n\nAuthResul" +
-      "t\022\t\n\005VALID\020\000\022\r\n\tNOT_VALID\020\001\022\t\n\005ERROR\020\002B\"" +
-      "\n im.dario.qantiqa.common.protocol"
+      "\001(\0132\007.status\022\036\n\026qantiqa_statuses_count\030\034" +
+      " \001(\003\"\034\n\005users\022\023\n\004user\030\001 \003(\0132\005.user\"\201\002\n\006s",
+      "tatus\022\022\n\ncreated_at\030\001 \001(\t\022\n\n\002id\030\002 \001(\003\022\014\n" +
+      "\004text\030\003 \001(\t\022\016\n\006source\030\004 \001(\t\022\021\n\ttruncated" +
+      "\030\005 \001(\010\022\035\n\025in_reply_to_status_id\030\006 \001(\003\022\033\n" +
+      "\023in_reply_to_user_id\030\007 \001(\003\022\021\n\tfavorited\030" +
+      "\010 \001(\010\022\037\n\027in_reply_to_screen_name\030\t \001(\t\022\023" +
+      "\n\004user\030\n \001(\0132\005.user\022!\n\020retweeted_status\030" +
+      "\013 \001(\0132\007.status\"#\n\010statuses\022\027\n\006status\030\001 \003" +
+      "(\0132\007.status\"Z\n\014relationship\022$\n\006target\030\001 " +
+      "\002(\0132\024.relationship_member\022$\n\006source\030\002 \002(" +
+      "\0132\024.relationship_member\"\217\001\n\023relationship",
+      "_member\022\023\n\013followed_by\030\001 \001(\010\022\021\n\tfollowin" +
+      "g\030\002 \001(\010\022\020\n\010blocking\030\003 \001(\010\022\035\n\025notificatio" +
+      "ns_enabled\030\004 \001(\010\022\023\n\013screen_name\030\005 \001(\t\022\n\n" +
+      "\002id\030\006 \001(\003\"\323\001\n\016direct_message\022\n\n\002id\030\001 \001(\003" +
+      "\022\021\n\tsender_id\030\002 \001(\003\022\014\n\004text\030\003 \001(\t\022\024\n\014rec" +
+      "ipient_id\030\004 \001(\003\022\022\n\ncreated_at\030\005 \001(\t\022\032\n\022s" +
+      "ender_screen_name\030\006 \001(\t\022\035\n\025recipient_scr" +
+      "een_name\030\007 \001(\t\022\025\n\006sender\030\010 \001(\0132\005.user\022\030\n" +
+      "\trecipient\030\t \001(\0132\005.user\":\n\017direct_messag" +
+      "es\022\'\n\016direct_message\030\001 \003(\0132\017.direct_mess",
+      "age\"\027\n\006gluons\022\r\n\005gluon\030\001 \003(\t\"+\n\nvalidati" +
+      "on\022\014\n\004isOk\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"4\n\016aut" +
+      "hentication\022\020\n\010username\030\001 \001(\t\022\020\n\010passwor" +
+      "d\030\002 \001(\t\"l\n\027authentication_response\022\033\n\006re" +
+      "sult\030\001 \002(\0162\013.AuthResult\022\017\n\007user_id\030\002 \001(\003" +
+      "\022\017\n\007user_ip\030\003 \001(\t\022\022\n\nsession_id\030\004 \001(\t\"<\n" +
+      "\007session\022\017\n\007user_id\030\001 \001(\003\022\024\n\014user_addres" +
+      "s\030\002 \001(\t\022\n\n\002id\030\003 \001(\t*1\n\nAuthResult\022\t\n\005VAL" +
+      "ID\020\000\022\r\n\tNOT_VALID\020\001\022\t\n\005ERROR\020\002B\"\n im.dar" +
+      "io.qantiqa.common.protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7262,7 +7302,7 @@ public final class Protocol {
           internal_static_user_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_user_descriptor,
-              new java.lang.String[] { "Id", "Name", "ScreenName", "Location", "Description", "ProfileImageUrl", "Url", "Protected", "FollowersCount", "ProfileBackgroundColor", "ProfileTextColor", "ProfileLinkColor", "ProfileSidebarFillColor", "ProfileSidebarBoderColor", "FriendsCount", "CreatedAt", "FavouritesCount", "UtcOffset", "TimeZone", "ProfileBackgroundImageUrl", "ProfileBackgroundTile", "StatusesCount", "Notifications", "Following", "GeoEnabled", "Verified", "Status", },
+              new java.lang.String[] { "Id", "Name", "ScreenName", "Location", "Description", "ProfileImageUrl", "Url", "Protected", "FollowersCount", "ProfileBackgroundColor", "ProfileTextColor", "ProfileLinkColor", "ProfileSidebarFillColor", "ProfileSidebarBoderColor", "FriendsCount", "CreatedAt", "FavouritesCount", "UtcOffset", "TimeZone", "ProfileBackgroundImageUrl", "ProfileBackgroundTile", "StatusesCount", "Notifications", "Following", "GeoEnabled", "Verified", "Status", "QantiqaStatusesCount", },
               im.dario.qantiqa.common.protocol.Protocol.user.class,
               im.dario.qantiqa.common.protocol.Protocol.user.Builder.class);
           internal_static_users_descriptor =
