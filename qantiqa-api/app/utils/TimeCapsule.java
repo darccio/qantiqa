@@ -5,7 +5,7 @@ import im.dario.qantiqa.common.utils.TwitterDate;
 import java.io.Serializable;
 
 /**
- * Wrapper class to add time-order in ordered sets like TreeSet.
+ * Wrapper class to allow time-order in ordered sets like TreeSet.
  * 
  * @author Dario
  * 
@@ -13,7 +13,7 @@ import java.io.Serializable;
  *            Class stored in our capsule.
  */
 public class TimeCapsule<E extends Serializable> implements Serializable,
-		Comparable<TwitterDate> {
+		Comparable<TimeCapsule<E>> {
 
 	private static final long serialVersionUID = -4075519777552002384L;
 
@@ -33,12 +33,7 @@ public class TimeCapsule<E extends Serializable> implements Serializable,
 		return this.value;
 	}
 
-	@Override
-	public int compareTo(TwitterDate o) {
-		/*
-		 * We switch the actual comparison result in order to get a
-		 * newest-to-oldest order by default.
-		 */
-		return (-1) * date.compareTo(o);
+	public int compareTo(TimeCapsule<E> o) {
+		return (-1) * date.compareTo(o.date);
 	}
 }

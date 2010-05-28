@@ -21,6 +21,7 @@ package controllers;
 
 import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.protocol.Protocol.session;
+import im.dario.qantiqa.common.protocol.format.JsonFormat;
 import im.dario.qantiqa.common.protocol.format.XmlFormat;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
@@ -49,7 +50,6 @@ import annotations.Formats;
 import annotations.Methods;
 import annotations.RequiresAuthentication;
 
-import com.google.protobuf.JsonFormat;
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 
@@ -318,6 +318,7 @@ public abstract class QController extends Controller {
 	protected static void renderProtobuf(Message msg) {
 		Format format = Cache.get(getFormatKey(), Format.class);
 
+		System.out.println(format);
 		switch (format) {
 		case ATOM:
 		case RSS:
@@ -327,7 +328,14 @@ public abstract class QController extends Controller {
 			renderXml(XmlFormat.printToString(msg));
 			break;
 		case JSON:
-			renderText(JsonFormat.printToString(msg));
+			if (msg instanceof Protocol.statuses
+					|| msg instanceof Protocol.direct_messages
+					|| msg instanceof Protocol.errors
+					|| msg instanceof Protocol.users) {
+				renderText(JsonFormat.printCollectionToString(msg));
+			} else {
+				renderText(JsonFormat.printToString(msg));
+			}
 			break;
 		}
 	}

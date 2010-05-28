@@ -194,7 +194,13 @@ public class QuarkService extends Service {
 					.status(404);
 		}
 
-		return status;
+		UserService usv = new UserService(overlay);
+		Protocol.user user = usv.get(QuarkService.getUserIdFromQuarkId(id));
+
+		Protocol.status.Builder builder = status.toBuilder();
+		builder.setUser(user);
+
+		return builder.build();
 	}
 
 	/**
@@ -287,7 +293,9 @@ public class QuarkService extends Service {
 		for (Long user : users) {
 			TreeSet<TimeCapsule<Long>> timeline = (TreeSet<TimeCapsule<Long>>) overlay
 					.retrieve(Storage.recentQuarks, user);
-			full.addAll(timeline);
+			if (timeline != null) {
+				full.addAll(timeline);
+			}
 		}
 
 		return buildStream(full, limit, sinceId);
@@ -319,7 +327,7 @@ public class QuarkService extends Service {
 	private Protocol.statuses buildStream(TreeSet<TimeCapsule<Long>> quarks,
 			Integer limit, Long sinceId) {
 		// Looking if they asked all quarks since one...
-		TwitterDate since = null;
+		TwitterDate since = TwitterDate.MIN_VALUE;
 		if (sinceId != null) {
 			try {
 				since = TwitterDate.parse(this.show(sinceId).getCreatedAt());
@@ -328,21 +336,27 @@ public class QuarkService extends Service {
 			}
 		}
 
+		if (limit == null) {
+			limit = 200;
+		}
+
 		Protocol.statuses.Builder builder = Protocol.statuses.newBuilder();
-		for (Integer total = 0; total < limit; total++) {
-			TimeCapsule<Long> tc = quarks.pollFirst();
-			if (tc == null) {
-				break;
+		quarks = new TreeSet<TimeCapsule<Long>>(quarks);
+		if (quarks != null) {
+			for (Integer total = 0; total < limit; total++) {
+				TimeCapsule<Long> tc = quarks.pollFirst();
+				if (tc == null) {
+					break;
+				}
 
-			}
-
-			if (since == TwitterDate.MIN_VALUE // We are comparing pointers,
-												// yeah.
-					|| tc.getCreationTime().compareTo(since) > 0) {
-				try {
-					builder.addStatus(this.show(tc.getValue()));
-				} catch (QantiqaException e) {
-					// Nothing to do, really.
+				if (since == TwitterDate.MIN_VALUE // We are comparing pointers,
+						// yeah.
+						|| tc.getCreationTime().compareTo(since) > 0) {
+					try {
+						builder.addStatus(this.show(tc.getValue()));
+					} catch (QantiqaException e) {
+						// Nothing to do, really.
+					}
 				}
 			}
 		}

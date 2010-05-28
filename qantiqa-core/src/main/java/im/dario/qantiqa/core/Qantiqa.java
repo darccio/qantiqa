@@ -33,7 +33,8 @@ import com.sun.akuma.Daemon;
  * Server daemon class.
  * 
  * Handles all daemon functionality with an embedded Jetty on which deploy
- * qa-api-node war (generated with "play war api -o bin/war" command).
+ * qantiqa-api war (generated with
+ * "play war qantiqa-api -o qantiqa-core/target/classes/war" command).
  * 
  * @author Dario
  */
@@ -58,12 +59,12 @@ public class Qantiqa {
 	private void initHttpServer() {
 		Connector connector = new SelectChannelConnector();
 
-		// TODO Configurable HTTP port
-		connector.setPort(11576);
+		connector.setPort(Integer.parseInt(System.getProperty("qantiqa.port",
+				"9000")));
 		connector.setHost("127.0.0.1");
 		httpSrv.addConnector(connector);
 
-		// Deploying qa-api-node war...
+		// Deploying qantiqa-api war...
 		final URL warUrl = this.getClass().getClassLoader().getResource("war");
 		httpSrv.addHandler(new WebAppContext(warUrl.toExternalForm(), "/"));
 

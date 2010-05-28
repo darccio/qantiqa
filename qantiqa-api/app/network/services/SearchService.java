@@ -23,6 +23,7 @@ import im.dario.qantiqa.common.protocol.Protocol;
 import im.dario.qantiqa.common.utils.QantiqaException;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -97,15 +98,22 @@ public class SearchService extends Service {
 	 *            Index to search
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private <F, E extends Collection<F>> E search(String q, Storage<E> ix) {
 		E results = overlay.retrieve(ix, q);
+		if (results == null) {
+			results = (E) new HashSet<F>();
+		}
 
 		StringTokenizer tk = new StringTokenizer(q, " _.,;");
 		if (tk.countTokens() > 1) {
 			while (tk.hasMoreElements()) {
 				String next = tk.nextToken().trim();
 				if (!next.equals("")) {
-					results.addAll(overlay.retrieve(ix, next));
+					E value = overlay.retrieve(ix, next);
+					if (value != null) {
+						results.addAll(value);
+					}
 				}
 			}
 		}
