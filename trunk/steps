@@ -1,0 +1,29 @@
+cd $QANTIQA_HOME
+mvn clean install
+play war qantiqa-api -o qantiqa-core/target/classes/war
+cp ~/.m2/repository/im/dario/qantiqa/common/qantiqa-common/1.1-SNAPSHOT/qantiqa-common-1.1-SNAPSHOT.jar qantiqa-core/target/classes/war/WEB-INF/lib/
+Add gluon in Higgs (play run qantiqa-higgs): http://127.0.0.1:9001/ with secret from qantiqa-api/conf/application.conf 
+
+1. Portada: títol del PFC, nom de l'estudiant, titulació, nom del consultor i data d'entrega 
+2. Dedicatòria i agraïments, de forma opcional 
+3. Resum del PFC (màx. 300 paraules) 
+4. Índex de continguts, índex de figures i índex de taules 
+5. Cos de la memòria, dividit per capítols 
+    5.1. Introducció 
+      5.1.1 Justificació del PFC i context en el qual es desenvolupa: punt de partida i aportació del PFC 
+      5.1.2. Objectius del PFC 
+      5.1.3. Especificació de requeriments del PFC 
+      5.1.4. Planificació del projecte 
+        5.1.4.1. Desviacions respecte la planificació inicial 
+      5.1.5. Productes obtinguts del PFC (explicar-los breument, donat que ja s'explicaran detalladament als altres capítols de la memòria) 
+      5.1.6. Breu descripció dels capítols que conformen la memòria 
+    5.2. Estat de l'art (aquesta secció conté un anàlisi de les tecnologies utilitzades en el vostre PFC i les funcionalitats que proporcionen. Per exemple, aquí descriuríem el funcionament de LaCOLLA, la tecnologia de Servlets, JSPs, XML, EJB, ...) 
+    5.3. Anàlisi (en aquesta secció caldrà incloure els diagrames UML següents: diagrama de casos d'ús, diagrama d'activitats, diagrama de classes, diagrama de seqüències, ...). De cadascun d'aquests diagrames, no cal arribar al màxim nivell de detall, sinó només destacar els casos més importants. 
+    5.4. Disseny (cal incloure el model Entitat-Relació de la base de dades (si n'utilitzem), un diagrama de l'arquitectura seguida en el PFC, diagrames de lògica de negoci, patrons de disseny utilitzats (ex: Model-Vista-Controlador (MVC), ...) 
+    5.5 Implementació (en aquest capítol podeu detallar totes les característiques d'implementació del vostre PFC: particularitats de les tecnologies emprades, problemes amb els que us heu trobat, quins heu pogut solucionar, quins no heu pogut solucionar, com els heu solucionat,...) 
+    5.6 Joc de proves (cal especificar quines proves heu realitzat per tal de validar que el vostre PFC funciona correctament. Aquestes proves haurien d'entregar-se també de forma que el consultor pugui executar-les i validar-les). 
+    5.7 Valoració econòmica del PFC, si s'escau 
+    5.8 Conclusions 
+6. Glossari 
+7. Bibliografia 
+8. Annexos 
