@@ -5,6 +5,8 @@
 # Home page
 GET     /                                   	Main.index
 
+GET     /public/                                staticDir:public
+
 GET		/account/profile_image/{screen_name}	Qaccount.profile_image
 
 GET		/users/show/{id}\..*					Qusers.show

@@ -285,15 +285,12 @@ public abstract class QController extends Controller {
 				// We don't have all the required authentication info.
 				unauthorized();
 			} else {
-				// Only if we are not verifying our credentials...
-				if (!request.actionMethod.equals("verify_credentials")) {
-					switch (authenticate().getResult()) {
-					case NOT_VALID:
-						unauthorized();
-						break;
-					case ERROR:
-						renderError(500, "Could not authenticate you.");
-					}
+				switch (authenticate().getResult()) {
+				case NOT_VALID:
+					unauthorized();
+					break;
+				case ERROR:
+					renderError(500, "Could not authenticate you.");
 				}
 			}
 		}
