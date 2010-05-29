@@ -192,4 +192,15 @@ public class Higgs extends Controller {
 	static void renderProtobuf(Builder<?> builder) {
 		renderXml(QantiqaFormat.printToString(builder.build()));
 	}
+
+	public static void _init() {
+		Gluon g = new Gluon(
+				"127.0.0.1",
+				5009,
+				play.libs.Codec
+						.hexMD5("ciaekrp933cvj2479vx758n3en5us47224740okr160iii1h2h8l6t0akhmzhe6l"));
+		g.insert();
+
+		renderText("OK");
+	}
 }

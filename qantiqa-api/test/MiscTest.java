@@ -4,7 +4,9 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Misc {
+import play.test.FunctionalTest;
+
+public class MiscTest extends FunctionalTest {
 
 	/**
 	 * Testing out the maximum value for Long ids.

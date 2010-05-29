@@ -35,7 +35,6 @@ import play.Play;
 import play.cache.Cache;
 import annotations.Formats;
 import annotations.Methods;
-import annotations.RequiresAuthentication;
 import constants.Format;
 import easypastry.dht.DHTException;
 
@@ -59,7 +58,6 @@ public class Qaccount extends QController {
 	 */
 	@Methods( { GET })
 	@Formats( { XML, JSON })
-	@RequiresAuthentication
 	public static void verify_credentials() {
 		UserService usv = new UserService(getOverlay());
 
