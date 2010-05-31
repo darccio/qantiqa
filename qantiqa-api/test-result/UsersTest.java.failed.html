@@ -1,0 +1,239 @@
+<html>
+    <head>
+        <title>Test results for UsersTest.class</title>
+        <style type="text/css">
+            body {
+                font-family: Arial, Sans;
+                margin: 0;
+                padding: 0;
+            }
+            table {
+                width: 100%;
+            }
+            #header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            #results {
+                padding: 15px;
+            }
+            #header h1 {
+                margin-top: 0;
+            }
+            #header.success {
+                background: #81CF5A !important;
+            }
+            .passed span {
+                background: #81CF5A !important;
+                padding: 3px 5px;
+            }
+            #header.failed {
+                background: #EF6868 !important;
+            }
+            .failed span {
+                background: #EF6868 !important;
+                padding: 3px 5px;
+            }
+            table .source {
+                margin-top: 10px;
+            }
+            table .source span {
+                color: #fff;
+                font-size: 85%;
+                padding: 1px 3px;
+                background: #666;
+            }
+            table .sourceLine {
+                border-left: 3px solid #c00;
+                padding: 4px 3px;
+                color: #000;
+                font-size: 85%;
+                margin-bottom: 10px;
+            }
+            .error {
+                color: #c00;
+            }
+            table td {
+                padding: 5px 0;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div id="header" class="block failed">
+            <h1>
+                UsersTest.class
+            </h1>
+            <p>
+                FAILED
+            </p>
+        </div>
+        
+        <div id="results">
+            <table>
+                                <tr>
+                    <td width="20%" class="failed" valign="top">
+                        <span>search</span>
+                    </td>
+                    <td class="error" valign="top">
+                                                <strong>A java.lang.IllegalStateException has been caught, Message type &quot;users&quot; has no field named &quot;hash&quot;.</strong>
+                                                <div class="source">
+                            <span>In /test/UsersTest.java, line 16 :</span>
+                        </div>
+                        <div class="sourceLine">
+                            <span>
+                                
+                                    		QantiqaFormat.merge(getContent(rs), builder);
+                                
+                            </span>
+                        </div>
+                                                                        <pre>java.lang.IllegalStateException: Message type "users" has no field named "hash".
+	at im.dario.qantiqa.common.protocol.format.XmlFormat.startElement(XmlFormat.java:915)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(AbstractSAXParser.java:501)
+	at com.sun.org.apache.xerces.internal.impl.dtd.XMLDTDValidator.startElement(XMLDTDValidator.java:767)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanStartElement(XMLDocumentFragmentScannerImpl.java:1363)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$ContentDriver.scanRootElementHook(XMLDocumentScannerImpl.java:1318)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:3103)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:922)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:648)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:511)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:808)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:737)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:119)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1205)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:522)
+	at javax.xml.parsers.SAXParser.parse(SAXParser.java:395)
+	at javax.xml.parsers.SAXParser.parse(SAXParser.java:198)
+	at im.dario.qantiqa.common.protocol.format.XmlFormat.merge(XmlFormat.java:246)
+	at im.dario.qantiqa.common.protocol.format.XmlFormat.merge(XmlFormat.java:232)
+	at im.dario.qantiqa.common.protocol.format.QantiqaFormat.merge(QantiqaFormat.java:47)
+	at im.dario.qantiqa.common.protocol.format.QantiqaFormat.merge(QantiqaFormat.java:64)
+	at UsersTest.search(UsersTest.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.junit.runners.Suite.runChild(Suite.java:115)
+	at org.junit.runners.Suite.runChild(Suite.java:23)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:116)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:107)
+	at play.test.TestEngine$1.call(TestEngine.java:90)
+	at play.test.TestEngine$1.call(TestEngine.java:86)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+</pre>
+                                                                                            </td>
+                    <td width="5%" align="right" class="time" valign="top">
+                        3675 ms
+                    </td>
+                </tr>
+                                <tr>
+                    <td width="20%" class="failed" valign="top">
+                        <span>show</span>
+                    </td>
+                    <td class="error" valign="top">
+                                                <strong>A java.lang.IllegalStateException has been caught, Message type &quot;user&quot; has no field named &quot;hash&quot;.</strong>
+                                                <div class="source">
+                            <span>In /test/UsersTest.java, line 27 :</span>
+                        </div>
+                        <div class="sourceLine">
+                            <span>
+                                
+                                    		QantiqaFormat.merge(getContent(rs), builder);
+                                
+                            </span>
+                        </div>
+                                                                        <pre>java.lang.IllegalStateException: Message type "user" has no field named "hash".
+	at im.dario.qantiqa.common.protocol.format.XmlFormat.startElement(XmlFormat.java:915)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(AbstractSAXParser.java:501)
+	at com.sun.org.apache.xerces.internal.impl.dtd.XMLDTDValidator.startElement(XMLDTDValidator.java:767)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanStartElement(XMLDocumentFragmentScannerImpl.java:1363)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$ContentDriver.scanRootElementHook(XMLDocumentScannerImpl.java:1318)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:3103)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:922)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:648)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:511)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:808)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:737)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:119)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1205)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:522)
+	at javax.xml.parsers.SAXParser.parse(SAXParser.java:395)
+	at javax.xml.parsers.SAXParser.parse(SAXParser.java:198)
+	at im.dario.qantiqa.common.protocol.format.XmlFormat.merge(XmlFormat.java:246)
+	at im.dario.qantiqa.common.protocol.format.XmlFormat.merge(XmlFormat.java:232)
+	at im.dario.qantiqa.common.protocol.format.QantiqaFormat.merge(QantiqaFormat.java:47)
+	at im.dario.qantiqa.common.protocol.format.QantiqaFormat.merge(QantiqaFormat.java:64)
+	at UsersTest.show(UsersTest.java:27)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.junit.runners.Suite.runChild(Suite.java:115)
+	at org.junit.runners.Suite.runChild(Suite.java:23)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:116)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:107)
+	at play.test.TestEngine$1.call(TestEngine.java:90)
+	at play.test.TestEngine$1.call(TestEngine.java:86)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+</pre>
+                                                                                            </td>
+                    <td width="5%" align="right" class="time" valign="top">
+                        1703 ms
+                    </td>
+                </tr>
+                            </table>
+        </div>
+        
+    </body>
+</html>
+
