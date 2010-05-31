@@ -43,6 +43,12 @@ public class AccountTest extends FunctionalTest {
 		Request rq = QantiqaSupport.getTestRequest();
 		Response rs = GET(rq, "/account/verify_credentials.xml");
 		assertStatus(200, rs);
+
+		rq = QantiqaSupport.getTestRequest();
+		rq.user = "test2";
+		rq.password = "test2";
+		rs = GET(rq, "/account/verify_credentials.xml");
+		assertStatus(200, rs);
 	}
 
 	/**

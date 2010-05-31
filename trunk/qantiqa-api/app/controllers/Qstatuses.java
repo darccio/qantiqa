@@ -119,24 +119,40 @@ public class Qstatuses extends QController {
 	@Methods( { GET })
 	@Formats( { XML, JSON, RSS, ATOM })
 	public static void user_timeline(String id, Integer count) {
-		timeline(id, count);
-	}
-
-	@Methods( { GET })
-	@Formats( { XML, JSON, RSS, ATOM })
-	public static void friends_timeline(String id, Integer count) {
-		timeline(id, count);
-	}
-
-	private static void timeline(String id, Integer count) {
 		if (id == null) {
 			id = request.user;
 		}
 
-		Protocol.user user = getUser(id, "source");
+		Protocol.user user = getUser(id, "target");
 
 		QuarkService qsv = new QuarkService(getOverlay());
 		renderProtobuf(qsv.timeline(user.getId(), count));
+	}
+
+	/**
+	 * From Twitter official doc {@linkplain http
+	 * ://dev.twitter.com/doc/get/statuses/friends_timeline}
+	 * 
+	 * Returns the 20 most recent statuses posted by the authenticating user and
+	 * that user's friends. This is the equivalent of /timeline/home on the Web.
+	 * 
+	 * @param count
+	 *            Specifies the number of records to retrieve. May not be
+	 *            greater than 200.
+	 * @param since_id
+	 *            Returns results with an ID greater than (that is, more recent
+	 *            than) the specified ID.
+	 */
+	@Methods( { GET })
+	@Formats( { XML, JSON, RSS, ATOM })
+	public static void friends_timeline(Integer count, Long since_id) {
+		RelationshipService rsv = new RelationshipService(getOverlay());
+
+		Protocol.user request = getRequestUser();
+		Set<Long> users = rsv.following(request);
+
+		QuarkService qsv = new QuarkService(getOverlay());
+		renderProtobuf(qsv.timelines(users, count, since_id));
 	}
 
 	@Methods( { GET })
