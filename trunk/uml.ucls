@@ -1,0 +1,684 @@
+<class-diagram version="0.9.86" automaticImage="PNG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="im.dario.qantiqa.common.utils.TwitterDate" project="qantiqa-common" 
+    file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false">    
+    <position x="1494" y="2505" width="157" height="174"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="im.dario.qantiqa.common.utils.AsyncResult" project="qantiqa-common" 
+    file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/AsyncResult.java" binary="false">    
+    <position x="1094" y="1865" width="132" height="78"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qfriendships" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qfriendships.java" binary="false">    
+    <position x="213" y="555" width="303" height="110"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qusers" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qusers.java" binary="false">    
+    <position x="766" y="555" width="119" height="78"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qstatuses" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qstatuses.java" binary="false">    
+    <position x="1076" y="555" width="192" height="206"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qsearch" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qsearch.java" binary="false">    
+    <position x="925" y="555" width="111" height="62"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qdirect_messages" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qdirect_messages.java" binary="false">    
+    <position x="41" y="555" width="132" height="78"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qfavorites" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qfavorites.java" binary="false">    
+    <position x="1477" y="555" width="112" height="78"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.QController" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/QController.java" binary="false">    
+    <position x="766" y="37" width="262" height="478"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="controllers.Qaccount" project="qantiqa-api" 
+    file="/qantiqa-api/app/controllers/Qaccount.java" binary="false">    
+    <position x="556" y="555" width="149" height="94"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.Cast" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/Cast.java" binary="false">    
+    <position x="1266" y="1865" width="136" height="126"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.Overlay" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/Overlay.java" binary="false">    
+    <position x="1259" y="1507" width="373" height="318"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.Storage.StorageCallback" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/Storage.java" binary="false">    
+    <position x="676" y="2339" width="146" height="94"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.RelationshipService" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false">    
+    <position x="737" y="801" width="315" height="190"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.SessionService" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/SessionService.java" binary="false">    
+    <position x="1579" y="801" width="220" height="94"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.FavoriteService" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/FavoriteService.java" binary="false">    
+    <position x="1392" y="801" width="147" height="94"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.Service" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/Service.java" binary="false">    
+    <position x="1331" y="555" width="106" height="62"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.UserService" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/UserService.java" binary="false">    
+    <position x="794" y="1309" width="390" height="158"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.SearchService" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/SearchService.java" binary="false">    
+    <position x="1092" y="801" width="176" height="110"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="network.services.QuarkService" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/services/QuarkService.java" binary="false">    
+    <position x="1329" y="1031" width="345" height="238"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="utils.TimeCapsule" project="qantiqa-api" 
+    file="/qantiqa-api/app/utils/TimeCapsule.java" binary="false">    
+    <position x="1494" y="2339" width="180" height="126"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="TOP_LEFT" language="java" name="network.Storage" project="qantiqa-api" 
+    file="/qantiqa-api/app/network/Storage.java" binary="false">    
+    <position x="676" y="1865" width="257" height="334"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <generalization>    
+    <bendpoint x="1361" y="801"/>    
+    <source project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <bendpoint x="1319" y="801"/>    
+    <source project="qantiqa-api" name="controllers.Qstatuses" file="/qantiqa-api/app/controllers/Qstatuses.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="1256" y="1031"/>    
+    <bendpoint x="1256" y="1309"/>    
+    <source project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qdirect_messages" 
+      file="/qantiqa-api/app/controllers/Qdirect_messages.java" binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="qantiqa-api" name="network.Cast" file="/qantiqa-api/app/network/Cast.java" binary="false" 
+      navigable="false">      
+      <attribute name="gluon"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Cast" file="/qantiqa-api/app/network/Cast.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="requarks"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qfavorites" file="/qantiqa-api/app/controllers/Qfavorites.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <association>    
+    <bendpoint x="1829" y="801"/>    
+    <bendpoint x="1829" y="1031"/>    
+    <bendpoint x="1829" y="1309"/>    
+    <source project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false" navigable="false">      
+      <attribute name="overlay"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false" 
+      navigable="false">      
+      <attribute name="MIN_VALUE"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qfriendships" file="/qantiqa-api/app/controllers/Qfriendships.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.RelationshipService" 
+      file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="664" y="801"/>    
+    <bendpoint x="664" y="1031"/>    
+    <source project="qantiqa-api" name="controllers.Qaccount" file="/qantiqa-api/app/controllers/Qaccount.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="cache"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="qantiqa-api" name="utils.TimeCapsule" file="/qantiqa-api/app/utils/TimeCapsule.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="1662" y="1309"/>    
+    <bendpoint x="1662" y="1507"/>    
+    <bendpoint x="1662" y="1865"/>    
+    <source project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>    
+    <target project="qantiqa-api" name="utils.TimeCapsule" file="/qantiqa-api/app/utils/TimeCapsule.java" 
+      binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="users"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qaccount" file="/qantiqa-api/app/controllers/Qaccount.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <bendpoint x="1214" y="1031"/>    
+    <bendpoint x="1214" y="1309"/>    
+    <source project="qantiqa-api" name="network.services.RelationshipService" 
+      file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Cast" file="/qantiqa-api/app/network/Cast.java" binary="false" 
+      navigable="false">      
+      <attribute name="auth"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Cast" file="/qantiqa-api/app/network/Cast.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="1704" y="1031"/>    
+    <bendpoint x="1683" y="1309"/>    
+    <source project="qantiqa-api" name="network.services.FavoriteService" 
+      file="/qantiqa-api/app/network/services/FavoriteService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="network.services.FavoriteService" 
+      file="/qantiqa-api/app/network/services/FavoriteService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <source project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Cast" file="/qantiqa-api/app/network/Cast.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="1084" y="1507"/>    
+    <source project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.AsyncResult" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/AsyncResult.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="1319" y="1309"/>    
+    <source project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qsearch" file="/qantiqa-api/app/controllers/Qsearch.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="usersById"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qfavorites" file="/qantiqa-api/app/controllers/Qfavorites.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.FavoriteService" 
+      file="/qantiqa-api/app/network/services/FavoriteService.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qsearch" file="/qantiqa-api/app/controllers/Qsearch.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="quarks"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="1725" y="1031"/>    
+    <bendpoint x="1725" y="1309"/>    
+    <source project="qantiqa-api" name="network.services.SessionService" 
+      file="/qantiqa-api/app/network/services/SessionService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qusers" file="/qantiqa-api/app/controllers/Qusers.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="454" y="801"/>    
+    <bendpoint x="454" y="1031"/>    
+    <bendpoint x="454" y="1309"/>    
+    <bendpoint x="454" y="1507"/>    
+    <source project="qantiqa-api" name="controllers.Qfriendships" file="/qantiqa-api/app/controllers/Qfriendships.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false"/>  
+  </dependency>  
+  <nesting>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Storage.StorageCallback" file="/qantiqa-api/app/network/Storage.java" 
+      binary="false"/>  
+  </nesting>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qfriendships" file="/qantiqa-api/app/controllers/Qfriendships.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="followers"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="index"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="1235" y="1031"/>    
+    <source project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qusers" file="/qantiqa-api/app/controllers/Qusers.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <bendpoint x="1298" y="555"/>    
+    <bendpoint x="1298" y="801"/>    
+    <bendpoint x="1298" y="1031"/>    
+    <bendpoint x="1298" y="1309"/>    
+    <source project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="callback"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage.StorageCallback" file="/qantiqa-api/app/network/Storage.java" 
+      binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="512" y="801"/>    
+    <bendpoint x="512" y="1031"/>    
+    <source project="qantiqa-api" name="controllers.Qfriendships" file="/qantiqa-api/app/controllers/Qfriendships.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="1063" y="1507"/>    
+    <bendpoint x="1063" y="1865"/>    
+    <bendpoint x="1063" y="2339"/>    
+    <source project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="network.services.RelationshipService" 
+      file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <bendpoint x="763" y="1031"/>    
+    <bendpoint x="763" y="1309"/>    
+    <bendpoint x="763" y="1507"/>    
+    <source project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="utils.TimeCapsule" file="/qantiqa-api/app/utils/TimeCapsule.java" binary="false" 
+      navigable="false">      
+      <attribute name="date"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="requarksByUser"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qstatuses" file="/qantiqa-api/app/controllers/Qstatuses.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.RelationshipService" 
+      file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="recentQuarks"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qstatuses" file="/qantiqa-api/app/controllers/Qstatuses.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.SearchService" 
+      file="/qantiqa-api/app/network/services/SearchService.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false" 
+      navigable="false">      
+      <attribute name="MAX_VALUE"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="qantiqa-api" name="network.services.FavoriteService" 
+      file="/qantiqa-api/app/network/services/FavoriteService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="network.services.SessionService" 
+      file="/qantiqa-api/app/network/services/SessionService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <bendpoint x="1277" y="1031"/>    
+    <bendpoint x="1340" y="801"/>    
+    <source project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.services.Service" file="/qantiqa-api/app/network/services/Service.java" 
+      binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="following"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="685" y="1031"/>    
+    <bendpoint x="685" y="1309"/>    
+    <bendpoint x="685" y="1507"/>    
+    <source project="qantiqa-api" name="network.services.RelationshipService" 
+      file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false"/>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="qantiqa-api" name="controllers.Qstatuses" file="/qantiqa-api/app/controllers/Qstatuses.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="qantiqa-api" name="network.Overlay" file="/qantiqa-api/app/network/Overlay.java" binary="false" 
+      navigable="false">      
+      <attribute name="gluon"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.AsyncResult" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/AsyncResult.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <bendpoint x="1704" y="1309"/>    
+    <bendpoint x="1704" y="1507"/>    
+    <bendpoint x="1704" y="1865"/>    
+    <bendpoint x="1704" y="2339"/>    
+    <source project="qantiqa-api" name="network.services.QuarkService" 
+      file="/qantiqa-api/app/network/services/QuarkService.java" binary="false"/>    
+    <target project="qantiqa-common" name="im.dario.qantiqa.common.utils.TwitterDate" 
+      file="/qantiqa-common/src/main/java/im/dario/qantiqa/common/utils/TwitterDate.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="735" y="555"/>    
+    <bendpoint x="706" y="801"/>    
+    <bendpoint x="706" y="1031"/>    
+    <source project="qantiqa-api" name="controllers.QController" file="/qantiqa-api/app/controllers/QController.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.UserService" 
+      file="/qantiqa-api/app/network/services/UserService.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <source project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="false">      
+      <attribute name="favorites"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="qantiqa-api" name="network.Storage" file="/qantiqa-api/app/network/Storage.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="qantiqa-api" name="controllers.Qusers" file="/qantiqa-api/app/controllers/Qusers.java" 
+      binary="false"/>    
+    <target project="qantiqa-api" name="network.services.RelationshipService" 
+      file="/qantiqa-api/app/network/services/RelationshipService.java" binary="false"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
