@@ -12,3 +12,7 @@ bin
 gluoc-mock/storage
 storage
 target
+qantiqa-api/target/*
+qantiqa-core/target/*
+qantiqa-common/target/*
+qantiqa-higgs/target/*

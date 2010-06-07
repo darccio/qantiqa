@@ -236,8 +236,8 @@ public class Overlay {
 	private Overlay(String configPath, boolean isGluon) {
 		try {
 			if (isGluon) {
-				// TODO ! Get WAN/LAN IP
-				PastryKernel.init("192.168.0.12", configPath);
+				PastryKernel.init(Play.configuration.getProperty("qantiqa.ip"),
+						configPath);
 			} else {
 				PastryKernel.init(configPath);
 			}

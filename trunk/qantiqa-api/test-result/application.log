@@ -1,7 +1,7 @@
-31 May 2010 23:15:51,896 INFO  ~ Starting /home/dario/uoc/8e/tfc/forge/qantiqa/qantiqa-api
-31 May 2010 23:15:51,900 INFO  ~ Module test-runner is available (/home/dario/software/play-1.0.1/modules/test-runner)
-31 May 2010 23:15:53,229 INFO  ~ 
-31 May 2010 23:15:53,229 INFO  ~ Go to http://localhost:8080/@tests to run the tests
-31 May 2010 23:15:53,229 INFO  ~ 
-31 May 2010 23:15:53,229 WARN  ~ You're running Play! in DEV mode
-31 May 2010 23:15:53,523 INFO  ~ Listening for HTTP at /127.0.0.1:8080 (Waiting a first request to start) ...
+07 Jun 2010 02:09:22,317 INFO  ~ Starting /home/dario/uoc/8e/tfc/forge/qantiqa/qantiqa-api
+07 Jun 2010 02:09:22,321 INFO  ~ Module test-runner is available (/home/dario/software/play-1.0.1/modules/test-runner)
+07 Jun 2010 02:09:22,573 INFO  ~ 
+07 Jun 2010 02:09:22,573 INFO  ~ Go to http://localhost:8080/@tests to run the tests
+07 Jun 2010 02:09:22,573 INFO  ~ 
+07 Jun 2010 02:09:22,573 WARN  ~ You're running Play! in DEV mode
+07 Jun 2010 02:09:22,769 INFO  ~ Listening for HTTP at /127.0.0.1:8080 (Waiting a first request to start) ...
