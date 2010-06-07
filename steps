@@ -1,9 +1,0 @@
-cd $QANTIQA_HOME
-mvn clean install
-play war qantiqa-api -o qantiqa-core/target/classes/war
-cp ~/.m2/repository/im/dario/qantiqa/common/qantiqa-common/1.1-SNAPSHOT/qantiqa-common-1.1-SNAPSHOT.jar qantiqa-core/target/classes/war/WEB-INF/lib/
-Add gluon in Higgs (play run qantiqa-higgs): http://127.0.0.1:9001/ with secret from qantiqa-api/conf/application.conf 
-
-    5.5 Implementació (en aquest capítol podeu detallar totes les característiques d'implementació del vostre PFC: particularitats de les tecnologies emprades, problemes amb els que us heu trobat, quins heu pogut solucionar, quins no heu pogut solucionar, com els heu solucionat,...) 
-    5.6 Joc de proves (cal especificar quines proves heu realitzat per tal de validar que el vostre PFC funciona correctament. Aquestes proves haurien d'entregar-se també de forma que el consultor pugui executar-les i validar-les). 
-    5.8 Conclusions 
